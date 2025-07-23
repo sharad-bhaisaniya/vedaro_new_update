@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Only rewrite if request is not already going to /public
+    RewriteCond %{REQUEST_URI} !^/public/
+
+    # Forward all requests to the /public folder
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
+
+Options -Indexes
+
+# Block .env from public access
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>

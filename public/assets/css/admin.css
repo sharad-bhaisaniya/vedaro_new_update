@@ -1,0 +1,217 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+#admin_main {
+    padding-top: 10px;
+    /* margin-left: 13%; */
+}
+
+.header {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1040;
+}
+
+.header .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.header .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.header .nav-link:hover {
+    background-color: #495057;
+}
+
+.sidebar {
+    height: 100vh;
+    background-color: #343a40;
+    color: #fff;
+    padding: 15px;
+    position: fixed;
+    top: 60px;
+    /* Account for header height */
+    left: 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 1030;
+    width: 250px;
+}
+
+.sidebar a {
+    color: #ddd;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+.sidebar .active {
+    background-color: #495057;
+}
+
+/*.content {*/
+/*    padding: 20px;*/
+/*    margin-left: 250px;*/
+/*}*/
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card h5 {
+    color: #495057;
+}
+
+.close-sidebar {
+    cursor: pointer;
+    display: none;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-250px);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .content {
+        margin-left: 0;
+    }
+    .close-sidebar {
+        display: block;
+    }
+}
+
+.toggle-sidebar {
+    display: none !important;
+}
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-box h2 {
+    font-weight: 700;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-box .form-control {
+    border-radius: 5px;
+    height: 45px;
+}
+
+.login-box .btn-primary {
+    width: 100%;
+    height: 45px;
+    font-size: 16px;
+}
+
+.login-box .forgot-password {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-box .forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-box .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+#addProductForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-container {
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    width: 31%;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    border-radius: 5px;
+}
+
+.form-group .custom-checkbox input {
+    margin-top: 0;
+}
+
+.alert {
+    display: none;
+}
+
+
+/* Container to ensure the form takes 75% width and is aligned to the right */
+
+.form-container {
+    width: 100%;
+    /* Set width to 75% */
+    margin-left: auto;
+    /* Push the form to the right */
+    margin-right: 0;
+    /* Remove any right margin */
+    padding: 20px;
+    position: relative;
+}
+
+
+/* Make sure the form doesn’t overlap or hide behind anything */
+
+.container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.row {
+    display: flex;
+    justify-content: flex-end;
+    /* Align items to the right */
+}

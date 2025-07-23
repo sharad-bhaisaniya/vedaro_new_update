@@ -1,0 +1,493 @@
+@extends('layouts.main')
+
+@section('title', 'Limited Edition')
+
+@section('content')
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('public/assets/css/limited_additions.css') }}">
+    
+    <style>
+        :root {
+            --primary-color: #6b46c1;
+            --secondary-color: #f6ad55;
+            --dark-color: #2d3748;
+            --light-color: #f8fafc;
+        }
+        .container{
+            width: 100% !important;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+        }
+        
+        .banner {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), 
+                        url('https://trueso.in/wp-content/uploads/elementor/thumbs/diamond-banenr-1-o1a9yqmf7dmwos37d29et48hzupw5nxn4hyay2th3q.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .grid-item-large {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            
+            .grid-item-medium-h {
+                grid-column: span 2;
+            }
+            
+            .grid-item-medium-v {
+                grid-row: span 1;
+            }
+        }
+        
+        .limi-product-card {
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .limi-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .grid-item-large .product-image {
+            height: 100%;
+        }
+        
+        .grid-item-medium-h .product-image {
+            height: 100%;
+        }
+        
+        .grid-item-medium-v .product-image {
+            height: 100%;
+        }
+        
+        .limi-product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .product-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .grid-item-large .product-title {
+            font-size: 1.5rem;
+        }
+        
+        .product-description {
+            color: #4a5568;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #a0aec0;
+            margin-left: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .discount-badge {
+            background-color: #f56565;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .timer-container {
+            background-color: #fffaf0;
+            border: 1px solid #fed7aa;
+            color: #9c4221;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            display: grid; /* Changed from flex to grid for better alignment */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .timer-expired-message {
+            background-color: #e0f2f7; /* Light blue for "Available" */
+            border: 1px solid #b2ebf2;
+            color: #00838f; /* Darker blue for text */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .timer-part {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .timer-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .timer-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #b7791f;
+            letter-spacing: 0.05em;
+        }
+        
+        .add-to-cart {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99;
+            background-color: var(--primary-color);
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #backToTop:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-3px);
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: #4a5568;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+    </style>
+
+    <section class="banner bg-cover bg-center h-96 flex items-center justify-center text-white text-center">
+        <div class="banner-content p-6 max-w-3xl">
+            <h1 class="text-3xl font-extrabold mb-4 drop-shadow-lg">Exquisite Limited Edition Jewelry</h1>
+            <p class="text-sm mb-8 drop-shadow-md">Unveil unique pieces crafted with unparalleled artistry and rare gemstones. Each piece a timeless treasure.</p>
+            <a href="#collection" class="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Shop Now</a>
+        </div>
+    </section>
+
+    <section id="collection" class="mx-auto py-16">
+        <h2 class="text-4xl font-bold text-center mb-12 text-gray-800 section-title">Our Exclusive Limited Editions</h2>
+
+        <div class="grid-container">
+            @forelse ($limitedEditionProducts as $product)
+                <a href="/product_details/{{ $product->id }}" class="limi-product-card 
+                    @if($loop->first) grid-item-large
+                    @elseif(in_array($loop->index, [3, 9, 10])) grid-item-medium-h 
+                    @elseif(in_array($loop->index, [6, 12, 13])) grid-item-medium-v
+                    @elseif($loop->index == 15) grid-item-large
+                    @endif"> 
+                    
+                    <div class="product-image-container">
+                        <img src="{{ asset('storage/products/' . $product->image1) }}" 
+                             alt="{{ $product->productName }}" 
+                             class="product-image">
+                        <span class="product-badge">Limited Edition</span>
+                    </div>
+                    
+                    <div class="product-content">
+                        <h3 class="product-title">{{ $product->productName }}</h3>
+                        <p class="product-description">{{ Str::limit($product->productDescription1, 120) }}</p>
+                        
+                        <div class="product-price">
+                            @if($product->discountPrice)
+                                <div>
+                                    <span class="price-amount">₹{{ number_format($product->discountPrice, 2) }}</span>
+                                    @if ($product->discountPercentage != 0)
+                                    <span class="original-price">₹{{ number_format($product->price, 2) }}</span>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="price-amount">₹{{ number_format($product->price, 2) }}</span>
+                            @endif
+                        </div>
+                        
+                        {{-- Timer Container (initially visible for products with timer_end_at) --}}
+                        <div class="timer-container" id="timer-{{ $product->id }}" 
+                             data-end-time="{{ $product->timer_end_at ? \Carbon\Carbon::parse($product->timer_end_at)->timestamp : '' }}">
+                            <div class="timer-part">
+                                <span class="timer-value days">00</span>
+                                <span class="timer-label">Days</span>
+                            </div>
+                            <div class="timer-part">
+                                <span class="timer-value hours">00</span>
+                                <span class="timer-label">Hrs</span>
+                            </div>
+                            <div class="timer-part">
+                                <span class="timer-value minutes">00</span>
+                                <span class="timer-label">Mins</span>
+                            </div>
+                            <div class="timer-part">
+                                <span class="timer-value seconds">00</span>
+                                <span class="timer-label">Secs</span>
+                            </div>
+                        </div>
+
+                        {{-- "Available to Buy" message and Add to Cart button (initially hidden) --}}
+                        <div id="available-message-{{ $product->id }}" class="timer-expired-message hidden">
+                             Buy Now
+                        </div>
+                        <button class="add-to-cart" id="add-to-cart-{{ $product->id }}" data-product-id="{{ $product->id }}" style="display: none;">
+                            Add to Cart
+                        </button>
+                    </div>
+                </a>
+            @empty
+                <div class="empty-state">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">No Limited Edition Items Available</h3>
+                    <p class="text-gray-600">Check back soon for our exclusive limited edition collections.</p>
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+    <section id="why-choose-us" class="bg-gray-50 py-16 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-12 section-title">Why Choose Elegance Gems?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300 ease-in-out">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L3 12l5.714-2.143L11 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Unrivaled Craftsmanship</h3>
+                    <p class="text-gray-600">Each piece is meticulously handcrafted by master artisans, ensuring exceptional quality and intricate detail.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300 ease-in-out">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
+                        <svg class="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1L19 18H5l1.408-6.092A9.956 9.956 0 0112 8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Ethically Sourced</h3>
+                    <p class="text-gray-600">We are committed to responsible sourcing, ensuring all our gemstones are conflict-free and ethically obtained.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300 ease-in-out">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c0 2.897.834 5.618 2.378 7.056L12 21.056l6.678-5.992A12.007 12.007 0 0021.056 12c0-2.897-.834-5.618-2.378-7.056z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Exclusive Designs</h3>
+                    <p class="text-gray-600">Our limited edition pieces are truly unique, often featuring rare cuts and innovative designs not found elsewhere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 my-16">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-700 rounded-xl p-8 md:p-12 text-center text-white">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Don't Miss Your Chance!</h2>
+            <p class="text-xl mb-6 max-w-2xl mx-auto">These exclusive pieces are available for a limited time only. Secure your unique treasure today.</p>
+            <a href="#collection" class="inline-block bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                View Collection
+            </a>
+        </div>
+    </section>
+
+    <button id="backToTop" title="Go to top">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        // Back to top button
+        window.onscroll = function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                document.getElementById("backToTop").style.display = "flex";
+            } else {
+                document.getElementById("backToTop").style.display = "none";
+            }
+        };
+
+        document.getElementById("backToTop").addEventListener("click", function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Countdown timer function
+        function updateCountdownTimers() {
+            const now = new Date().getTime();
+            
+            document.querySelectorAll('.timer-container').forEach(timerContainer => {
+                const productId = timerContainer.id.replace('timer-', '');
+                const endTimeAttribute = timerContainer.dataset.endTime;
+                const addToCartButton = document.getElementById(`add-to-cart-${productId}`);
+                const availableMessage = document.getElementById(`available-message-${productId}`);
+
+                // If no end time is set, assume it's available for purchase immediately
+                if (!endTimeAttribute || endTimeAttribute === '') {
+                    timerContainer.style.display = 'none'; // Hide the timer
+                    if (addToCartButton) addToCartButton.style.display = 'block'; // Show Add to Cart
+                    if (availableMessage) availableMessage.classList.remove('hidden'); // Show Available message
+                    return; 
+                }
+
+                const endTime = parseInt(endTimeAttribute) * 1000;
+                const distance = endTime - now;
+                
+                if (distance < 0) {
+                    // Timer has ended
+                    timerContainer.style.display = 'none'; // Hide the timer
+                    if (addToCartButton) addToCartButton.style.display = 'block'; // Show Add to Cart
+                    if (availableMessage) availableMessage.classList.remove('hidden'); // Show Available message
+                } else {
+                    // Timer is running
+                    timerContainer.style.display = 'grid'; // Show the timer grid
+                    if (addToCartButton) addToCartButton.style.display = 'none'; // Hide Add to Cart
+                    if (availableMessage) availableMessage.classList.add('hidden'); // Hide Available message
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    timerContainer.querySelector('.days').textContent = String(days).padStart(2, '0');
+                    timerContainer.querySelector('.hours').textContent = String(hours).padStart(2, '0');
+                    timerContainer.querySelector('.minutes').textContent = String(minutes).padStart(2, '0');
+                    timerContainer.querySelector('.seconds').textContent = String(seconds).padStart(2, '0');
+                }
+            });
+        }
+        
+        // Initialize and update timers every second
+        updateCountdownTimers();
+        setInterval(updateCountdownTimers, 1000);
+        
+        // Add to cart functionality
+        $(document).on('click', '.add-to-cart', function() {
+            const productId = $(this).data('product-id');
+            // Implement your cart addition logic here
+            console.log('Adding product to cart:', productId);
+            alert('Product added to cart!');
+        });
+    </script>
+@endsection
