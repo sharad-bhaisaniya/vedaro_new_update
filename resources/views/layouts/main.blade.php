@@ -5,6 +5,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>@yield('title', 'Default Title')</title>
       <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
+      <!--FavIcon-->
+      <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('public/assets/images/VEDARO_logo.png') }}">
       <!-- Bootstrap CSS -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <!-- Font Awesome -->
@@ -666,8 +668,9 @@ color: white;
                         <!--</li>-->
                     </ul>
 
-                   <h6 class="header__heading mobile-header-logo d-flex align-items-center m-0"> <a href="/" class="header__heading-link navbar-brand" style="text-decoration:none;">
+                   <h6 class="header__heading mobile-header-logo d-flex align-itms-center m-0"> <a href="/" class="header__heading-link navbar-brand" style="text-decoration:none;">
                         <div class="header__logo-wrapper">
+                            <!--<img src="{{ asset('public/assets/images/VEDARO_logo2.png') }}" style="width:20px;">-->
                             VEDARO
                         </div>
                     </a>
@@ -1040,7 +1043,7 @@ color: white;
 
         <div class="row gy-5 align-items-start">
             <div class="col-12 col-md-3 text-center text-md-start">
-                <img style="max-width: 150px; height: auto;" src="http://127.0.0.1:8000/storage/products/product_images/TzSr8vOQ4VwuHaIksfdSDsdxBZ8DDctlz7YS4Vs6.webp" alt="Product Image" class="img-fluid">
+                <img style="max-width: 150px; height: auto;" src="{{ asset('public/assets/images/VEDARO_logo.png') }}" alt="Product Image" class="img-fluid">
             </div>
 
             <div class="col-6 col-md-3">

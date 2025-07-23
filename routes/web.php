@@ -196,6 +196,8 @@ Route::prefix('admin')->group(function () {
 
         // Utility
         Route::get('/add-product', [AdminController::class, 'categoriesName'])->name('admin.add_product');
+        
+         Route::get('/pre-bookings', [PreBookingController::class, 'index'])->name('admin.prebookings');
     });
 });
 
@@ -223,13 +225,21 @@ Route::post('/login', [AuthController::class, 'login']); // Handle login
 // Logout route
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout'); // Logout route
 
+
+
 // Home route (Authenticated)
-Route::get('/', [HomeController::class, 'ShowOnHome'])->name('home');
+Route::get('/home2', [HomeController::class, 'ShowOnHome'])->name('home');
+
+Route::get('/', function () {
+    return view('comming_soon');
+});
+
 
 
 Route::get('/admin', function () {
     return view('admin/index');
 });
+
 
 
 // Route to fetch all products

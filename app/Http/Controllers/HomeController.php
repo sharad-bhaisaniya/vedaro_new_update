@@ -17,26 +17,25 @@ class HomeController extends Controller
 
 public function ShowOnHome()
 {
-    $products = Product::all();  // All products
-    $featuredProducts = Product::where('availability', 1)->limit(1)->get();  // Featured
-    $categories = Category::all();  // Categories
-    $banners = Banner::all();  // Regular banners
-
-    $limitedEditionBanners = LimitedEditionBanner::latest()->get(); // Limited banners
-    //   $limitedEditionProducts = Product::where('add_timer', true)
-    //                                     ->where('timer_end_at', '>', Carbon::now())
-    //                                     ->get();
-       $limitedEditionProducts = Product::where('add_timer', true)
-        ->where('timer_end_at', '>', Carbon::now())
-        ->get();
-
+    $products = Product::all();
+    $featuredProducts = Product::where('availability', 1)->limit(1)->get();
+    $categories = Category::all();
+    $banners = Banner::all();
+    $limitedEditionBanners = LimitedEditionBanner::latest()->get();
+    // Get limited edition banners with their associated products
+        $limitedEditionBanners->each(function($banner) {
+        $productIds = explode(',', $banner->product_ids ?? '');
+        $banner->products = Product::whereIn('id', $productIds)
+            ->where('add_timer', true)
+            ->where('timer_end_at', '>', Carbon::now())
+            ->get();
+    });
     return view('home', compact(
         'products',
         'categories',
         'banners',
         'featuredProducts',
-        'limitedEditionBanners',
-        'limitedEditionProducts'
+        'limitedEditionBanners'
     ));
 }
     

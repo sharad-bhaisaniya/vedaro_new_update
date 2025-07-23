@@ -10,54 +10,54 @@
 	</div> -->
 	
 	<style>
-.product_details_accordion_container {
-    width: 100%;
-    margin: 0 auto;
-}
-
-.product_details_accordion_item {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.product_details_accordion_content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    padding: 0 15px;
-    /*background: #fff;*/
-}
-
-.product_details_accordion_content.show {
-    max-height: 500px; /* Adjust based on your content */
-    padding: 15px;
-}
-
-.accordion_icon {
-    font-weight: bold;
-    font-size: 20px;
-    margin-left: auto;
-    transition: transform 0.3s;
-}
-
-.product_details_accordion_header {
-    cursor: pointer;
-    padding: 15px;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.product_details_accordion_header:hover {
-    background: #e0e0e0;
-}
-
-.product_details_accordion_header.active .accordion_icon {
-    transform: rotate(45deg);
-}
+        .product_details_accordion_container {
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .product_details_accordion_item {
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .product_details_accordion_content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 15px;
+            /*background: #fff;*/
+        }
+        
+        .product_details_accordion_content.show {
+            max-height: 500px; /* Adjust based on your content */
+            padding: 15px;
+        }
+        
+        .accordion_icon {
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: auto;
+            transition: transform 0.3s;
+        }
+        
+        .product_details_accordion_header {
+            cursor: pointer;
+            padding: 15px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .product_details_accordion_header:hover {
+            background: #e0e0e0;
+        }
+        
+        .product_details_accordion_header.active .accordion_icon {
+            transform: rotate(45deg);
+        }
 
   .timer-container {
             background-color: #fffaf0;
@@ -91,6 +91,140 @@
             color: #b7791f;
             letter-spacing: 0.05em;
         }
+        
+        /*styling for Out Of Stock section*/
+
+        /*.out:hover{*/
+        /*    background-color: #6B46C1;*/
+        /*}*/
+        /*  .btn-shine {*/
+        /*    display: inline-block;*/
+        /*    padding: 12px 24px;*/
+        /*    font-size: 16px;*/
+        /*    font-weight: 600;*/
+        /*    text-decoration: none;*/
+            /*color: #fff;*/
+        /*    color: #FFD700;*/
+        /*    border-radius: 8px;*/
+        /*    background: linear-gradient(to right, #4d4d4d 0, white 10%, #4d4d4d 20%);*/
+        /*    background-size: 200% auto;*/
+        /*    background-position: 0;*/
+        /*    -webkit-background-clip: text;*/
+        /*    -webkit-text-fill-color: transparent;*/
+        /*    animation: shine 3s infinite linear;*/
+        /*    transition: all 0.3s ease;*/
+            /*white-space: nowrap;*/
+        /*    margin: 0;*/
+        /*  }*/
+        
+        /*  .btn-shine:hover {*/
+            /*border-color: #00ffcc;*/
+            /*background: linear-gradient(to right, #00ffcc 0, #ffffff 10%, #00ffcc 20%);*/
+            /*animation: shine 1.5s infinite linear;*/
+        /*  }*/
+        
+        /*  @keyframes shine {*/
+        /*    0% {*/
+        /*      background-position: 0%;*/
+        /*    }*/
+        /*    60% {*/
+        /*      background-position: 180px;*/
+        /*    }*/
+        /*    100% {*/
+        /*      background-position: 330px;*/
+        /*    }*/
+        /*  }*/
+        
+        /*  .btn-shine i {*/
+        /*    margin-right: 8px;*/
+        /*  }*/
+        .btn-shine {
+  display: inline-block;
+  padding: 14px 28px;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  background: linear-gradient(to right, #4d4d4d 0%, #fff8b5 10%, #4d4d4d 20%);
+  background-size: 300% auto;
+  background-position: 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s linear infinite;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 300% center;
+  }
+}
+
+                    /*stying for Pre-Book Now section*/
+        
+            .black-prebook-btn {
+                width: 100%;
+                padding: 14px 22px;
+                font-size: 16px;
+                font-weight: 600;
+                color: #fff;
+                /*background: linear-gradient(135deg, #ff0047, #f33030);*/
+                background: black;
+                border: 2px solid transparent;
+                border-radius: 10px;
+                cursor: pointer;
+                position: relative;
+                z-index: 1;
+                overflow: hidden;
+                transition: all 0.4s ease;
+                box-shadow: 0 0 0 transparent;
+            }
+            
+            /* Bubble particles */
+            .black-prebook-btn span.bubble {
+                position: absolute;
+                background: rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0;
+                animation: none;
+            }
+            
+            /* Hover state to start animation */
+            .black-prebook-btn:hover {
+                border-color: #ff0047;
+                box-shadow: 0 0 20px #ff0047cc;
+                transform: scale(1.03);
+            }
+            
+            .black-prebook-btn:hover span.bubble {
+                animation: rise 2s ease-out forwards;
+            }
+            
+            /* Keyframe animation */
+            @keyframes rise {
+                0% {
+                    transform: translateY(0) scale(1);
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: translateY(-60px) scale(0.5);
+                    opacity: 0;
+                }
+            }
+            
+            /* Optional icon margin */
+            .black-prebook-btn i {
+                margin-left: 8px;
+            }
+
         
 </style>
 	
@@ -222,20 +356,19 @@
                             🛒 Add to Cart
                         </button>
                     </form>
-                    <a href="{{ route('checkout.single', $product->id) }}" class="w-100">
+                    <a href="{{ route('checkout.single', $product->id) }}" id="buyButtons" class="w-100">
                         <button class="btn btn-outline-primary btn-lg px-4 w-100">
                             ⚡ Buy Now
                         </button>
                     </a>
                 </div>
                 @else
-    {{-- Out of Stock Label --}}
-    <div class="mt-4">
-        <span class="badge bg-danger w-100 py-3 fs-5" style="border-radius: 8px;">
-            Out of Stock
-        </span>
-    </div>
-
+                    {{-- Out of Stock Label --}}
+                <div class="mt-4 text-center out" style="cursor:pointer;">
+                  <p class="btn-shine bg-dark " target="_blank" id="openPrebookModal">
+                    <i class="fas fa-box-open"></i> This product is out of stock — Go and check Pre-Book the order
+                  </p>
+                </div>
             @endif
 
 
@@ -300,81 +433,20 @@
 						</form>
 						@else
 					
-                        <!--<div class="prebook-button-wrapper">-->
-                        <!--    <button type="button" id="openPrebookModal" class="btn btn-sm btn-secondary text-white w-100">-->
-                        <!--        Out of Stock - Pre-Book Now <i class="fas fa-calendar-check"></i>-->
-                        <!--    </button>-->
-                        <!--</div>-->
-                        
-<style>
-.black-prebook-btn {
-    width: 100%;
-    padding: 14px 22px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #fff;
-    /*background: linear-gradient(135deg, #ff0047, #f33030);*/
-    background: black;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    box-shadow: 0 0 0 transparent;
-}
+                    
 
-/* Bubble particles */
-.black-prebook-btn span.bubble {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    opacity: 0;
-    animation: none;
-}
-
-/* Hover state to start animation */
-.black-prebook-btn:hover {
-    border-color: #ff0047;
-    box-shadow: 0 0 20px #ff0047cc;
-    transform: scale(1.03);
-}
-
-.black-prebook-btn:hover span.bubble {
-    animation: rise 2s ease-out forwards;
-}
-
-/* Keyframe animation */
-@keyframes rise {
-    0% {
-        transform: translateY(0) scale(1);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(-60px) scale(0.5);
-        opacity: 0;
-    }
-}
-
-/* Optional icon margin */
-.black-prebook-btn i {
-    margin-left: 8px;
-}
-</style>
-
-<div class="prebook-button-wrapper position-relative">
-    <button type="button" id="openPrebookModal" class="black-prebook-btn">
-        Pre-Book Now <i class="fas fa-calendar-check"></i>
-        <!-- Bubble particles -->
-        <span class="bubble" style="width: 8px; height: 8px; bottom: 10px; left: 10%; animation-delay: 0s;"></span>
-        <span class="bubble" style="width: 6px; height: 6px; bottom: 10px; left: 30%; animation-delay: 0.2s;"></span>
-        <span class="bubble" style="width: 10px; height: 10px; bottom: 10px; left: 60%; animation-delay: 0.4s;"></span>
-        <span class="bubble" style="width: 7px; height: 7px; bottom: 10px; left: 80%; animation-delay: 0.1s;"></span>
-        <span class="bubble" style="width: 5px; height: 5px; bottom: 10px; left: 50%; animation-delay: 0.3s;"></span>
-    </button>
-</div>
+                            <!--show fixed pre-Book Button -->
+                            <!--<div class="prebook-button-wrapper position-relative">-->
+                            <!--    <button type="button" id="openPrebookModal" class="black-prebook-btn">-->
+                            <!--        Pre-Book Now <i class="fas fa-calendar-check"></i>-->
+                                    <!-- Bubble particles -->
+                            <!--        <span class="bubble" style="width: 8px; height: 8px; bottom: 10px; left: 10%; animation-delay: 0s;"></span>-->
+                            <!--        <span class="bubble" style="width: 6px; height: 6px; bottom: 10px; left: 30%; animation-delay: 0.2s;"></span>-->
+                            <!--        <span class="bubble" style="width: 10px; height: 10px; bottom: 10px; left: 60%; animation-delay: 0.4s;"></span>-->
+                            <!--        <span class="bubble" style="width: 7px; height: 7px; bottom: 10px; left: 80%; animation-delay: 0.1s;"></span>-->
+                            <!--        <span class="bubble" style="width: 5px; height: 5px; bottom: 10px; left: 50%; animation-delay: 0.3s;"></span>-->
+                            <!--    </button>-->
+                            <!--</div>-->
 
                         
 						@endif
@@ -383,26 +455,7 @@
 					
 					
 					
-					<!-- Prebooking Modal -->
-					<!--<div id="prebookModal" class="modal-overlay">-->
-					<!--	<div class="modal-box">-->
-					<!--		<div class="modal-header">-->
-					<!--			<h3>Pre-Book Product</h3>-->
-					<!--			<button id="closePrebookModal" class="close-modal">&times;</button>-->
-					<!--		</div>-->
-					<!--		<div class="modal-body">-->
-					<!--			<p>This item is currently out of stock. You can pre-book it now and we’ll notify you when it's available.</p>-->
-					<!--			<form action="" method="POST">-->
-					<!--				@csrf-->
-					<!--				<div class="mb-3">-->
-					<!--					<label for="prebookEmail">Your Email</label>-->
-					<!--					<input type="email" id="prebookEmail" name="email" required class="modal-input">-->
-					<!--				</div>-->
-					<!--				<button type="submit" class="btn btn-success w-100">Confirm Pre-Booking</button>-->
-					<!--			</form>-->
-					<!--		</div>-->
-					<!--	</div>-->
-					<!--</div>-->
+				
 					<div id="prebookModal" class="modal-overlay">
                         <div class="modal-box">
                             <div class="modal-header">
@@ -742,11 +795,14 @@
 	document.addEventListener("DOMContentLoaded", function () {
 	const timerEl = document.querySelector('.countdown-timer');
 	const buttonsEl = document.getElementById('purchaseButtons');
+	const buttonsby = document.getElementById('buyButtons');
 	const footer = document.getElementById('footer');
 
 	if (buttonsEl) {
 		buttonsEl.style.display = 'none';
+		buttonsby.style.display = 'none';
 		buttonsEl.style.opacity = '0';
+		buttonsby.style.opacity = '0';
 	}
 
 	let timerEnded = false;
@@ -756,6 +812,9 @@
 			buttonsEl.style.display = 'flex';
 			buttonsEl.style.opacity = '1';
 			buttonsEl.style.pointerEvents = 'auto';
+			buttonsby.style.display = 'flex';
+			buttonsby.style.opacity = '1';
+			buttonsby.style.pointerEvents = 'auto';
 		}
 	}
 

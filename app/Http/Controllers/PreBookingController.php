@@ -1,23 +1,13 @@
 <?php
 
-
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PreBooking;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller; // ✅ This line ensures Controller is recognized
 
 class PreBookingController extends Controller
 {
-    /**
-     * Store a new pre-booking.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $product_id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request, $product_id)
     {
         $user = Auth::user();
@@ -41,5 +31,12 @@ class PreBookingController extends Controller
 
         return back()->with('success', 'Product pre-booked successfully!');
     }
+
+// app/Http/Controllers/PreBookingController.php
+public function index()
+{
+    $preBookings = PreBooking::with(['user', 'product'])->latest()->get();
+    return view('admin.preBooking', compact('preBookings'));
 }
 
+}

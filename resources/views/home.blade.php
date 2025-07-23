@@ -28,7 +28,6 @@
 	font-weight: 600;
 	margin: 0;
 	}
-
 	.timer-value {
 	animation: pulse 1.2s infinite ease-in-out;
 	}
@@ -44,6 +43,131 @@
 	.limited-content-overlay {
 	padding: 40px;
 	text-align: center;
+	}
+	.badge-wrapper {
+	position: absolute;
+	top: 8px; 
+	left: 8px; 
+	z-index: 10;
+	display: flex;
+	flex-direction: row;
+	gap: 4px; 
+	justify-content: space-between;
+	width: 100%;
+	padding-right: 15px;
+	}
+	.product-badge {
+	font-size: 0.75rem;
+	font-weight: 500;
+	border-radius: 50rem;
+	padding: 0.25rem 0.5rem;
+	width: fit-content;
+	}
+	.limited-badge {
+	background-color: #6b46c1;
+	color: #ffffff;
+	}
+	.in-stock-badge {
+	background-color: #28A745;
+	color: white;
+	}
+	.out-stock-badge {
+	background-color: #DC3545;
+	color: white;
+	}
+	.timer-container {
+	width: 100%;
+	background-color: #fffaf0;
+	color: #9c4221;
+	padding: 0.75rem;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 0.5rem;
+	text-align: center;
+	display: grid;
+	position: absolute;
+	z-index: 9;
+	bottom: 96px;
+	border-radius: 0;
+	background: transparent;
+	border: none !important;
+	backdrop-filter: blur(20px);
+	}
+	.timer-expired-message {
+	background-color: #e0f2f7;
+	border: 1px solid #b2ebf2;
+	color: #00838f;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	margin: 1rem 0;
+	font-weight: 600;
+	text-align: center;
+	}
+	.timer-part {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: #ffffffad;
+	color: #3103fc;
+	}
+	.timer-value {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: #6b46c1;
+	}
+	.timer-label {
+	font-size: 0.65rem;
+	text-transform: uppercase;
+	color: #b7791f;
+	letter-spacing: 0.05em;
+	}
+	.product-availability {
+	display: inline-block;
+	padding: 8px 16px;
+	border-radius: 4px;
+	font-size: 14px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-inline: auto;
+	width: 100%;
+	background-color: #ffeeee;
+	color: #d32f2f;
+	border: 1px solid #ffcdcd;
+	}
+	.product-availability.available {
+	background-color: #e8f5e9;
+	color: #2e7d32;
+	border: 1px solid #c8e6c9;
+	}
+	.faq-section {
+	background-color: #faf7f2;
+	}
+	.accordion-button {
+	background-color: white;
+	color: #333;
+	font-weight: 500;
+	padding: 1.25rem;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+	border-radius: 8px !important;
+	}
+	.accordion-button:not(.collapsed) {
+	background-color: white;
+	color: #b78d65;
+	box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+	}
+	.accordion-button:focus {
+	box-shadow: 0 0 0 0.25rem rgba(183, 141, 101, 0.25);
+	border-color: #b78d65;
+	}
+	.accordion-body {
+	padding: 1.5rem;
+	background-color: white;
+	border-radius: 0 0 8px 8px;
+	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+	}
+	.accordion-item {
+	border-radius: 8px;
+	overflow: hidden;
 	}
 </style>
 @section('content')
@@ -97,54 +221,56 @@ $activeBanner = $banners->where('is_active', true)->first();
 	@endif
 </section>
 @endif
-<!-- Script -->
-
 <!--Banner section Ends -->
 <section class="carousel" aria-label="hero banner carousel">
-	<p class="sr-only">This is a carousel with auto-rotating slides. Activate any of the buttons to disable rotation. Use Next and Previous buttons to navigate, or jump to a slide using the slide dots.</p>
-	<!-- Pause/resume button -->
-	<!-- Previous button -->
-	<button class="previous-button is-control">
-	<span class="fas fa-angle-left" aria-hidden="true"></span>
-	<span class="sr-only">Previous slide</span>
-	</button>
-	<div class="slides">
-		@foreach ($limitedEditionBanners as $index => $banner)
-		<div class="slide position-relative" role="group" aria-label="slide {{ $index + 1 }} of {{ $limitedEditionBanners->count() }}">
-			<img src="{{ asset('storage/products/' . $banner->image) }}" class="background-image w-100" alt="{{ $banner->title }}">
-			{{-- Content Overlay --}}
-			<div class="limited-content-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white" style="background: rgba(0,0,0,0.5);">
-				<h2 class="timer-text mb-4">⏳ Limited Time Offer</h2>
-				<div class="d-flex flex-wrap justify-content-center gap-3 px-3 w-100">
-					@foreach($products->where('add_timer', true)->where('timer_end_at', '>', now())->take(5) as $product)
-					<a href="/product_details/{{ $product->id }}" class="text-decoration-none text-white">
-						<div class="card bg-light text-dark" style="width: 180px;">
-							<div class="card-body text-center p-2">
-								<h6 class="fw-semibold text-truncate" style="font-size: 0.95rem">{{ $product->productName }}</h6>
-								@if($product->add_timer && $product->timer_end_at)
-								<div class="countdown-timer text-danger small fw-bold"
-									data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
-									<span class="time-remaining">--:--:--</span>
-								</div>
-								@endif
-							</div>
-						</div>
-					</a>
-					@endforeach
-				</div>
-			</div>
-		</div>
-		@endforeach
-	</div>
-
-	<!-- Next button -->
-	<button class="next-button is-control">
-	<span class="fas fa-angle-right" aria-hidden="true"></span>
-	<span class="sr-only">Next slide</span>
-	</button>
+    <p class="sr-only">This is a carousel with auto-rotating slides. Activate any of the buttons to disable rotation. Use Next and Previous buttons to navigate, or jump to a slide using the slide dots.</p>
+    <!-- Previous button -->
+    <button class="previous-button is-control">
+        <span class="fas fa-angle-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous slide</span>
+    </button>
+    <div class="slides">
+        @foreach ($limitedEditionBanners as $index => $banner)
+            @if($banner->products->isNotEmpty())
+            <div class="slide position-relative" role="group" aria-label="slide {{ $index + 1 }} of {{ $limitedEditionBanners->count() }}">
+                <img src="{{ asset('storage/products/' . $banner->image) }}" class="background-image w-100" alt="{{ $banner->title }}">
+                {{-- Content Overlay --}}
+                <div class="limited-content-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white" style="background: rgba(0,0,0,0.5);">
+                    <h2 class="timer-text mb-4">⏳ Limited Time Offer</h2>
+                    <div class="d-flex flex-wrap justify-content-center gap-3 px-3 w-100">
+                        @foreach($banner->products->take(5) as $product)
+                            <a href="/product_details/{{ $product->id }}" class="text-decoration-none text-white">
+                                <div class="card bg-light text-dark" style="width: 180px;">
+                                    <div class="card-body text-center p-2">
+                                        <img src="{{ asset('storage/products/' . $product->image1) }}" 
+                 alt="{{ $product->productName }}"
+                 class="w-100 h-100 object-fit-cover"
+                 style="object-fit: cover;">
+                                        <h6 class="fw-semibold text-truncate" style="font-size: 0.95rem">{{ $product->productName }}</h6>
+                                        @if($product->add_timer && $product->timer_end_at)
+                                        <div class="countdown-timer text-danger small fw-bold"
+                                            data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
+                                            <span class="time-remaining">--:--:--</span>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+        @endforeach
+    </div>
+    <!-- Next button -->
+    <button class="next-button is-control">
+        <span class="fas fa-angle-right" aria-hidden="true"></span>
+        <span class="sr-only">Next slide</span>
+    </button>
 </section>
-{{-- product section --}}
 
+{{-- product section --}}
 <section class="position-relative w-100 mb-5" style="padding: 0;">
 	<!-- Scroll Buttons -->
 	<button onclick="scrollToLeft()" class="btn position-absolute start-0 top-50 translate-middle-y px-2 py-2 shadow-sm" style="z-index: 10; background-color: #1c1b33; color: white;">
@@ -157,9 +283,16 @@ $activeBanner = $banners->where('is_active', true)->first();
 		@foreach($products as $product)
 		<a href="/product_details/{{ $product->id }}" class="text-decoration-none text-dark">
 			<div class="card product-card bg-white shadow-sm">
-				<!-- NEW Badge -->
-				<span class="position-absolute top-0 start-0 m-2 badge text-dark small fw-medium bg-success {{ $product->stock ? '' : 'bg-danger text-white' }} text-white rounded-pill px-2 py-1" style="width: fit-content; z-index: 10;">{{ $product->stock ? 'In Stock' : 'Out of Stock' }}</span>
-				<!-- Images -->
+				<div class="badge-wrapper">
+					@if($product->add_timer == 1)
+					<span class="product-badge limited-badge">
+					Limited Edition
+					</span>
+					@endif
+					<span class="product-badge {{ $product->stock ? 'in-stock-badge' : 'out-stock-badge' }}">
+					{{ $product->stock ? 'In Stock' : 'Out of Stock' }}
+					</span>
+				</div>
 				<div class="product-img-wrapper">
 					<img src="{{ asset('storage/products/' . $product->image1) }}" class="img-front" alt="{{ $product->productName }}">
 					@if($product->image2)
@@ -167,14 +300,12 @@ $activeBanner = $banners->where('is_active', true)->first();
 					@else
 					<img src="{{ asset('storage/products/' . $product->image1) }}" class="img-back" alt="{{ $product->productName }} Hover">
 					@endif
-					<div class="lock-icon add-to-cart-btn" data-product-id="{{ $product->id }}">
+					<div class="lock-icon add-to-cart-btn" id="add-to-cart-{{ $product->id }}" data-product-id="{{ $product->id }}" style="{{ ($product->add_timer && $product->timer_end_at) ? 'display: none;' : '' }}">
 						<i class="fa-solid fa-lock text-white small"></i>
 					</div>
 				</div>
-				<!-- Content -->
 				<div class="card-body px-2 py-3">
 					<h6 class="product_name">{{ $product->productName }}</h6>
-					<!--<p class="text-muted small mb-2">₹ {{ $product->price }}</p>-->
 					<div class="d-flex align-items-center justify-content-between mt-2">
 						<div>
 							<span class="discountPrice fw-bold fs-6">₹{{ $product->discountPrice }}</span>
@@ -192,17 +323,29 @@ $activeBanner = $banners->where('is_active', true)->first();
 					@endif
 				</div>
 				@if($product->stock)
-				{{-- Show Product Name --}}
-				<h1 class="product-name">{{ $product->name }}</h1>
-				{{-- Show Timer if applicable --}}
 				@if($product->add_timer && $product->timer_end_at)
-				<div class="px-2 pb-2">
-					<div class="countdown-timer text-danger small fw-bold"
-						data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
-						<span class="time-remaining">--:--:--</span>
+				<div class="timer-container" id="timer-{{ $product->id }}"
+					data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
+					<div class="timer-part">
+						<span class="timer-value days">00</span>
+						<span class="timer-label">Days</span>
+					</div>
+					<div class="timer-part">
+						<span class="timer-value hours">00</span>
+						<span class="timer-label">Hrs</span>
+					</div>
+					<div class="timer-part">
+						<span class="timer-value minutes">00</span>
+						<span class="timer-label">Mins</span>
+					</div>
+					<div class="timer-part">
+						<span class="timer-value seconds">00</span>
+						<span class="timer-label">Secs</span>
 					</div>
 				</div>
 				@endif
+				@else
+				<!--<div class="product-availability">Product Not Available</div>-->
 				@endif
 			</div>
 		</a>
@@ -449,8 +592,6 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 	</div>
 </section>
 {{-- golden jwellery start --}}
-
-
 {{-- Vedaro about  start --}}
 <section class="bg-white px-3 py-5" style="background-color: #FDFBF9;">
 	<div class="container px-3 px-md-5">
@@ -514,6 +655,104 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 	</div>
 </section>
 {{-- Vedaro advertise products end --}}
+{{--FAQ Section --}}
+<section class="faq-section py-5">
+	<div class="container">
+		<h2 class="text-center mb-5">Frequently Asked Questions</h2>
+		<div class="accordion" id="faqAccordion">
+			<!-- Question 1 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingOne">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+					What materials are used in Vedaro jewellery?
+					</button>
+				</h3>
+				<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						Our jewellery is crafted using high-quality materials including 925 sterling silver, 
+						14k and 18k gold (both solid and plated options), genuine gemstones, and ethically 
+						sourced diamonds. Each piece is nickel-free and hypoallergenic for sensitive skin.
+					</div>
+				</div>
+			</div>
+			<!-- Question 2 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					How do I determine my ring size?
+					</button>
+				</h3>
+				<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						You can use our printable ring size guide available on the product page, or visit 
+						any local jeweler for professional sizing. We also offer free resizing within 
+						30 days of purchase for most of our rings.
+					</div>
+				</div>
+			</div>
+			<!-- Question 3 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingThree">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+					What is your return policy?
+					</button>
+				</h3>
+				<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						We offer a 30-day return policy for unworn, undamaged jewellery with original 
+						packaging and tags. Custom pieces and engraved items are final sale. Returns are 
+						processed within 3-5 business days after we receive the item.
+					</div>
+				</div>
+			</div>
+			<!-- Question 4 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingFour">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+					How should I care for my jewellery?
+					</button>
+				</h3>
+				<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						<ul>
+							<li>Store pieces separately in soft pouches to prevent scratches</li>
+							<li>Remove jewellery before swimming, showering, or applying cosmetics</li>
+							<li>Clean with a soft, lint-free cloth after each wear</li>
+							<li>For deeper cleaning, use a mild soap solution and soft brush</li>
+							<li>Avoid exposure to harsh chemicals, perfumes, and chlorinated water</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- Question 5 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingFive">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+					Do you offer international shipping?
+					</button>
+				</h3>
+				<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						Yes, we ship worldwide via DHL Express. International orders may be subject to 
+						customs fees and import taxes which are the responsibility of the customer. 
+						Delivery times vary by destination but typically range from 3-7 business days 
+						after dispatch.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 {{-- vedaro detailing  --}}
 <section class=" py-5 px-3" style="background-color: #FDF1E7;">
 	<div class="container mx-auto row g-4 text-center" style="max-width: 1140px">
@@ -556,36 +795,63 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 		</div>
 	</div>
 </section>
-{{-- Organic section --}}
-{{-- 
-<section class="organic_section">
-	<div class="center_wr">
-		<div class="wi_ce">
-			<h5>Explore our</h5>
-			<h2> <span>Vast Range </span> of products</h2>
-			<p class="inline-bullets">
-				<span>• Puja Samagri Online</span>
-				<span>• Spiritual Healing Products</span>
-				<span>• Mahashivratri Essentials</span>
-				<span>• Hindu Puja Accessories</span>
-			</p>
-			<style>
-				.inline-bullets span {
-				display: inline-block;
-				margin-right: 10px;
-				}
-			</style>
-			<button class="main_button">Explore Products</button>
-		</div>
-	</div>
-</section>
---}}
-{{-- some detailing ends --}}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 <script src="{{ asset('public/assets/js/home.js') }}"></script>
+<script>
+	// Countdown timer function
+	function updateCountdownTimers() {
+	    const now = new Date().getTime();
+	
+	    document.querySelectorAll('.timer-container').forEach(timerContainer => {
+	        const productId = timerContainer.id.replace('timer-', '');
+	        const endTimeAttribute = timerContainer.dataset.endTime;
+	        const addToCartButton = document.getElementById(`add-to-cart-${productId}`);
+	
+	        // If no end time is set, hide the timer and show the "Add to Cart" button.
+	        if (!endTimeAttribute || endTimeAttribute === '') {
+	            timerContainer.style.display = 'none';
+	            if (addToCartButton) {
+	                addToCartButton.style.display = 'flex'; // Use flex since it's a lock-icon with text
+	            }
+	            return;
+	        }
+	
+	        const endTime = parseInt(endTimeAttribute) * 1000;
+	        const distance = endTime - now;
+	
+	        if (distance < 0) {
+	            // Timer has ended
+	            timerContainer.style.display = 'none';
+	            if (addToCartButton) {
+	                addToCartButton.style.display = 'flex'; // Show "Add to Cart" button
+	            }
+	        } else {
+	            // Timer is running
+	            timerContainer.style.display = 'grid'; // Show the timer grid
+	            if (addToCartButton) {
+	                addToCartButton.style.display = 'none'; // Hide "Add to Cart" button
+	            }
+	
+	            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	
+	            timerContainer.querySelector('.days').textContent = String(days).padStart(2, '0');
+	            timerContainer.querySelector('.hours').textContent = String(hours).padStart(2, '0');
+	            timerContainer.querySelector('.minutes').textContent = String(minutes).padStart(2, '0');
+	            timerContainer.querySelector('.seconds').textContent = String(seconds).padStart(2, '0');
+	        }
+	    });
+	}
+	
+	// Initialize and update timers every second
+	updateCountdownTimers();
+	setInterval(updateCountdownTimers, 1000);
+</script>
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
 	const timers = document.querySelectorAll(".countdown-timer");
@@ -617,7 +883,6 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 	});
 	});
 </script>
-<!--Add to cart and update cart script-->
 <script>
 	$(document).ready(function () {
 	$('.add-to-cart-btn').on('click', function (e) {

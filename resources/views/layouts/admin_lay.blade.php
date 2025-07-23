@@ -18,7 +18,8 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+         <!--FavIcon-->
+      <link rel="icon" type="image/png" href="{{ asset('public/assets/images/VEDARO_logo.png') }}">
 		    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 
   <style>
@@ -347,26 +348,35 @@
       </li>
     </ul>
   </li>
+  
   <li class="nav-item">
     <a href="{{ route('limited-banners.index') }}" class="nav-link">
         <i class="fas fa-fire text-danger"></i> <!-- Icon -->
         <span class="ms-2">Limited Edition</span>
     </a>
-</li>
-
+  </li>
+  
   <li>
-    <a href="/admin/registered-users">
+    <a href="/admin/pre-bookings">
       <i class="fas fa-users"></i>
-      <span>Users</span>
+      <span>Pre-Booking</span>
     </a>
   </li>
+
   <li>
     <a href="{{route('admin.inquiries.index')}}">
       <i class="fas fa-users"></i>
       <span>Users Inquiry</span>
     </a>
   </li>
-
+  
+  <li>
+    <a href="/admin/registered-users">
+      <i class="fas fa-users"></i>
+      <span>Users</span>
+    </a>
+  </li>
+  
   <li>
     <a href="#">
       <i class="fas fa-user-circle"></i>
@@ -376,7 +386,7 @@
   
     <li>
     <a href="#">
-  <form action="{{ route('admin.logout') }}" method="POST">
+    <form action="{{ route('admin.logout') }}" method="POST">
     @csrf
     <button type="submit" class="dropdown-item">
         <i class="fas fa-sign-out-alt me-2"></i> Logout

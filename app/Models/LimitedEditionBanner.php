@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class LimitedEditionBanner extends Model
 {
     protected $fillable = ['title', 'description', 'image'];
+    
+    
+    
 }
+
+
