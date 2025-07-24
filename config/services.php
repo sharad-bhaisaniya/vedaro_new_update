@@ -40,6 +40,10 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
-
+    'aisensy' => [
+        'api_key' => env('AISENSY_API_KEY'),
+        'template_name' => env('AISENSY_TEMPLATE_NAME'),
+        'campaign_name' => env('AISENSY_API_CAMPAIGN_NAME'),
+    ],
 
 ];

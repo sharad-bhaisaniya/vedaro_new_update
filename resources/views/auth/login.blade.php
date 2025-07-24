@@ -3,6 +3,17 @@
 @section('title', 'Login')
 
 @section('content')
+
+@if(session('error'))
+    <div class="error-message">
+        {{ session('error') }}
+        @if(config('app.debug'))
+            <div class="debug-info" style="margin-top: 10px; font-size: 12px; color: #666;">
+                Debug Info: {{ session('debug_error') }}
+            </div>
+        @endif
+    </div>
+@endif
 <div class="user_login_form">
     <h2>Login</h2>
     @if(session('error'))
@@ -38,18 +49,24 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 
+    <div class="mt-3">
+        <a href="{{ route('login-with-otp') }}" class="btn btn-outline-primary">
+            Login with WhatsApp OTP
+        </a>
+    </div>
+
     <a href="{{ route('login.google') }}">
         <button type="button" class="login-with-google-btn">Sign in with Google</button>
     </a>
-
 
     <div class="auth-links">
         <a href="{{ '/register' }}">Create new account</a>
         <a href="{{ '/forgot-password' }}" class="forgot-password-link">Forgot Password?</a>
     </div>
 </div>
+@endsection
 
-        <style>
+    <style>
             
 /* Center the login form on the page */
 .user_login_form {
@@ -256,4 +273,3 @@ button[type="submit"]:hover {
 
 
         </style>
-@endsection

@@ -110,8 +110,8 @@
 
     /* Improve checkout button styling */
     #rzp-button {
-        /*background-color: #2B2542;*/
-                background-color: #65c6be;
+       
+        background-color: #2D3748;
         color: #fff;
         padding: 12px 25px;
         font-size: 15px;
@@ -251,7 +251,7 @@
     }
 
     #rzp-button {
-        background: #65c6be;
+       
     
         color: white;
         padding: 12px 25px;
@@ -264,7 +264,7 @@
     }
 
     #rzp-button:hover {
-        background: #241d3f;
+        background: #6B46C1;
     }
     .banner-checkout{
          margin-top: 140px;

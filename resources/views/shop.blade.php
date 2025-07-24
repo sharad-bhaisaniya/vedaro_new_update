@@ -340,7 +340,7 @@
     
     <div class="row">
         <!-- Sidebar -->
-        <aside class="col-md-4">
+        <aside class="col-md-3">
             <div class="p-3 border rounded bg-light">
                 <h5 class="mb-4 text-uppercase text-center" style="font-weight: bold; color: #b08d57;">Jewellery Categories</h5>
                 <ul class="list-group list-group-flush">
@@ -361,7 +361,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="col-md-8">
+        <main class="col-md-9">
             <h4 class="mb-4 text-uppercase" style="color: #b08d57; font-weight: bold;">
                 @if(request('category'))
                     {{ $currentCategoryName ?? 'Selected Category' }} Products

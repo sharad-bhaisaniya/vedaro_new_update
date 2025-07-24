@@ -55,6 +55,15 @@
         border-radius: 5px;
         animation: congrats-animation 2s ease-in-out infinite, bounce 1.5s ease-in-out infinite;
     }
+    .proceed ,  .coupon{
+        background: #2D3748;
+        transition: all .5s ease-in-out;
+        
+    }
+    .proceed:hover ,  .coupon:hover{
+        background: #6B46C1;
+    }
+
 
     /* Congrats Animation - Initial Bounce */
     @keyframes congrats-animation {
@@ -185,7 +194,7 @@
                             @endforeach
                     </tbody>
                 </table>
-                <button class="update-cart">Update Cart</button>
+                <!--<button class="update-cart">Update Cart</button>-->
             </div>
         @else
             <p style="text-align: center;">Your cart is empty.</p>
@@ -251,7 +260,7 @@
     <div class="coupon-section">
         <label for="coupon-code">Coupon:</label>
         <input type="text" id="coupon-code" placeholder="Enter Coupon Code">
-        <button class="apply-coupon">Apply Coupon</button>
+        <button class="apply-coupon coupon">Apply Coupon</button>
     </div>
 </div>
 
@@ -276,7 +285,7 @@
             </div>
         </div>
     </div>
-    <a href="/checkout" class="apply-coupon">Proceed To Checkout</a>
+    <a href="/checkout" class="apply-coupon proceed">Proceed To Checkout</a>
 </div>
 
 

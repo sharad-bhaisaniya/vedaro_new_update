@@ -28,11 +28,13 @@ use App\Http\Controllers\LimitedEditionBannerController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminAuthController;
 use App\Mail\WelcomeMail;
-
-// ---------------------------------------------------------------------
-// IMPORTANT: "Coming Soon" Mode - Routes that MUST be accessible
-// Place these routes at the very top so they are matched BEFORE the catch-all.
-// ---------------------------------------------------------------------
+use App\Http\Controllers\Auth\OtpController;
+// OTP Authentication Routes
+Route::get('/login-with-otp', [OtpController::class, 'showLoginWithOtpForm'])->name('login-with-otp');
+Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send-otp');
+Route::get('/verify-otp', [OtpController::class, 'showVerifyOtpForm'])->name('verify-otp');
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('verify-otp');
+Route::post('/resend-otp', [OtpController::class, 'sendOtp'])->name('resend-otp');
 
 // The "Coming Soon" Page Itself - MUST be accessible
 Route::get('/comming_soon', function () {
@@ -65,34 +67,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-    // NOTE: Other admin routes within this group (like /admin/dashboard) will
-    // still be caught by the catch-all below unless you specifically list them here.
-    // However, if an admin logs in, they will hit the /admin/dashboard, which will then
-    // be redirected unless you are *only* in maintenance mode for public access.
-    // For full admin access during maintenance, you'd disable the catch-all.
 });
 
-
-// ---------------------------------------------------------------------
-// CATCH-ALL REDIRECT TO "COMMING SOON"
-// Any request that does NOT match a route defined *above* this line
-// will be redirected to the /comming_soon page.
-// ---------------------------------------------------------------------
-// Route::any('{any}', function () {
-//     return redirect('/comming_soon');
-// })->where('any', '.*');
-
-
-// ---------------------------------------------------------------------
-// ALL ORIGINAL ROUTES BELOW THIS POINT
-// These routes are preserved but will be redirected to /comming_soon
-// by the catch-all route above, unless explicitly exempted by being placed
-// BEFORE the catch-all as shown above.
-// ---------------------------------------------------------------------
-
-// -----------------------------------------------
-// Public Routes (Shop, Order Status, etc.)
-// -----------------------------------------------
 
 Route::get('/home', function () {
     return view('home');
@@ -164,10 +140,7 @@ Route::get('/user-profile', [HomeController::class, 'showProfile'])->name('user_
 // -----------------------------------------------
 
 Route::prefix('admin')->group(function () {
-    // Admin login/logout routes are defined above this catch-all for accessibility.
 
-    // Protected Admin Routes (These will still be redirected by the catch-all unless
-    // you temporarily comment out the Route::any() line or add them specifically above)
     Route::middleware(['auth:admin'])->group(function () {
         // Admin dashboard
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -225,15 +198,12 @@ Route::post('/login', [AuthController::class, 'login']); // Handle login
 // Logout route
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout'); // Logout route
 
-
-
 // Home route (Authenticated)
 Route::get('/home2', [HomeController::class, 'ShowOnHome'])->name('home');
 
 Route::get('/', function () {
     return view('comming_soon');
 });
-
 
 
 Route::get('/admin', function () {
@@ -277,8 +247,6 @@ Route::get('/fetch-categories', [HomeController::class, 'fetchCategories'])->nam
 // Cart Routes (Adding, Updating, Removing items)
 // -----------------------------------------------
 
-// Cart view and management
-// Example of correct routing
 Route::get('/cart', [CartController::class, 'cart_view'])->name('cart');
 
 // Add to cart functionality
@@ -304,8 +272,6 @@ Route::post('/cart/apply-coupon', [CartController::class, 'applyCoupon'])->name(
 
 Route::get('/checkout', [CartController::class, 'checkout_view'])->name('cart.checkout_view');
 Route::get('/checkout-single/{product_id}', [CartController::class, 'singleCheckoutView'])->name('checkout.single');
-
-
 Route::post('/checkout', [CartController::class, 'store_address'])->name('add.address');
 
 // ----------------------------------------users profile----------------------------------------------
@@ -319,9 +285,7 @@ Route::middleware('auth')->get('/profile', [ProfileController::class, 'show']);
 // --------------------------------------------------------------------------------------------------
 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-
 Route::get('/product_details/{id}', [ReviewController::class, 'showProductDetails'])->name('product.details');
-
 
 // ----------------------------------------pay U money----------------------------------------------
 Route::get('pay-u-money-view', [PayUMoneyController::class, 'payUMoneyView'])->name('pay.u.money.view');
@@ -335,8 +299,6 @@ Route::group(['middleware' => []], function () {
 
 // ----------------------------------------pay U money----------------------------------------------
 
-
-
 Route::get('verify-otp', [AuthController::class, 'verifyOtp'])->name('verify-otp');
 Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/resend-otp', [AuthController::class, 'resendOtp'])->name('resend-otp');
@@ -347,11 +309,7 @@ Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('
 Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
-
-
-// web.php
 Route::get('order-status/{order_id}', [OrderController::class, 'showStatus'])->name('order.status');
-// web.php
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.page');
 
 
@@ -360,15 +318,12 @@ Route::get('track-order/{awbNo}', [OrderController::class, 'trackOrder']);
 
 Route::middleware('auth')->get('/checkout', [CartController::class, 'checkout_view'])->name('checkout');
 
-
-
 Route::post('/address', [UserAddressController::class, 'store'])->name('address.store');
 
 Route::get('/address', [UserAddressController::class, 'showForm'])->name('address.form');
 
 Route::get('/login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
-
 
 // --------------------------------------Order Routes------------------------------------------------------------
 
@@ -386,8 +341,6 @@ Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store
 Route::get('/product_details/{id}', [ReviewController::class, 'showProductDetails'])->name('product.details');
 
 
-
-
 // Initiate Razorpay order (AJAX call from frontend)
 Route::post('/razorpay/initiate', [RazorpayController::class, 'initiatePayment'])->name('razorpay.initiate');
 
@@ -400,21 +353,15 @@ Route::get('/thank-you', [RazorpayController::class, 'thankYouPage'])->name('raz
 
 // Banner Routes------------------------------------------------------------use App\Http\Controllers\BannerController;
 
-
 Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
 Route::get('/banners/create', [BannerController::class, 'create'])->name('banners.create');
 Route::post('/banners', [BannerController::class, 'store'])->name('banners.store');
 Route::patch('/banners/{id}/activate', [BannerController::class, 'activate'])->name('banners.activate');
 Route::delete('/banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
 
-
-
 // All categories Page products
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories_page');
-
-
-
 
 // User Inquiry Routes
 Route::get('/admin/inquiries', [InquiryController::class, 'index'])->name('admin.inquiries.index');
@@ -444,11 +391,9 @@ Route::post('/prebook/{product_id}', [PreBookingController::class, 'store'])->na
 
 Route::resource('limited-banners', LimitedEditionBannerController::class);
 
-
 // Update Addresses store
 Route::middleware(['auth'])->group(function () {
     Route::post('/address/store', [AddressController::class, 'store'])->name('user.address.store');
-
     Route::get('/address/list', [AddressController::class, 'index'])->name('address.index');
     Route::post('/user/address/update', [AddressController::class, 'update'])->name('user.address.update');
     Route::post('/address/set-default/{id}', [AddressController::class, 'setDefault'])->name('address.setDefault');

@@ -90,7 +90,14 @@
             </div>
             <div class="card-body">
                 <div class="products-grid flex-wrap">
-                    @forelse($unassignedProducts as $product)
+             
+                                    @forelse($unassignedProducts as $product)
+                    @php
+                        $timerEnd = \Carbon\Carbon::parse($product->timer_end_at);
+                        $showProduct = $product->timer_end_at && \Carbon\Carbon::now()->lt($timerEnd);
+                    @endphp
+                
+                    @if($showProduct)
                         <div class="product-card border p-2" draggable="true"
                              data-id="{{ $product->id }}" ondragstart="onDrag(event)">
                             <div class="product-image-wrapper">
@@ -103,14 +110,16 @@
                                         <span class="text-muted text-decoration-line-through">${{ number_format($product->old_price, 2) }}</span>
                                         <span class="text-success">${{ number_format($product->price, 2) }}</span>
                                     @else
-                                        ${{ number_format($product->price ?? 0, 2) }}
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="alert alert-info w-100">No products available.</div>
-                    @endforelse
+                        ${{ number_format($product->price ?? 0, 2) }}
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+@empty
+    <div class="alert alert-info w-100">No products available.</div>
+@endforelse
+
                 </div>
             </div>
         </div>
