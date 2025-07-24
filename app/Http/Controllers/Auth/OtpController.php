@@ -28,35 +28,77 @@ class OtpController extends Controller
     public function sendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|digits_between:10,15|exists:users,phone',
+            'phone' => 'required|string|min:10',
+            'action' => 'required|in:login,register',
         ]);
 
+        if ($request->action === 'register') {
+            $validator->sometimes('name', 'required|string|max:255', function ($input) {
+                return $input->action === 'register';
+            });
+            
+            $validator->sometimes('email', 'nullable|email|unique:users,email', function ($input) {
+                return $input->action === 'register';
+            });
+            
+            // Check if phone already exists for registration
+            if (User::where('phone', $request->phone)->exists()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'This phone number is already registered. Please login instead.');
+            }
+        } else {
+            // For login, check if phone exists
+            if (!User::where('phone', $request->phone)->exists()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Phone number not found. Please register first.');
+            }
+        }
+
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $otp = rand(100000, 999999);
         Session::put('otp_phone', $request->phone);
         Session::put('otp_code', $otp);
         Session::put('otp_expires_at', now()->addMinutes(10));
-
-        // Send OTP via WhatsApp
-        $sent = $this->aiSensyService->sendOtp($request->phone, $otp);
-
-        if (!$sent) {
-            return redirect()->back()->with('error', 'Failed to send OTP. Please try again.');
+        
+        // Store registration data if this is a registration
+        if ($request->action === 'register') {
+            Session::put('registration_data', [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ]);
         }
 
-        return redirect()->route('verify-otp')->with('success', 'OTP has been sent to your WhatsApp.');
+        // Send OTP via WhatsApp
+       // Send OTP via WhatsApp
+        $result = $this->aiSensyService->sendOtp($request->phone, $otp);
+        
+        if (!is_array($result) || !isset($result['success']) || !$result['success']) {
+            return redirect()->back()
+                ->with('error', 'Failed to send OTP: ' . ($result['message'] ?? 'Unknown error occurred.'))
+                ->withInput();
+        }
+
+
+        return redirect()->route('verify-otp')
+            ->with('success', 'OTP has been sent to your WhatsApp.');
     }
 
     public function showVerifyOtpForm()
     {
         if (!Session::has('otp_phone')) {
-            return redirect()->route('login-with-otp')->with('error', 'Please request a new OTP.');
+            return redirect()->route('login-with-otp')
+                ->with('error', 'Please request a new OTP.');
         }
 
-        return view('auth.wh-verify-otp');
+        return view('auth.verify-otp');
     }
 
     public function verifyOtp(Request $request)
@@ -66,25 +108,44 @@ class OtpController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+            return redirect()->back()
+                ->withErrors($validator);
         }
 
         if (!Session::has('otp_phone') || !Session::has('otp_code') || !Session::has('otp_expires_at')) {
-            return redirect()->route('login-with-otp')->with('error', 'OTP session expired. Please request a new OTP.');
+            return redirect()->route('login-with-otp')
+                ->with('error', 'OTP session expired. Please request a new OTP.');
         }
 
         if (now()->gt(Session::get('otp_expires_at'))) {
-            return redirect()->back()->with('error', 'OTP has expired. Please request a new one.');
+            return redirect()->back()
+                ->with('error', 'OTP has expired. Please request a new one.');
         }
 
         if ($request->otp != Session::get('otp_code')) {
-            return redirect()->back()->with('error', 'Invalid OTP. Please try again.');
+            return redirect()->back()
+                ->with('error', 'Invalid OTP. Please try again.');
         }
 
-        $user = User::where('phone', Session::get('otp_phone'))->first();
-
-        if (!$user) {
-            return redirect()->route('login-with-otp')->with('error', 'User not found. Please register first.');
+        // Check if this was a registration flow
+        if (Session::has('registration_data')) {
+            $userData = Session::get('registration_data');
+            
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'phone' => $userData['phone'],
+                'password' => Hash::make(rand(100000, 999999)), // Random password since we're using OTP
+            ]);
+            
+            Session::forget('registration_data');
+        } else {
+            $user = User::where('phone', Session::get('otp_phone'))->first();
+            
+            if (!$user) {
+                return redirect()->route('login-with-otp')
+                    ->with('error', 'User not found. Please register first.');
+            }
         }
 
         Auth::login($user);
@@ -97,6 +158,7 @@ class OtpController extends Controller
             ? session('url.intended')
             : route('home');
 
-        return redirect()->to($redirectTo)->with('success', 'You are now logged in!');
+        return redirect()->to($redirectTo)
+            ->with('success', 'You are now logged in!');
     }
 }

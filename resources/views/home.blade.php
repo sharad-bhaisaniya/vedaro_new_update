@@ -335,71 +335,160 @@ $activeBanner = $banners->where('is_active', true)->first();
 </section>
 @endif
 <!--Banner section Ends -->
-<section class="carousel" aria-label="hero banner carousel">
+<section class="carousel" aria-label="hero banner carousel" style="    margin-bottom: 50px;">
     <p class="sr-only">This is a carousel with auto-rotating slides. Activate any of the buttons to disable rotation. Use Next and Previous buttons to navigate, or jump to a slide using the slide dots.</p>
     <!-- Previous button -->
     <button class="previous-button is-control">
         <span class="fas fa-angle-left" aria-hidden="true"></span>
         <span class="sr-only">Previous slide</span>
     </button>
-    <div class="slides">
-        @foreach ($limitedEditionBanners as $index => $banner)
-            @if($banner->products->isNotEmpty())
-            <div class="slide position-relative" role="group" aria-label="slide {{ $index + 1 }} of {{ $limitedEditionBanners->count() }}">
-                               
-                <img src="{{ asset('storage/products/' . $banner->image) }}" class="background-image w-100" alt="{{ $banner->title }}">
-                {{-- Content Overlay --}}
-                <div class="limited-content-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-white" style="background: rgba(0,0,0,0.5);">
-                     <!--<a href="/limited_edition">View all </a>-->
-                    <h2 class="timer-text mb-4">⏳ Limited Time Offer</h2>
-                    <div class="d-flex flex-wrap justify-content-center gap-3 px-3 w-100">
-                        @foreach($banner->products->take(5) as $product)
-                            <a href="/product_details/{{ $product->id }}" class="text-decoration-none text-white">
-                                <div class="card bg-light text-dark" style="width: 180px;">
-                                    <!--<div class="card-body limited-banner-card text-center p-2">-->
-                                    <!--    <img src="{{ asset('storage/products/' . $product->image1) }}" -->
-                                    <!--     alt="{{ $product->productName }}"-->
-                                    <!--     class="w-100 h-100 object-fit-cover"-->
-                                    <!--     style="object-fit: cover;">-->
-                                    <!--    <h6 class="fw-semibold text-truncate" style="font-size: 0.95rem">{{ $product->productName }}</h6>-->
-                                    <!--    @if($product->add_timer && $product->timer_end_at)-->
-                                    <!--    <div class="countdown-timer text-danger small fw-bold"-->
-                                    <!--        data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">-->
-                                    <!--        <span class="time-remaining">--:--:--</span>-->
-                                    <!--    </div>-->
-                                    <!--    @endif-->
-                                    <!--</div>-->
-                                    <div class="card-body limited-banner-card text-center p-2">
-    <!-- Image container with fixed width and height -->
-                                    <div class="img-container mx-auto mb-2" style="width: 150px; height: 150px; overflow: hidden;">
-                                        <img src="{{ asset('storage/products/' . $product->image1) }}" 
-                                             alt="{{ $product->productName }}"
-                                             class="w-100 h-100"
-                                             style="object-fit: cover;">
-                                    </div>
+   <div class="slides">
+    @foreach ($limitedEditionBanners as $index => $banner)
+        @if($banner->products->isNotEmpty())
+        <div class="slide position-relative" role="group" aria-label="slide {{ $index + 1 }} of {{ $limitedEditionBanners->count() }}">
 
-    <h6 class="fw-semibold text-truncate" style="font-size: 0.95rem">
-        {{ $product->productName }}
-    </h6>
+            <img src="{{ asset('storage/products/' . $banner->image) }}" class="background-image w-100" alt="{{ $banner->title }}" style="height: 600px; filter: brightness(0.5);">
 
-    @if($product->add_timer && $product->timer_end_at)
-        <div class="countdown-timer text-danger small fw-bold"
-             data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
-            <span class="time-remaining">--:--:--</span>
-        </div>
-    @endif
-</div>
+            <!-- Overlay Content -->
+            <div class="limited-content-overlay position-absolute top-0 start-0 w-100 h-100 d-flex text-white" style="background: rgba(0,0,0,0.6); gap: 3rem;">
 
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
+                <!-- Left side: Banner title and description -->
+                <div class="banner-text-container p-4 d-flex flex-column justify-content-center" style="flex: 1; max-width: 40%;">
+                    <h1 class="banner-title mb-3" style="font-size: 3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">{{ $banner->title }}</h1>
+                    <p class="banner-description mb-4" style="font-size: 1.5rem;">
+                        {{ $banner->description ?? 'To Make It Happen!' }}
+                    </p>
+                    <a href="/limited_edition" class="btn-view-all btn btn-warning btn-lg rounded-pill px-4 py-2" style="font-weight: 600; border: none; align-self: center;">View All Offers</a>
                 </div>
 
+                <!-- Right side: Product cards -->
+            <div class="product-cards-container d-flex flex-nowrap gap-4 p-3"
+     style="flex: 1; max-width: 60%; align-items: center; justify-content: flex-start; overflow-x: auto; overflow-y: hidden; -ms-overflow-style: none; scrollbar-width: none;">
+
+                    @foreach($banner->products->take(5) as $product)
+                        <a href="/product_details/{{ $product->id }}" class="product-card text-decoration-none text-white d-flex flex-column align-items-center rounded" style="
+                            background: rgba(255, 255, 255, 0.1);
+                            backdrop-filter: blur(10px);
+                            border: 1px solid rgba(255, 255, 255, 0.15);
+                            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                            width: 220px;
+                            padding: 1rem;
+                            overflow: hidden;
+                        ">
+                            <div class="img-container mb-2" style="width: 100%; height: 200px; overflow: hidden; border-radius: 1rem; position: relative;">
+                                <img 
+                                    src="{{ asset('storage/products/' . $product->image1) }}" 
+                                    alt="{{ $product->productName }}" 
+                                    style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;"
+                                >
+                                @if($product->add_timer && $product->timer_end_at)
+                                <div class="countdown-timer" style="
+                                    position: absolute;
+                                    top: 10px;
+                                    left: 10px;
+                                    background: rgba(255, 59, 48, 0.85);
+                                    color: white;
+                                    padding: 4px 10px;
+                                    border-radius: 20px;
+                                    font-size: 0.75rem;
+                                    font-weight: 600;
+                                ">
+                                    <i class="bi bi-clock me-1"></i>
+                                   @if($product->add_timer && $product->timer_end_at)
+                                    <div class="countdown-timer small fw-bold" style="background:none"
+                                         data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
+                                        <span class="time-remaining">--:--:--</span>
+                                    </div>
+                                @endif
+                                </div>
+                                @endif
+                            </div>
+                            <h5 class="product-name mt-3 mb-2" style="
+                                font-size: 1rem;
+                                font-weight: 600;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                margin: 0;
+                                width: 100%;
+                                text-align: center;
+                            ">
+                                {{ $product->productName }}
+                            </h5>
+                           
+                        </a>
+                    @endforeach
+                </div>
             </div>
-            @endif
-        @endforeach
-    </div>
+        </div>
+        @endif
+    @endforeach
+</div>
+
+
+
+
+<style>
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .limited-content-overlay {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
+        
+        .banner-text-container,
+        .product-cards-container {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        .banner-title {
+            font-size: 2.5rem !important;
+        }
+        
+        .banner-description {
+            font-size: 1.2rem !important;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .product-card {
+            width: 160px !important;
+        }
+        
+        .img-container {
+            height: 150px !important;
+        }
+        
+        .banner-title {
+            font-size: 2rem !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .product-card {
+            width: 140px !important;
+        }
+        
+        .img-container {
+            height: 140px !important;
+        }
+    }
+    
+    /* Hover effects */
+    .product-card:hover {
+        transform: translateY(-8px) scale(1.03) !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    .product-card:hover img {
+        transform: scale(1.08) !important;
+    }
+    .slick-dots{
+        display: none;
+    }
+</style>
     <!-- Next button -->
     <button class="next-button is-control">
         <span class="fas fa-angle-right" aria-hidden="true"></span>
