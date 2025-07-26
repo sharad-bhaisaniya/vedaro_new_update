@@ -3,11 +3,16 @@
 @section('title', 'Pre-Bookings')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container mt-4">
     <h2 class="mb-4">All Pre-Bookings</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
     @if($preBookings->count())
@@ -27,7 +32,7 @@
             </thead>
             <tbody>
                 @foreach($preBookings as $index => $booking)
-                    <tr>
+                    <tr id="booking-row-{{ $booking->id }}">
                         <td>{{ $index + 1 }}</td>
                         <td>
                             @if($booking->user)
@@ -43,11 +48,10 @@
                         <td>{{ $booking->note }}</td>
                         <td>{{ $booking->created_at->format('d M Y, h:i A') }}</td>
                         <td>
-                            <a href="https://wa.me/{{ $booking->user->phone }}" target="_blank" class="btn btn-sm btn-success mb-1">
+                            <button type="button" onclick="sendWhatsAppReminder({{ $booking->id }})" 
+                                    class="btn btn-sm btn-success mb-1">
                                 <i class="bi bi-whatsapp"></i> WhatsApp
-                            </a>
-                        
-                           
+                            </button>
                         </td>
                     </tr>
                 @endforeach
@@ -57,4 +61,34 @@
         <p>No pre-bookings found.</p>
     @endif
 </div>
+
+<script>
+function sendWhatsAppReminder(bookingId) {
+    // Use absolute URL with admin prefix
+    const url = `${window.location.origin}/admin/pre-bookings/${bookingId}/send-whatsapp`;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => { throw err; });
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send reminder: ' + (error.message || 'Unknown error'));
+    });
+}</script>
 @endsection

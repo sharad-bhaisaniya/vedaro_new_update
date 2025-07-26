@@ -17,101 +17,100 @@ use App\Models\Cart;
 
 class RazorpayController extends Controller
 {
-    public function initiatePayment(Request $request)
-    {
-        try {
-            Log::info('🟡 Razorpay payment init request:', $request->all());
 
-            $user = auth()->user();
-            $orderIdStr = $request->order_id ?? '#MAHA-' . Str::upper(Str::random(8));
-            $amount = (float) $request->amount;
-            $amountInPaise = (int) ($amount * 100);
+public function initiatePayment(Request $request)
+{
+    try {
+        Log::info('🟡 Razorpay payment init request:', $request->all());
 
-            // 1. Create Order
-            $order = new Order();
-            $order->order_id = $orderIdStr;
-            // $order->txnid = '';
-            $order->amount = $amount;
-            $order->status = 'Pending';
-            $order->full_name = $request->input('full_name') ?? (($user->first_name).' '.($user->last_name) ?? '');
-            $order->email = $request->input('email') ?? ($user->email ?? '');
-            $order->phone = $request->phone ?? '';
-            $order->address = $request->address ?? '';
-            $order->city = $request->city ?? '';
-            $order->postal_code = $request->postal_code ?? '';
-            $order->country = $request->country ?? 'India';
-            $order->shipping_address = $request->shipping_address ?? $order->address;
-            $order->billing_address = $request->billing_address ?? $order->address;
-            $order->razorpay_order_id = '';
-            $order->razorpay_payment_id = '';
-            $order->awb = '';
+        $user = auth()->user();
+        $orderIdStr = $request->order_id ?? '#MAHA-' . Str::upper(Str::random(8));
+        $amount = (float) $request->amount;
+        $amountInPaise = (int) ($amount * 100);
 
-            if (!$order->save()) {
-                Log::error('❌ Order save failed.');
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Order could not be saved.'
-                ], 500);
-            }
+        // 1. Create Order
+        $order = new Order();
+        $order->order_id = $orderIdStr;
+        $order->amount = $amount;
+        $order->status = 'Pending';
+        $order->full_name = $request->input('full_name') ?? (($user->first_name ?? '') . ' ' . ($user->last_name ?? ''));
+        $order->email = $request->input('email') ?? ($user->email ?? '');
+        $order->phone = $request->phone ?? '';
+        $order->address = $request->address ?? '';
+        $order->city = $request->city ?? '';
+        $order->postal_code = $request->postal_code ?? '';
+        $order->country = $request->country ?? 'India';
+        $order->shipping_address = $request->shipping_address ?? $order->address;
+        $order->billing_address = $request->billing_address ?? $order->address;
+        $order->razorpay_order_id = '';
+        $order->razorpay_payment_id = '';
+        $order->awb = '';
 
-            // 2. Store Order Items
-             // Add items to the order
-               $cartItems = $request->input('cartItems');
-                if (is_array($cartItems)) {
-                    foreach ($cartItems as $cartItem) {
-                        $orderItem = new OrderItem();
-                        $orderItem->order_id = $order->id;
-                        $orderItem->product_id = $cartItem['product_id'];
-                        $orderItem->product_qty = $cartItem['quantity'];
-                        $orderItem->price = $cartItem['price'];
-                        $orderItem->total = $orderItem->product_qty * $orderItem->price;
-                        $orderItem->save();
-                    }
-                } else {
-                    Log::warning('No cartItems passed in request.');
-                }
-
-
-            // 3. Create Razorpay Order
-            $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
-
-            $razorpayOrder = $api->order->create([
-                'receipt' => $orderIdStr,
-                'amount' => $amountInPaise,
-                'currency' => 'INR',
-                'payment_capture' => 1
-            ]);
-
-            // 4. Update Razorpay order ID
-            $order->razorpay_order_id = $razorpayOrder['id'];
-            $order->save();
-
-            Log::info("✅ Razorpay order created", [
-                'razorpay_id' => $razorpayOrder['id'],
-                'internal_order_id' => $order->id
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'razorpay_order_id' => $razorpayOrder['id'],
-                'amount' => $amount,
-                'currency' => 'INR',
-                'key' => env('RAZORPAY_KEY'),
-                'order_id' => $orderIdStr
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('❌ Payment initiation failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
+        if (!$order->save()) {
+            Log::error('❌ Order save failed.');
             return response()->json([
                 'success' => false,
-                'message' => 'Payment processing error: ' . $e->getMessage()
+                'message' => 'Order could not be saved.'
             ], 500);
         }
+
+        // 2. Fetch cart items from DB for this user
+        $cartItems = Cart::with('product')->where('customer_id', $user->id)->get();
+
+        if ($cartItems->isEmpty()) {
+            Log::warning('No cart items found for user ID: ' . $user->id);
+        } else {
+            foreach ($cartItems as $cartItem) {
+                $orderItem = new OrderItem();
+                $orderItem->order_id = $order->id;
+                $orderItem->product_id = $cartItem->product_id;
+                $orderItem->product_qty = $cartItem->product_qty;
+                $orderItem->price = $cartItem->product->discountPrice ?? $cartItem->product->price;
+                $orderItem->total = $orderItem->product_qty * $orderItem->price;
+                $orderItem->save();
+            }
+        }
+
+        // 3. Create Razorpay Order
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
+
+        $razorpayOrder = $api->order->create([
+            'receipt' => $orderIdStr,
+            'amount' => $amountInPaise,
+            'currency' => 'INR',
+            'payment_capture' => 1
+        ]);
+
+        // 4. Update Razorpay order ID
+        $order->razorpay_order_id = $razorpayOrder['id'];
+        $order->save();
+
+        Log::info("✅ Razorpay order created", [
+            'razorpay_id' => $razorpayOrder['id'],
+            'internal_order_id' => $order->id
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'razorpay_order_id' => $razorpayOrder['id'],
+            'amount' => $amount,
+            'currency' => 'INR',
+            'key' => env('RAZORPAY_KEY'),
+            'order_id' => $orderIdStr
+        ]);
+    } catch (\Exception $e) {
+        Log::error('❌ Payment initiation failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Payment processing error: ' . $e->getMessage()
+        ], 500);
     }
+}
+
 
 
        // Payment Verification Method

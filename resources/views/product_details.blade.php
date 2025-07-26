@@ -10,6 +10,14 @@
 	</div> -->
 	
 	<style>
+	
+        	@media (max-width: 575px) {
+         .btn-shine {
+        
+             white-space: wrap !important; 
+             width: 100%; 
+        }
+        }
         .product_details_accordion_container {
             width: 100%;
             margin: 0 auto;
@@ -91,81 +99,35 @@
             color: #b7791f;
             letter-spacing: 0.05em;
         }
-        
-        /*styling for Out Of Stock section*/
-
-        /*.out:hover{*/
-        /*    background-color: #6B46C1;*/
-        /*}*/
-        /*  .btn-shine {*/
-        /*    display: inline-block;*/
-        /*    padding: 12px 24px;*/
-        /*    font-size: 16px;*/
-        /*    font-weight: 600;*/
-        /*    text-decoration: none;*/
-            /*color: #fff;*/
-        /*    color: #FFD700;*/
-        /*    border-radius: 8px;*/
-        /*    background: linear-gradient(to right, #4d4d4d 0, white 10%, #4d4d4d 20%);*/
-        /*    background-size: 200% auto;*/
-        /*    background-position: 0;*/
-        /*    -webkit-background-clip: text;*/
-        /*    -webkit-text-fill-color: transparent;*/
-        /*    animation: shine 3s infinite linear;*/
-        /*    transition: all 0.3s ease;*/
-            /*white-space: nowrap;*/
-        /*    margin: 0;*/
-        /*  }*/
-        
-        /*  .btn-shine:hover {*/
-            /*border-color: #00ffcc;*/
-            /*background: linear-gradient(to right, #00ffcc 0, #ffffff 10%, #00ffcc 20%);*/
-            /*animation: shine 1.5s infinite linear;*/
-        /*  }*/
-        
-        /*  @keyframes shine {*/
-        /*    0% {*/
-        /*      background-position: 0%;*/
-        /*    }*/
-        /*    60% {*/
-        /*      background-position: 180px;*/
-        /*    }*/
-        /*    100% {*/
-        /*      background-position: 330px;*/
-        /*    }*/
-        /*  }*/
-        
-        /*  .btn-shine i {*/
-        /*    margin-right: 8px;*/
-        /*  }*/
-        .btn-shine {
-  display: inline-block;
-  padding: 14px 28px;
-  font-size: 17px;
-  font-weight: 700;
-  text-decoration: none;
-  color: #FFD700;
-  border: 2px solid #FFD700;
-  border-radius: 12px;
-  background: linear-gradient(to right, #4d4d4d 0%, #fff8b5 10%, #4d4d4d 20%);
-  background-size: 300% auto;
-  background-position: 0;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine 3s linear infinite;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-}
-
-@keyframes shine {
-  0% {
-    background-position: 0% center;
-  }
-  100% {
-    background-position: 300% center;
-  }
-}
+                    
+                    .btn-shine {
+              display: inline-block;
+              padding: 14px 28px;
+              font-size: 17px;
+              font-weight: 700;
+              text-decoration: none;
+              color: #FFD700;
+              border: 2px solid #FFD700;
+              border-radius: 12px;
+              background: linear-gradient(to right, #4d4d4d 0%, #fff8b5 10%, #4d4d4d 20%);
+              background-size: 300% auto;
+              background-position: 0;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              animation: shine 3s linear infinite;
+              transition: all 0.3s ease;
+              white-space: nowrap;
+              box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            }
+            
+            @keyframes shine {
+              0% {
+                background-position: 0% center;
+              }
+              100% {
+                background-position: 300% center;
+              }
+            }
 
                     /*stying for Pre-Book Now section*/
         
@@ -225,8 +187,205 @@
                 margin-left: 8px;
             }
 
-        
+        /*Styling for the Weight Select by user */
+                
+                .weight-selector-container {
+                    margin: 1.5rem 0;
+                    padding: 1.5rem;
+                    /*background: #f8f9fa;*/
+                    border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                    width:100%;
+                }
+                
+                .weight-selector-title {
+                    color: #333;
+                    font-weight: 600;
+                    margin-bottom: 1.25rem;
+                    font-size: 1.1rem;
+                }
+                
+                .weight-options-grid {
+                    display: grid;
+                    grid-template-columns: repeat(8, 1fr); /* exactly 4 columns */
+                    gap: 12px;
+                }
+                
+                .weight-option-card {
+                    position: relative;
+                }
+                
+                .weight-option-input {
+                    position: absolute;
+                    opacity: 0;
+                }
+                
+                .weight-option-input:checked + .weight-option-label {
+                    border-color: #4e73df;
+                    background-color: rgba(78, 115, 223, 0.05);
+                    box-shadow: 0 0 0 2px rgba(78, 115, 223, 0.25);
+                }
+                
+                .weight-option-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 0.5rem;
+                    border: 1px solid #ddd;
+                    /*border-radius: 8px;*/
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    height: 100%;
+                    text-align: center;
+                    width: min-content;
+                }
+                
+                .weight-option-label:hover {
+                    border-color: #bbb;
+                    transform: translateY(-2px);
+                }
+                
+                .weight-value {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #b7ab54;;
+                    margin-bottom: 4px;
+                     padding: 4px;
+                     
+                }
+                
+                .weight-badge {
+                    font-size: 0.7rem;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    background: #e9ecef;
+                    color: #495057;
+                }
+                
+                .weight-badge.popular {
+                    background: #ffeeba;
+                    color: #856404;
+                }
+                
+                @media (max-width: 768px) {
+                    .weight-options-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                    }
+                }
+                /*Style limited-badge */
+                	.badge-wrapper {
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    z-index: 5;
+                }
+                
+                .limited-badge {
+                    background-color: #28a745; /* Bootstrap green */
+                    color: white;
+                    padding: 4px 10px;
+                    font-size: 12px;
+                    border-radius: 4px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: 500;
+                }
+                .weight-badge{
+                    display: none;
+                }
+
+        /*styling for size*/
+                .size-selector-container {
+                    margin: 1.5rem 0;
+                    padding: 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                    width: 100%;
+                }
+                
+                .size-selector-title {
+                    color: #333;
+                    font-weight: 600;
+                    margin-bottom: 1.25rem;
+                    font-size: 1.1rem;
+                }
+                
+                .size-options-grid {
+                    display: grid;
+                    grid-template-columns: repeat(8, 1fr);
+                    gap: 12px;
+                }
+                
+                .size-option-card {
+                    position: relative;
+                        min-width: 91px;
+
+                }
+                
+                .size-option-input {
+                    position: absolute;
+                    opacity: 0;
+                }
+                
+                .size-option-input:checked + .size-option-label {
+                    border-color: #28a745;
+                    background-color: rgba(40, 167, 69, 0.05);
+                    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+                }
+                
+                .size-option-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 0.5rem;
+                    border: 1px solid #ddd;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    height: 100%;
+                    text-align: center;
+                    width: min-content;
+                    width:100%;
+                }
+                
+                .size-option-label:hover {
+                    border-color: #bbb;
+                    transform: translateY(-2px);
+                }
+                
+                .size-value {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: #17a2b8;
+                    margin-bottom: 4px;
+                    padding: 4px;
+                }
+                
+                
+                .size-badge {
+                    font-size: 0.7rem;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    background: #e9ecef;
+                    color: #495057;
+                }
+                
+                .size-badge.popular {
+                    background: #c3e6cb;
+                    color: #155724;
+                }
+                
+                @media (max-width: 768px) {
+                    .size-options-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                    }
+                }
 </style>
+
 	
 	
 @if(session('success'))
@@ -264,9 +423,18 @@
 					</div>
 				</div>
 			</div>
+			
+			
 			<!-- card right -->
 			<div class="product-content">
-				<span class="dis">save &nbsp;{{ $product->discountPercentage }}%</span>
+				<!--<span class="dis">save &nbsp;{{ $product->discountPercentage }}%</span>-->
+					<div class="badge-wrapper">
+                    @if($product->add_timer == 1)
+                        <span class="product-badge limited-badge">
+                            <i class="fas fa-star"></i> Limited Edition
+                        </span>
+                    @endif
+                </div>
 				<h2 class="product-title">{{ $product->productName }}</h2>
 				<!-- <div class="product-rating">
 					<div class="average-rating__stars">
@@ -294,32 +462,89 @@
 				</div>
 				<p class="product_disc">{{ $product->productDescription1 }}</p>
 				<div style="width: 90%; margin: 0 auto">
+				    
+				    <div class="size-selector-container">
+    <h4 class="size-selector-title">Select Size Option</h4>
+
+    <input type="hidden" name="size" id="selectedSize" value="{{ old('size', $product->size ?? '') }}">
+
+    <div class="size-options-grid">
+        <!-- Default size option -->
+        <div class="size-option-card">
+            <input type="radio" name="selected_size" 
+                   id="defaultSize" value="{{ old('size', $product->size ?? '') }}" 
+                   class="size-option-input" checked>
+            <label for="defaultSize" class="size-option-label">
+                <span class="size-value">{{ old('size', $product->size ?? '') }}</span>
+                <!--<span class="size-badge">Default</span>-->
+            </label>
+        </div>
+
+        <!-- Multiple size options -->
+        @if(isset($product) && $product->multiple_sizes)
+            @foreach(json_decode($product->multiple_sizes) as $index => $size)
+                <div class="size-option-card">
+                    <input type="radio" name="selected_size" 
+                           id="size{{ $index }}" value="{{ $size }}"
+                           class="size-option-input">
+                    <label for="size{{ $index }}" class="size-option-label">
+                        <span class="size-value">{{ $size }}</span>
+                        <!--@if($loop->first)-->
+                        <!--    <span class="size-badge popular">Popular</span>-->
+                        <!--@endif-->
+                    </label>
+                </div>
+            @endforeach
+        @endif
+    </div>
+</div>
+
 					<div class="product-variants">
+					    
+					   
+
+					
+					<div class="weight-selector-container">
+    <h4 class="weight-selector-title">Select Weight Option</h4>
+    
+    <input type="hidden" name="weight" id="selectedWeight" value="{{ old('weight', $product->weight ?? '') }}">
+
+<div class="weight-options-grid">
+    <!-- Default weight option -->
+    <div class="weight-option-card">
+        <input type="radio" name="selected_weight" 
+               id="defaultWeight" value="{{ old('weight', $product->weight ?? '') }}" 
+               class="weight-option-input" checked>
+        <label for="defaultWeight" class="weight-option-label">
+            <span class="weight-value">{{ old('weight', $product->weight ?? '') }}g</span>
+            <span class="weight-badge">Default</span>
+        </label>
+    </div>
+    
+    <!-- Multiple weight options -->
+    @if(isset($product) && $product->multiple_weights)
+        @foreach(json_decode($product->multiple_weights) as $index => $weight)
+            <div class="weight-option-card">
+                <input type="radio" name="selected_weight" 
+                       id="weight{{ $index }}" value="{{ $weight }}"
+                       class="weight-option-input">
+                <label for="weight{{ $index }}" class="weight-option-label">
+                    <span class="weight-value">{{ $weight }}g</span>
+                    @if($loop->first)
+                        <span class="weight-badge popular">Popular</span>
+                    @endif
+                </label>
+            </div>
+        @endforeach
+    @endif
+</div>
+</div>
+
+
 					
 						
-						
-						<div class="size-variant">
-							<p style="">Size: {{ $product->size }}</p>
-							<div>
-								<!-- Small -->
-								<label style="position: relative; cursor: pointer;">
-								<input type="radio" name="size" value="small" hidden>
-								<span class="size-swatch" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px;">1</span>
-								</label>
-								<!-- Medium -->
-								<label style="position: relative; cursor: pointer;">
-								<input type="radio" name="size" value="medium" hidden>
-								<span class="size-swatch" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px;">5</span>
-								</label>
-								<!-- Large -->
-								<label style="position: relative; cursor: pointer;">
-								<input type="radio" name="size" value="large" hidden>
-								<span class="size-swatch" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px;">10</span>
-								</label>
-							</div>
-						</div>
+					
 					</div>
-					
 				
                     
                     @if($product->stock > 0)
@@ -1061,6 +1286,75 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+</script>
+
+
+<!--script for the update weight in db-->
+<script>
+					    document.addEventListener('DOMContentLoaded', function() {
+    const weightRadios = document.querySelectorAll('.weight-option-input');
+    
+    weightRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const selectedWeight = this.value;
+            const productId = {{ $product->id ?? 'null' }};
+            
+            if (!productId) return;
+            
+            // Send AJAX request
+            fetch(`/products/${productId}/update-weight`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    weight: selectedWeight
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Optional: Show success message
+                    console.log('Weight updated successfully');
+                }
+            });
+        });
+    });
+});
+					</script>
+
+
+<script>
+document.querySelectorAll('input[name="selected_size"]').forEach(function(input) {
+    input.addEventListener('change', function() {
+        const selectedSize = this.value;
+        const productId = {{ $product->id }};
+
+        fetch(`/product/update-size/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                size: selectedSize
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Size updated successfully.");
+            } else {
+                alert("Failed to update size.");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Something went wrong.");
+        });
+    });
+});
 </script>
 
 

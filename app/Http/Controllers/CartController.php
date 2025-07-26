@@ -14,27 +14,6 @@ use App\Models\UserAddress;
 
 class CartController extends Controller
 {
-// public function cart_view()
-// {
-//     $customer_id = 1;
-//     $cartItems = Cart::with('product')
-//         ->where('customer_id', $customer_id)
-//         ->get();
-
-//     $subtotal = $cartItems->sum(function ($item) {
-//         return $item->product->price * $item->product_qty;
-//     });
-//     $shippingCost = 18.00;
-//     $total = $subtotal + $shippingCost;
-
-//     return view('cart', [
-//         'cartItems' => $cartItems,
-//         'subtotal' => $subtotal,
-//         'shippingCost' => $shippingCost,
-//         'total' => $total,
-//     ]);
-// }
-
 
 public function cart_view()
 {
@@ -73,8 +52,6 @@ public function cart_view()
         'total' => $total,
     ]);
 }
-
-
 
 // -----------------------------------------------------------------------------
 public function addToCart(Request $request)
@@ -152,7 +129,6 @@ public function addToCart(Request $request)
 
     return redirect()->back()->with('success', 'Product added to cart successfully!');
 }
-
 
 // -----------------------------------------------------------------------------
 public function updateCart(Request $request)
@@ -303,20 +279,7 @@ public function removeFromCart(Request $request)
         return response()->json(['freeGift' => $freeGift]);
     }
 // -----------------------------------------------------------------------------
-//   public function checkout_view()
-// {
-//     if (!Auth::check()) {
-//         return redirect()->route('login')->with('error', 'You need to log in first to access the checkout page.');
-//     }
 
-//     $this->transferGuestCartToDatabase(); // Merge the session cart
-
-//     $user = auth()->user();
-//     $cartItems = Cart::where('customer_id', $user->id)->with('product')->get();
-//     $addresses = $user->addresses;
-
-//     return view('checkout', compact('user', 'addresses', 'cartItems'));
-// }
 
 public function checkout_view()
 {

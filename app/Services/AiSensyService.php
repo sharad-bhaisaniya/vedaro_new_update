@@ -10,34 +10,50 @@ class AiSensyService
     public function sendOtp($phone, $otp)
     {
         try {
+            // Validate phone number (must be 10 digits)
+            $phone = preg_replace('/\D/', '', $phone); // Strip non-digits
+            if (strlen($phone) !== 10) {
+                return [
+                    'success' => false,
+                    'message' => 'Mobile number must be exactly 10 digits.',
+                ];
+            }
+
+            $payload = [
+                'apiKey'         => env('AISENSY_API_KEY'),
+                'campaignName'   => env('AISENSY_API_CAMPAIGN_NAME', 'vedaro_login'),
+                'destination'    => $phone, // Do NOT prefix "91", AiSensy automatically handles it.
+                'userName'       => 'Vedaro',
+                'templateParams' => ["{$otp}"], // Must be array of strings
+                'source'         => 'vedaro.app',
+            ];
+
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('AISENSY_API_KEY'),
-                'Content-Type'  => 'application/json',
-            ])->post('https://api.aisensy.com/campaign/v1/send', [
-                'campaignName'    => 'vedaro_login',
-                'destination'     => '91' . $phone,
-                'userName'        => 'Vedaro',
-                'templateParams'  => [$otp],
-                'source'          => 'vedaro.app',
-            ]);
+                'Content-Type' => 'application/json',
+            ])->post('https://backend.aisensy.com/campaign/t1/api/v2', $payload);
 
             $body = $response->json();
 
-            return [
-                'success' => $response->successful(),
-                'message' => $body['message'] ?? 'Sent successfully.',
-            ];
-        }catch (\Exception $e) {
-            if (str_contains($e->getMessage(), 'Could not resolve host')) {
-                Log::error("DNS resolution failed for AiSensy API.");
+            if (!$response->successful() || isset($body['error'])) {
+                Log::error('❌ AiSensy error response:', $body);
+                return [
+                    'success' => false,
+                    'message' => $body['message'] ?? 'Unknown error from AiSensy',
+                ];
             }
-        
-            Log::error("AI Sensy Service Exception: " . $e->getMessage());
+
+            return [
+                'success' => true,
+                'message' => $body['message'] ?? 'OTP sent successfully.',
+                'data'    => $body,
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("❌ AiSensyService Exception: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Could not connect to AiSensy API. Please try again later.',
+                'message' => 'Could not connect to AiSensy API.',
             ];
         }
-
     }
 }

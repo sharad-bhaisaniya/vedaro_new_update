@@ -50,7 +50,7 @@
                             <i class="fas fa-phone"></i>+91-9079673886
                         </a>
                         <a href="mailto:info@dtiva.com">
-                            <i class="fas fa-envelope"></i> support@mahakaaal.com
+                            <i class="fas fa-envelope"></i> support@vedaro.in
                         </a>
                     </div>
             </div>

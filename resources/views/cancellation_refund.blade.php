@@ -2,12 +2,21 @@
 @section('title', 'Cancellation & Refund Policy')
 @section('content')
 
-<div class="sect_head"></div>
 
-
+<style>
+    .content{
+        margin-top: 150px;
+    }
+</style>
 
     
     <main class="content">
+            <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Cancellation & Refund Policy</h1>
+<style>
+    .content{
+        margin-top: 150px;
+    }
+</style>
       <section class="policy_section">
         <h2>Cancellation Policy</h2>
         <p>
@@ -46,7 +55,7 @@
         <h2>Contact Us</h2>
         <p>
           If you have any questions or concerns regarding our Cancellation & Refund Policy, 
-          please contact us at <a href="mailto:support@mahakaaal.com">support@mahakaaal.com</a> or call us at +91-9079673886
+          please contact us at <a href="mailto:support@Vedaro.com">support@Vedaro.com</a> or call us at +91-9079673886
         </p>
       </section>
     </main>

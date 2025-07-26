@@ -319,24 +319,24 @@
 @endphp
 
 <!-- Dropdown to Choose Address -->
-<div class="form-group mb-3">
-    <label for="addressSelect">Choose Saved Address:</label>
-    <select id="addressSelect" class="form-control">
-        <option value="">-- Select an Address --</option>
-        @foreach ($addresses as $address)
-            <option 
-                value="{{ $address->id }}"
-                data-address="{{ $address->address }}"
-                data-city="{{ $address->city }}"
-                data-state="{{ $address->state }}"
-                data-pincode="{{ $address->pincode }}"
-                {{ $address->is_default ? 'selected' : '' }}
-            >
-                {{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}
-            </option>
-        @endforeach
-    </select>
-</div>
+<!--<div class="form-group mb-3">-->
+<!--    <label for="addressSelect">Choose Saved Address:</label>-->
+<!--    <select id="addressSelect" class="form-control">-->
+<!--        <option value="">-- Select an Address --</option>-->
+<!--        @foreach ($addresses as $address)-->
+<!--            <option -->
+<!--                value="{{ $address->id }}"-->
+<!--                data-address="{{ $address->address }}"-->
+<!--                data-city="{{ $address->city }}"-->
+<!--                data-state="{{ $address->state }}"-->
+<!--                data-pincode="{{ $address->pincode }}"-->
+<!--                {{ $address->is_default ? 'selected' : '' }}-->
+<!--            >-->
+<!--                {{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}-->
+<!--            </option>-->
+<!--        @endforeach-->
+<!--    </select>-->
+<!--</div>-->
   
 <!-- Autofill Address Inputs -->
 <div class="form-group mb-3">
@@ -363,25 +363,10 @@
         value="{{ $defaultAddress ? $defaultAddress->state : '' }}">
 </div>
 
-<!-- Set Default Button -->
-<!--<div class="border p-3 mb-2" id="addressList">-->
-<!--    @foreach ($addresses as $address)-->
-<!--        <div class="address-item mb-3 p-2 border rounded {{ $address->is_default ? 'bg-light border-primary' : '' }}" data-id="{{ $address->id }}">-->
-<!--            <strong>{{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}</strong>-->
-<!--            <br>-->
-<!--            <span class="badge status-badge {{ $address->is_default ? 'bg-success' : 'bg-secondary' }}">-->
-<!--                {{ $address->is_default ? 'Default Address' : '' }}-->
-<!--            </span>-->
-<!--            @if (!$address->is_default)-->
-<!--                <form action="{{ route('address.setDefault', $address->id) }}" method="POST" class="d-inline set-default-form">-->
-<!--                    @csrf-->
-<!--                    <button type="submit" class="btn btn-sm btn-outline-primary">Set as Default</button>-->
-<!--                </form>-->
-<!--            @endif-->
-<!--        </div>-->
-<!--    @endforeach-->
-<!--</div>-->
 
+
+
+{{--Choose Saved Addresses
 
 <!--<div class="form-group mb-3">-->
 <!--    <label for="addressDropdown"><strong>Select Address:</strong></label>-->
@@ -396,7 +381,7 @@
 <!--    </select>-->
 <!--</div>-->
 
-
+--}}
 
 
 
@@ -420,36 +405,36 @@
                     
                    
 {{-- Table View of Addresses --}}
-<div class="dropdown">
-    <button class="btn btn-outline-primary dropdown-toggle mb-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Select Default Address
-    </button>
-    <div class="dropdown-menu p-3" style="width: 100%; max-width: 600px; ">
-        <table class="table table-bordered mb-0">
-            <thead>
-                <tr>
-                    <th>Address</th>
-                    <th class="text-center">Default</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($addresses as $address)
-                    <tr class="{{ $address->is_default ? 'table-primary' : '' }}">
-                        <td>
-                            {{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}
-                        </td>
-                        <td class="text-center">
-                            <form action="{{ route('address.setDefault', $address->id) }}" method="POST" class="set-default-form">
-                                @csrf
-                                <input type="checkbox" onchange="this.form.submit()" {{ $address->is_default ? 'checked' : '' }}>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
+<!--<div class="dropdown">-->
+<!--    <button class="btn btn-outline-primary dropdown-toggle mb-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--        Select Default Address-->
+<!--    </button>-->
+<!--    <div class="dropdown-menu p-3" style="width: 100%; max-width: 600px; ">-->
+<!--        <table class="table table-bordered mb-0">-->
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    <th>Address</th>-->
+<!--                    <th class="text-center">Default</th>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--                @foreach ($addresses as $address)-->
+<!--                    <tr class="{{ $address->is_default ? 'table-primary' : '' }}">-->
+<!--                        <td>-->
+<!--                            {{ $address->address }}, {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}-->
+<!--                        </td>-->
+<!--                        <td class="text-center">-->
+<!--                            <form action="{{ route('address.setDefault', $address->id) }}" method="POST" class="set-default-form">-->
+<!--                                @csrf-->
+<!--                                <input type="checkbox" onchange="this.form.submit()" {{ $address->is_default ? 'checked' : '' }}>-->
+<!--                            </form>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                @endforeach-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 <!--<input type="text" class="form-control mb-3" id="addressInput" placeholder="Selected Address will appear here" readonly>-->
@@ -466,91 +451,93 @@
 
 
 
-
+{{--Addess dropdowns
 <!-- Add New Address Button -->
-<button type="button" class="btn btn-primary mb-3 d-flex" id="showNewAddressForm">+ Add New Address</button>
+<!--<button type="button" class="btn btn-primary mb-3 d-flex" id="showNewAddressForm">+ Add New Address</button>-->
 
 <!-- New Address Fields (Initially Hidden) -->
-<div id="newAddressForm" class="border rounded p-3 mb-3" style="display: none;">
-   <form method="POST" action="{{ route('user.address.store') }}">
-    @csrf
+<!--<div id="newAddressForm" class="border rounded p-3 mb-3" style="display: none;">-->
+<!--   <form method="POST" action="{{ route('user.address.store') }}">-->
+<!--    @csrf-->
 
-    <div id="newAddressForm" class="border rounded p-3 mb-3">
-        <div class="form-group mb-2">
-            <label>Address</label>
-            <input type="text" class="form-control" name="address" required>
-        </div>
-        <div class="form-group mb-2">
-            <label>City</label>
-            <input type="text" class="form-control" name="city" required>
-        </div>
-        <div class="form-group mb-2">
-            <label>Pincode</label>
-            <input type="text" class="form-control" name="pincode" required>
-        </div>
-        <div class="form-group mb-2">
-            <label>State</label>
-            <input type="text" class="form-control" name="state" required>
-        </div>
+<!--    <div id="newAddressForm" class="border rounded p-3 mb-3">-->
+<!--        <div class="form-group mb-2">-->
+<!--            <label>Address</label>-->
+<!--            <input type="text" class="form-control" name="address" required>-->
+<!--        </div>-->
+<!--        <div class="form-group mb-2">-->
+<!--            <label>City</label>-->
+<!--            <input type="text" class="form-control" name="city" required>-->
+<!--        </div>-->
+<!--        <div class="form-group mb-2">-->
+<!--            <label>Pincode</label>-->
+<!--            <input type="text" class="form-control" name="pincode" required>-->
+<!--        </div>-->
+<!--        <div class="form-group mb-2">-->
+<!--            <label>State</label>-->
+<!--            <input type="text" class="form-control" name="state" required>-->
+<!--        </div>-->
 
         <!-- ✅ Checkbox for Default Address -->
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="is_default" value="1" id="setDefaultCheckbox">
-            <label class="form-check-label" for="setDefaultCheckbox">
-                Set as default address
-            </label>
-        </div>
+<!--        <div class="form-check mb-3">-->
+<!--            <input class="form-check-input" type="checkbox" name="is_default" value="1" id="setDefaultCheckbox">-->
+<!--            <label class="form-check-label" for="setDefaultCheckbox">-->
+<!--                Set as default address-->
+<!--            </label>-->
+<!--        </div>-->
 
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Address</button>
-        </div>
-    </div>
-</form>
-</div>
+<!--        <div class="modal-footer">-->
+<!--            <button type="submit" class="btn btn-primary">Save Address</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</form>-->
+<!--</div>-->
 
 <!-- JS Logic -->
-<script>
-    document.getElementById('addressSelect').addEventListener('change', function () {
-        const selected = this.options[this.selectedIndex];
-        document.getElementById('inputAddress').value = selected.getAttribute('data-address') || '';
-        document.getElementById('inputCity').value = selected.getAttribute('data-city') || '';
-        document.getElementById('inputPincode').value = selected.getAttribute('data-pincode') || '';
-        document.getElementById('inputState').value = selected.getAttribute('data-state') || '';
-    });
+<!--<script>-->
+<!--    document.getElementById('addressSelect').addEventListener('change', function () {-->
+<!--        const selected = this.options[this.selectedIndex];-->
+<!--        document.getElementById('inputAddress').value = selected.getAttribute('data-address') || '';-->
+<!--        document.getElementById('inputCity').value = selected.getAttribute('data-city') || '';-->
+<!--        document.getElementById('inputPincode').value = selected.getAttribute('data-pincode') || '';-->
+<!--        document.getElementById('inputState').value = selected.getAttribute('data-state') || '';-->
+<!--    });-->
 
-    document.getElementById('showNewAddressForm').addEventListener('click', function () {
-        const form = document.getElementById('newAddressForm');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    });
+<!--    document.getElementById('showNewAddressForm').addEventListener('click', function () {-->
+<!--        const form = document.getElementById('newAddressForm');-->
+<!--        form.style.display = form.style.display === 'none' ? 'block' : 'none';-->
+<!--    });-->
 
-    document.getElementById('setDefaultBtn').addEventListener('click', function () {
-        const selectedId = document.getElementById('addressSelect').value;
+<!--    document.getElementById('setDefaultBtn').addEventListener('click', function () {-->
+<!--        const selectedId = document.getElementById('addressSelect').value;-->
 
-        if (!selectedId) {
-            alert('Please select an address to set as default.');
-            return;
-        }
+<!--        if (!selectedId) {-->
+<!--            alert('Please select an address to set as default.');-->
+<!--            return;-->
+<!--        }-->
 
-        fetch('/set-default-address', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ address_id: selectedId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Default address updated!');
-                location.reload();
-            } else {
-                alert('Error setting default address.');
-            }
-        });
-    });
-</script>
+<!--        fetch('/set-default-address', {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--                'X-CSRF-TOKEN': '{{ csrf_token() }}'-->
+<!--            },-->
+<!--            body: JSON.stringify({ address_id: selectedId })-->
+<!--        })-->
+<!--        .then(res => res.json())-->
+<!--        .then(data => {-->
+<!--            if (data.success) {-->
+<!--                alert('Default address updated!');-->
+<!--                location.reload();-->
+<!--            } else {-->
+<!--                alert('Error setting default address.');-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
  
+ 
+ --}}
                     
                     
                     
@@ -851,7 +838,7 @@
                 amount: data.amount * 100,
                 currency: data.currency,
                 order_id: data.razorpay_order_id,
-                name: "Mahadev Ayurveda",
+                name: "Vedaro",
                 description: "Order #" + formData.order_id,
                 prefill: {
                     name: document.getElementById('full_name').value,

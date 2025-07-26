@@ -81,9 +81,54 @@
 						<input type="text" class="form-control" id="size" name="size"  placeholder="(H x W x L) " required>
 					</div>
 					<div class="form-group">
-						<label for="weight">Weight in (grams)</label>
+                    <label>Multiple Sizes</label>
+                    <div id="multiple-sizes-wrapper">
+                        <input type="text" name="multiple_sizes[]" class="form-control mb-2" placeholder="Size e.g. 12x12x6">
+                    </div>
+                    <button type="button" class="btn btn-sm btn-success mt-1" onclick="addSize()">Add Another Size</button>
+                </div>
+                
+               
+					<div class="form-group">
+						<label for="weight">Default Weight in (grams)</label>
 						<input type="text" class="form-control" id="weight" name="weight"  placeholder="Weight" required>
 					</div>
+					
+					<!-- To this -->
+                    <div class="form-group mb-3">
+                        <label>Multiple Weights in (grams)</label>
+                        <div id="weights-wrapper">
+                            <div class="input-group mb-2">
+                                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" required>
+                                <button type="button" class="btn btn-success add-weight">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.querySelector('.add-weight').addEventListener('click', function () {
+                            const wrapper = document.getElementById('weights-wrapper');
+                            const newInput = document.createElement('div');
+                            newInput.classList.add('input-group', 'mb-2');
+                            newInput.innerHTML = `
+                                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 250g" required>
+                                <button type="button" class="btn btn-danger remove-weight">-</button>
+                                 `;
+                            wrapper.appendChild(newInput);
+                        });
+                
+                        document.addEventListener('click', function (e) {
+                            if (e.target.classList.contains('remove-weight')) {
+                                e.target.parentElement.remove();
+                            }
+                        });
+                    });
+                </script>
+                
+                					
+					
+					
 					<div style="width:100%" class="form-group">
 						<label for="productDescription1">Product Description</label>
 						<textarea class="form-control" id="productDescription1" name="productDescription1" rows="4" placeholder="Enter product description" required></textarea>
@@ -244,4 +289,18 @@
     });
 	});
 </script>
+
+
+<!--Script for size update also-->
+            <script>
+                    function addSize() {
+                        const wrapper = document.getElementById('multiple-sizes-wrapper');
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = 'multiple_sizes[]';
+                        input.className = 'form-control mb-2';
+                        input.placeholder = 'Size e.g. 12x12x6';
+                        wrapper.appendChild(input);
+                    }
+                </script>
 @endsection

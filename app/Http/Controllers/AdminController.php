@@ -32,8 +32,12 @@ public function add_products(Request $request)
             "shipping_fee" => "required|numeric|min:0",
             "availability" => "required|boolean",
             "on_sell" => "required|boolean",
-            "weight" => "required|string|max:255",
+                'weight' => 'required|string|max:255', // Changed from array to string
+                'multiple_weights' => 'required|array|min:1',
+                'multiple_weights.*' => 'required|string|max:255|distinct',
             "size" => "required|string|max:255",
+             "multiple_sizes" => "required|array|min:1",
+            "multiple_sizes.*" => "required|string|max:255|distinct",
             "category" => "required|exists:categories,id",
 
         ]);
@@ -65,7 +69,9 @@ public function add_products(Request $request)
                 'coupon_code' => $request->coupon_code,
                 'category' => $request->category,
                 'size' => $request->size,
-                'weight' => $request->weight,
+                  'multiple_sizes' => json_encode($request->multiple_sizes),
+                'weight' => $request->weight, // Store as JSON array
+                'multiple_weights' => json_encode($request->multiple_weights),
                 'productDescription1' => $request->productDescription1,
                 'productDescription2' => $request->productDescription2,
                 'price' => $request->price,
@@ -98,6 +104,7 @@ public function add_products(Request $request)
     $categories = Category::all();
     return view('admin.add_product', compact('categories'));
 }
+
 
 
     // Edit Product

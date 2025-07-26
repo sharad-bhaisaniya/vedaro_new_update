@@ -2,11 +2,15 @@
 @section('title', 'Terms and Conditions')
 @section('content')
 
-<div class="sect_head"></div>
-
+<style>
+    .content{
+        margin-top: 150px;
+    }
+</style>
 <main class="content">
+    <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Terms and Condition</h1>
     <section class="policy_section">
-        <h2>Welcome to Mahakaaal</h2>
+        <h2>Welcome to Vedaro</h2>
         <p>
             By accessing or using our website and services, you agree to be bound by the following terms and conditions. Please read these terms carefully before using our platform. If you do not agree to any of the terms, you must refrain from using our services.
         </p>
@@ -78,7 +82,7 @@
     <section class="policy_section">
         <h2>Intellectual Property</h2>
         <p>
-            All content on our website, including text, images, graphics, logos, and software, is the property of Mahakaaal or its content suppliers and is protected under copyright and trademark laws. Unauthorized use of this content is prohibited.
+            All content on our website, including text, images, graphics, logos, and software, is the property of Vedaro or its content suppliers and is protected under copyright and trademark laws. Unauthorized use of this content is prohibited.
         </p>
     </section>
 
@@ -107,7 +111,7 @@
         <h2>Contact Us</h2>
         <p>
             If you have any questions or concerns regarding these terms, please contact us at 
-            <a href="mailto:support@mahakaaal.com">support@mahakaaal.com</a> or call us at +91-9079673886
+            <a href="mailto:support@Vedaro.com">support@Vedaro.com</a> or call us at +91-9079673886
         </p>
     </section>
 </main>

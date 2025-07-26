@@ -14,7 +14,9 @@ protected $fillable = [
     'coupon_code',
     'category',
     'size',
+    'multiple_sizes', // ← Add this line
     'weight',
+    'multiple_weights',  
     'productDescription1',
     'productDescription2',
     'price',
@@ -38,7 +40,9 @@ protected $fillable = [
         'on_sell' => 'boolean',
         'add_timer' => 'boolean',
         'timer_end_at' => 'datetime',
+          'multiple_weights' => 'array',
     ];
+
 
     public function category()
     {

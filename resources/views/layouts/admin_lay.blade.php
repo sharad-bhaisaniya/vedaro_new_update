@@ -263,17 +263,19 @@
     <ul class="sub-menu">
       <li>
         <a href="/admin/pending_orders">
-          <i class="fas fa-hourglass-half"></i> Pending Orders
+          
+             <i class="fas fa-times-circle"></i> Pending Orders
         </a>
       </li>
       <li>
         <a href="/admin/completed_orders">
-          <i class="fas fa-check-circle"></i> Completed Orders
+      
+             <i class="fas fa-hourglass-half"></i>Completed Orders
         </a>
       </li>
       <li>
         <a href="/admin/canceled_orders">
-          <i class="fas fa-times-circle"></i> Cancelled Orders
+              <i class="fas fa-check-circle"></i> Canceled Orders
         </a>
       </li>
     </ul>

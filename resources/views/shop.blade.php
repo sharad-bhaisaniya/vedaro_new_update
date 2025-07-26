@@ -379,7 +379,7 @@
                             <p class="small text-secondary">{{ $product->productName }}</p>
                         </div>
                         <div class="card-footer bg-transparent border-0">
-                            <a  href="/product_details/{{ $product->id }}" class="btn btn-outline-warning w-100 text-uppercase">View Details</a>
+                            <a  href="{{ url('/product_details/' . urlencode($product->productName)) }}" class="btn btn-outline-warning w-100 text-uppercase">View Details</a>
                         </div>
                     </div>
                 </div>

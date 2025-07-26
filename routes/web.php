@@ -29,12 +29,16 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminAuthController;
 use App\Mail\WelcomeMail;
 use App\Http\Controllers\Auth\OtpController;
+use App\Http\Controllers\GlobalSearchController;
+
+
+
 // OTP Authentication Routes
 Route::get('/login-with-otp', [OtpController::class, 'showLoginWithOtpForm'])->name('login-with-otp');
-Route::post('/send-otp', [OtpController::class, 'sendOtp'])->name('send-otp');
-Route::get('/verify-otp', [OtpController::class, 'showVerifyOtpForm'])->name('verify-otp');
-Route::post('/verify-otp', [OtpController::class, 'verifyOtp'])->name('verify-otp');
-Route::post('/resend-otp', [OtpController::class, 'sendOtp'])->name('resend-otp');
+Route::post('/wh-send-otp', [OtpController::class, 'sendOtp'])->name('send-otp');
+Route::get('/wh-verify-otp', [OtpController::class, 'showVerifyOtpForm'])->name('verify-otp');
+Route::post('/wh-verify-otp', [OtpController::class, 'verifyOtp'])->name('verify-otp');
+Route::post('/wh-resend-otp', [OtpController::class, 'sendOtp'])->name('resend-otp');
 
 // The "Coming Soon" Page Itself - MUST be accessible
 Route::get('/comming_soon', function () {
@@ -127,11 +131,6 @@ Route::get('/cancellation_refund', function () {
     return view('cancellation_refund');
 });
 
-Route::get('admin/completed_orders', [OrderController::class, 'completedOrders']);
-Route::get('admin/pending_orders', [OrderController::class, 'pendingOrders']);
-Route::get('admin/canceled_orders', [OrderController::class, 'canceledOrders']);
-
-Route::post('admin/ship_order', [OrderController::class, 'shipOrder'])->name('ship.order');
 
 
 Route::get('/user-profile', [HomeController::class, 'showProfile'])->name('user_profile');
@@ -171,10 +170,24 @@ Route::prefix('admin')->group(function () {
         Route::get('/add-product', [AdminController::class, 'categoriesName'])->name('admin.add_product');
         
          Route::get('/pre-bookings', [PreBookingController::class, 'index'])->name('admin.prebookings');
+         
+            Route::get('/completed_orders', [OrderController::class, 'completedOrders']);
+            Route::get('/pending_orders', [OrderController::class, 'pendingOrders']);
+            Route::get('/canceled_orders', [OrderController::class, 'canceledOrders']);
+            
+            Route::post('/ship_order', [OrderController::class, 'shipOrder'])->name('ship.order');
+
+         
+   
     });
 });
 
-
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    // Existing admin routes...
+    
+    Route::post('/pre-bookings/{id}/send-whatsapp', [PreBookingController::class, 'sendWhatsAppReminder'])
+        ->name('prebookings.sendWhatsApp');
+});
 Route::get('admin/', function () {
 })->name('index');
 
@@ -227,6 +240,9 @@ Route::get('/admin/registered-users', [AuthController::class, 'fetchRegisteredUs
 
 // Product details page
 Route::get('product_details/{id}', [ProductController::class, 'show'])->name('product.details');
+Route::post('/products/{product}/update-weight', [ProductController::class, 'updateWeight']);
+Route::post('/product/update-size/{id}', [ProductController::class, 'updateSize'])->name('product.updateSize');
+
 
 // Main shop page route
 Route::get('/shop', [HomeController::class, 'ShowOnShop'])->name('shop');
@@ -338,7 +354,8 @@ Route::post('/cancel-shiprocket-order', [OrderController::class, 'cancelShiprock
 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
-Route::get('/product_details/{id}', [ReviewController::class, 'showProductDetails'])->name('product.details');
+// Route::get('/product_details/{id}', [ReviewController::class, 'showProductDetails'])->name('product.details');
+Route::get('/product_details/{productName}', [ReviewController::class, 'showProductDetails'])->name('product.details');
 
 
 // Initiate Razorpay order (AJAX call from frontend)
@@ -398,3 +415,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/address/update', [AddressController::class, 'update'])->name('user.address.update');
     Route::post('/address/set-default/{id}', [AddressController::class, 'setDefault'])->name('address.setDefault');
 });
+
+
+
+// Routes for Global Search 
+Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global.search');

@@ -47,27 +47,30 @@ class ReviewController extends Controller
             return view('product_details', compact('reviews'));
         }
     
-        public function showProductDetails($productId)
-        {
-            $product = Product::findOrFail($productId);
-        
-            $reviews = Rating::with('user')->where('product_id', $productId)->get();
-        
-            $totalReviews = $reviews->count();
-        
-            $ratingsCount = [
-                5 => $reviews->where('rating', 5)->count(),
-                4 => $reviews->where('rating', 4)->count(),
-                3 => $reviews->where('rating', 3)->count(),
-                2 => $reviews->where('rating', 2)->count(),
-                1 => $reviews->where('rating', 1)->count(),
-            ];
-        
-            $averageRating = $totalReviews > 0
-                ? $reviews->sum('rating') / $totalReviews
-                : 0;
-        
-            return view('product_details', compact('product', 'reviews', 'totalReviews', 'ratingsCount', 'averageRating'));
-        }
+public function showProductDetails($productName)
+{
+    $decodedName = urldecode($productName);
+
+    $product = Product::where('productName', $decodedName)->firstOrFail();
+
+    $reviews = Rating::with('user')->where('product_id', $product->id)->get();
+
+    $totalReviews = $reviews->count();
+
+    $ratingsCount = [
+        5 => $reviews->where('rating', 5)->count(),
+        4 => $reviews->where('rating', 4)->count(),
+        3 => $reviews->where('rating', 3)->count(),
+        2 => $reviews->where('rating', 2)->count(),
+        1 => $reviews->where('rating', 1)->count(),
+    ];
+
+    $averageRating = $totalReviews > 0
+        ? $reviews->sum('rating') / $totalReviews
+        : 0;
+
+    return view('product_details', compact('product', 'reviews', 'totalReviews', 'ratingsCount', 'averageRating'));
+}
+
 
 }

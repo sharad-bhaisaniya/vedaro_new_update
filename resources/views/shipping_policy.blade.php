@@ -2,13 +2,19 @@
 @section('title', 'Shipping Policy')
 @section('content')
 
-<div class="sect_head"></div>
+
+<style>
+    .content{
+        margin-top: 150px;
+    }
+</style>
 
 <main class="content">
+        <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Shipping Policy</h1>
     <section class="policy_section">
         <h2>Shipping Overview</h2>
         <p>
-            At Mahakaaal, we are committed to delivering your orders promptly and efficiently. This Shipping Policy outlines the terms and conditions regarding the shipping and delivery of our products.
+            At Vedaro, we are committed to delivering your orders promptly and efficiently. This Shipping Policy outlines the terms and conditions regarding the shipping and delivery of our products.
         </p>
     </section>
     
@@ -106,7 +112,7 @@
         <h2>Contact Us</h2>
         <p>
             If you have any questions or concerns regarding our Shipping Policy, please contact us at 
-            <a href="mailto:support@mahakaaal.com">support@mahakaaal.com</a> or call us at +91-9079673886
+            <a href="mailto:support@Vedaro.com">support@Vedaro.com</a> or call us at +91-9079673886
         </p>
     </section>
 </main>

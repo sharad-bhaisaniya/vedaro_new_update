@@ -62,23 +62,180 @@ public function myOrders()
 
 
 // ----------------------------------------Adimn Orders view--------------------------------
- public function completedOrders()
-    {
-        $orders = Order::with('items')->where('status', 'Paid')->get();
-        return view('admin.completed_orders', compact('orders'));
+//  public function completedOrders()
+//     {
+//         $orders = Order::with('items')->where('status', 'Paid')->get();
+//         return view('admin.completed_orders', compact('orders'));
+//     }
+
+     
+
+public function completedOrders()
+{
+    // 1. Local Orders (status = 'Paid' and not canceled)
+    $localOrders = Order::with('items')
+        ->where('status', 'Paid')
+        ->where(function($query) {
+            $query->where('status', '!=', 'canceled')
+                  ->orWhereNull('status'); // Include if status is null
+        })
+        ->get();
+
+    // 2. Shiprocket Orders
+    $token = $this->getShiprocketToken();
+    $shiprocketOrders = [];
+
+    if ($token) {
+        $url = 'https://apiv2.shiprocket.in/v1/external/orders';
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->get($url, [
+            'per_page' => 100,
+            'sort' => 'desc'
+        ]);
+
+        $orders = $response->json();
+
+        if (isset($orders['data']) && !empty($orders['data'])) {
+            foreach ($orders['data'] as $order) {
+                // Skip canceled orders
+                if (isset($order['status']) && strtolower($order['status']) === 'canceled') {
+                    continue;
+                }
+
+                $shipment = $order['shipments'][0] ?? [];
+
+                // Process Shiprocket products
+                $orderItems = [];
+                foreach ($order['products'] ?? [] as $product) {
+                    $orderItems[] = [
+                        'name' => $product['name'] ?? 'N/A',
+                        'sku' => $product['channel_sku'] ?? $product['sku'] ?? 'N/A',
+                        'price' => $product['price'] ?? '0.00',
+                        'quantity' => $product['quantity'] ?? 0,
+                        'total' => ($product['price'] ?? 0) * ($product['quantity'] ?? 0)
+                    ];
+                }
+
+                $shiprocketOrders[] = [
+                    'order_id' => $order['id'] ?? null,
+                    'channel_order_id' => $order['channel_order_id'] ?? 'N/A',
+                    'order_date' => isset($order['created_at']) 
+                        ? \Carbon\Carbon::parse($order['created_at'])->format('d M Y, h:i A')
+                        : 'N/A',
+                    'customer_name' => $order['customer_name'] ?? 'Unknown',
+                    'status' => $order['status'] ?? 'Pending',
+                    'payment_method' => $order['payment_method'] ?? 'N/A',
+                    'order_total' => $order['total'] ?? '0.00',
+                    'tracking_url' => isset($shipment['awb']) 
+                        ? "https://shiprocket.co/tracking/" . $shipment['awb'] 
+                        : null,
+                    'courier_name' => $shipment['courier'] ?? null,
+                    'order_items' => $orderItems,
+                    'shipping_address' => [
+                        'address' => $order['customer_address'] ?? 'N/A',
+                        'city' => $order['customer_city'] ?? 'N/A',
+                        'state' => $order['customer_state'] ?? 'N/A',
+                        'pincode' => $order['customer_pincode'] ?? 'N/A'
+                    ]
+                ];
+            }
+        }
     }
+
+    // 3. Return both to the view
+    return view('admin.completed_orders', [
+        'localOrders' => $localOrders,
+        'shiprocketOrders' => $shiprocketOrders
+    ]);
+}
+
+
+
+
 
     public function pendingOrders()
     {
-        $orders = Order::with('items')->where('status', 'Pending')->get();
+        $orders = Order::with('items')->where('status', 'Paid')->get();
         return view('admin.pending_orders', compact('orders'));
     }
-
+    
     public function canceledOrders()
-    {
-        $orders = Order::with('items')->where('status', 'Canceled')->get();
-        return view('admin.canceled_orders', compact('orders'));
+{
+    // 1. Local Canceled Orders (ONLY checks 'status' field)
+    $localCanceledOrders = Order::with('items')
+        ->where(function($query) {
+            $query->where('status', 'Canceled') // Exact match
+                  ->orWhere('status', 'like', '%cancel%'); // Broad match (e.g., "Cancelled")
+        })
+        ->get();
+
+    // 2. Shiprocket Canceled Orders (ONLY checks 'status' field)
+    $token = $this->getShiprocketToken();
+    $shiprocketCanceledOrders = [];
+
+    if ($token) {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->get('https://apiv2.shiprocket.in/v1/external/orders', [
+            'per_page' => 100,
+            'sort' => 'desc',
+        ]);
+
+        $orders = $response->json();
+
+        if (isset($orders['data']) && !empty($orders['data'])) {
+            foreach ($orders['data'] as $order) {
+                // Skip if status is not "canceled" (case-insensitive)
+                if (!isset($order['status']) || strtolower($order['status']) !== 'canceled') {
+                    continue;
+                }
+
+                $shipment = $order['shipments'][0] ?? [];
+                $orderItems = [];
+
+                foreach ($order['products'] ?? [] as $product) {
+                    $orderItems[] = [
+                        'name' => $product['name'] ?? 'N/A',
+                        'sku' => $product['channel_sku'] ?? $product['sku'] ?? 'N/A',
+                        'price' => $product['price'] ?? '0.00',
+                        'quantity' => $product['quantity'] ?? 0,
+                        'total' => ($product['price'] ?? 0) * ($product['quantity'] ?? 0),
+                    ];
+                }
+
+                $shiprocketCanceledOrders[] = [
+                    'order_id' => $order['id'] ?? null,
+                    'channel_order_id' => $order['channel_order_id'] ?? 'N/A',
+                    'order_date' => isset($order['created_at']) 
+                        ? \Carbon\Carbon::parse($order['created_at'])->format('d M Y, h:i A')
+                        : 'N/A',
+                    'customer_name' => $order['customer_name'] ?? 'Unknown',
+                    'status' => $order['status'] ?? 'Canceled',
+                    'payment_method' => $order['payment_method'] ?? 'N/A',
+                    'order_total' => $order['total'] ?? '0.00',
+                    'tracking_url' => isset($shipment['awb']) 
+                        ? "https://shiprocket.co/tracking/" . $shipment['awb'] 
+                        : null,
+                    'courier_name' => $shipment['courier'] ?? null,
+                    'order_items' => $orderItems,
+                    'shipping_address' => [
+                        'address' => $order['customer_address'] ?? 'N/A',
+                        'city' => $order['customer_city'] ?? 'N/A',
+                        'state' => $order['customer_state'] ?? 'N/A',
+                        'pincode' => $order['customer_pincode'] ?? 'N/A',
+                    ],
+                ];
+            }
+        }
     }
+
+    return view('admin.canceled_orders', [
+        'localCanceledOrders' => $localCanceledOrders,
+        'orders' => $shiprocketCanceledOrders,
+    ]);
+}
+
 
 
 
@@ -181,24 +338,33 @@ private function createShiprocketOrder($order, $token)
 
     $hsnCode = '';
 
+    // Default dimensions in case product has no size info
     $length = 10;
     $breadth = 10;
     $height = 10;
 
+    $totalWeight = 0; // Track total weight dynamically
+    $data['order_items'] = [];
+
     foreach ($order->items as $orderItem) {
         $product = $orderItem->product;
 
-        $size = $product->size ?? ''; // Adjust this path as per actual model
-
+        // Set dimensions from size field (e.g. "10 x 5 x 3")
+        $size = $product->size ?? '';
         if ($size) {
             $dimensions = explode(' x ', $size);
             if (count($dimensions) === 3) {
-                $length = $dimensions[0];
-                $breadth = $dimensions[1];
-                $height = $dimensions[2];
+                $length = (float) $dimensions[0];
+                $breadth = (float) $dimensions[1];
+                $height = (float) $dimensions[2];
             }
         }
 
+        // Weight from DB * quantity
+        $productWeight = $product->weight ?? 0.5; // fallback to 0.5 kg
+        $totalWeight += ($productWeight * $orderItem->product_qty);
+
+        // Add order item
         $data['order_items'][] = [
             'name' => $product->productName,
             'sku' => $product->coupon_code,
@@ -210,6 +376,7 @@ private function createShiprocketOrder($order, $token)
         ];
     }
 
+    // Prepare final payload
     $data = [
         'order_id' => $order->order_id,
         'order_date' => $order->created_at->format('Y-m-d H:i'),
@@ -224,13 +391,13 @@ private function createShiprocketOrder($order, $token)
         'billing_email' => $order->email,
         'billing_phone' => $order->phone,
         'shipping_is_billing' => true,
-        'order_items' => $data['order_items'] ?? [],
+        'order_items' => $data['order_items'],
         'payment_method' => 'Prepaid',
         'sub_total' => $order->amount,
-        'length' => $length,   // Dynamically set length
-        'breadth' => $breadth, // Dynamically set breadth
-        'height' => $height,    // Dynamically set height
-        'weight' => 0.6  // Adjust as per your requirements
+        'length' => $length,
+        'breadth' => $breadth,
+        'height' => $height,
+        'weight' => $totalWeight
     ];
 
     $headers = [
@@ -253,8 +420,6 @@ private function createShiprocketOrder($order, $token)
 }
 
 
-
-
 public function fetchShiprocketOrders()
 {
     $token = $this->getShiprocketToken();
@@ -268,7 +433,10 @@ public function fetchShiprocketOrders()
     $url = 'https://apiv2.shiprocket.in/v1/external/orders';
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . $token
-    ])->get($url);
+    ])->get($url, [
+        'per_page' => 100, // Get more orders if needed
+        'sort' => 'desc' // Newest first
+    ]);
 
     $orders = $response->json();
 
@@ -289,51 +457,45 @@ public function fetchShiprocketOrders()
         }
 
         $shipment = $order['shipments'][0] ?? [];
+        
+        // Process all products/order items
+        $orderItems = [];
+        foreach ($order['products'] ?? [] as $product) {
+            $orderItems[] = [
+                'name' => $product['name'] ?? 'N/A',
+                'sku' => $product['channel_sku'] ?? $product['sku'] ?? 'N/A',
+                'price' => $product['price'] ?? '0.00',
+                'quantity' => $product['quantity'] ?? 0,
+                'total' => ($product['price'] ?? 0) * ($product['quantity'] ?? 0)
+            ];
+        }
 
-        $dataToStore = [
-            'order_id'       => $order['id'] ?? null,
-            'shipment_id'    => $shipment['shipment_id'] ?? null,
-            'awb_code'       => $shipment['awb'] ?? null,
-            'courier_name'   => $shipment['courier'] ?? null,
-            'destination'    => ($order['customer_city'] ?? '') . ', ' . ($order['customer_state'] ?? ''),
-            'origin'         => $shipment['pickup_location']['city'] ?? null,
-            'packages'       => isset($shipment['packages']) ? json_encode($shipment['packages']) : null,
-            'pod'            => $shipment['pod'] ?? null,
-            'pod_status'     => $shipment['pod_status'] ?? null,
-            'status'         => $order['status'] ?? 'Pending',
-            'tracking_url'   => isset($shipment['awb']) ? "https://shiprocket.co/tracking/" . $shipment['awb'] : null,
-            'weight'         => $shipment['weight'] ?? null,
-        ];
-
-        // Save to DB
-        ShiprocketOrder::updateOrCreate(
-            ['order_id' => $dataToStore['order_id']],
-            $dataToStore
-        );
-
-        // For display in Blade
-        $processedOrders[] = array_merge($dataToStore, [
+        $processedOrders[] = [
+            'order_id' => $order['id'] ?? null,
             'channel_order_id' => $order['channel_order_id'] ?? 'N/A',
-            'order_date'       => $order['created_at'] ?? 'N/A',
-            'customer_name'    => $order['customer_name'] ?? 'Unknown',
-            'customer_email'   => $order['customer_email'] ?? 'N/A',
-            'customer_phone'   => $order['customer_phone'] ?? 'N/A',
-            'customer_address' => $order['customer_address'] ?? 'N/A',
-            'customer_pincode' => $order['customer_pincode'] ?? 'N/A',
-            'order_total'      => $order['total'] ?? '0.00',
-            'payment_method'   => $order['payment_method'] ?? 'N/A',
-            'shipping_charges' => $shipment['shipping_charges'] ?? 'N/A',
-            'etd'              => $shipment['etd'] ?? 'N/A',
-            'product_name'     => $order['products'][0]['name'] ?? 'N/A',
-            'product_sku'      => $order['products'][0]['channel_sku'] ?? 'N/A',
-            'product_price'    => $order['products'][0]['price'] ?? 'N/A',
-            'product_quantity' => $order['products'][0]['quantity'] ?? 'N/A',
-        ]);
+            'order_date' => isset($order['created_at']) 
+                ? \Carbon\Carbon::parse($order['created_at'])->format('d M Y, h:i A')
+                : 'N/A',
+            'customer_name' => $order['customer_name'] ?? 'Unknown',
+            'status' => $order['status'] ?? 'Pending',
+            'payment_method' => $order['payment_method'] ?? 'N/A',
+            'order_total' => $order['total'] ?? '0.00',
+            'tracking_url' => isset($shipment['awb']) 
+                ? "https://shiprocket.co/tracking/" . $shipment['awb'] 
+                : null,
+            'courier_name' => $shipment['courier'] ?? null,
+            'order_items' => $orderItems,
+            'shipping_address' => [
+                'address' => $order['customer_address'] ?? 'N/A',
+                'city' => $order['customer_city'] ?? 'N/A',
+                'state' => $order['customer_state'] ?? 'N/A',
+                'pincode' => $order['customer_pincode'] ?? 'N/A'
+            ]
+        ];
     }
 
     return view('fetch-shiprocket-orders', compact('processedOrders'));
 }
-
 
 public function updateShipmentStatus($orderId)
 {
@@ -357,40 +519,6 @@ public function updateShipmentStatus($orderId)
 
     return response()->json(['message' => 'Failed to update order with AWB'], 500);
 }
-// public function updateShipmentStatus($orderId)
-// {
-//     $order = Order::find($orderId);
-
-//     if (!$order) {
-//         return response()->json(['message' => 'Order not found'], 404);
-//     }
-
-//     $token = $this->getShiprocketToken();
-//     if (!$token) {
-//         return response()->json(['message' => 'Failed to authenticate with Shiprocket'], 500);
-//     }
-
-//     $url = "https://apiv2.shiprocket.in/v1/external/orders/show/$orderId"; // assuming orderId maps
-//     $response = Http::withHeaders([
-//         'Authorization' => 'Bearer ' . $token,
-//     ])->get($url);
-
-//     $data = $response->json();
-
-//     $awb = $data['shipments'][0]['awb'] ?? null;
-
-//     if ($awb) {
-//         $order->awb = $awb;
-//         $order->status = 'Shipped';
-//         $order->save();
-
-//         return response()->json(['message' => 'Order updated with AWB', 'awb' => $awb], 200);
-//     }
-
-//     return response()->json(['message' => 'AWB not found in Shiprocket response.'], 400);
-// }
-
-
 
 public function trackOrder(Request $request)
 {

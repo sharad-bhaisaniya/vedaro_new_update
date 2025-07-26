@@ -294,7 +294,7 @@
 
         <div class="grid-container">
             @forelse ($limitedEditionProducts as $product)
-                <a href="/product_details/{{ $product->id }}" class="limi-product-card 
+                <a href="{{ url('/product_details/' . urlencode($product->productName)) }}" class="limi-product-card 
                     @if($loop->first) grid-item-large
                     @elseif(in_array($loop->index, [3, 9, 10])) grid-item-medium-h 
                     @elseif(in_array($loop->index, [6, 12, 13])) grid-item-medium-v
@@ -490,4 +490,6 @@
             alert('Product added to cart!');
         });
     </script>
+    
+    
 @endsection
