@@ -98,7 +98,7 @@
             <label>Multiple Weights in (grams)</label>
             <div id="weights-wrapper">
               <div class="input-group mb-2">
-                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" required>
+                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" >
                 <button type="button" class="btn btn-success add-weight">+</button>
               </div>
             </div>

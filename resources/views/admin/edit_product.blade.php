@@ -110,7 +110,7 @@
                     
                     <div class="form-group">
                         <label for="weight">Default Weight in (grams)</label>
-                        <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight" value="{{ old('weight', $product->weight) }}" required>
+                        <input type="text" class="form-control" id="weight" name="weight" placeholder="Weight" value="{{ old('weight', $product->weight) }}" >
                     </div>
                     
                     <div class="form-group mb-3">
@@ -122,12 +122,12 @@
                             @endphp
                             @forelse($multipleWeights as $multiWeight)
                                 <div class="input-group mb-2">
-                                    <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" value="{{ old('multiple_weights.' . $loop->index, $multiWeight) }}" required>
+                                    <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" value="{{ old('multiple_weights.' . $loop->index, $multiWeight) }}" >
                                     <button type="button" class="btn btn-danger remove-weight">-</button>
                                 </div>
                             @empty
                                 <div class="input-group mb-2">
-                                    <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" required>
+                                    <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" >
                                     <button type="button" class="btn btn-success add-weight">+</button>
                                 </div>
                             @endforelse

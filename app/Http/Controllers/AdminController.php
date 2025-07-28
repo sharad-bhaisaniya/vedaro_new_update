@@ -14,6 +14,7 @@ class AdminController extends Controller
 {
 
 
+
 public function add_products(Request $request)
 {
     if ($request->isMethod("post")) {
@@ -32,12 +33,13 @@ public function add_products(Request $request)
             "shipping_fee" => "required|numeric|min:0",
             "availability" => "required|boolean",
             "on_sell" => "required|boolean",
-            'weight' => 'required|string|max:255', // Changed from array to string
-            'multiple_weights' => 'required|array|min:1',
-            'multiple_weights.*' => 'required|string|max:255|distinct',
-            "size" => "required|string|max:255",
-            "multiple_sizes" => "required|array|min:1",
-            "multiple_sizes.*" => "required|string|max:255|distinct",
+            'weight' => 'nullable|string|max:255',
+            'multiple_weights' => 'nullable|array',
+            'multiple_weights.*' => 'nullable|string|max:255|distinct',
+            
+            'size' => 'nullable|string|max:255',
+            'multiple_sizes' => 'nullable|array',
+            'multiple_sizes.*' => 'nullable|string|max:255|distinct',
             "category" => "required|exists:categories,id",
 
         ]);
@@ -68,10 +70,12 @@ public function add_products(Request $request)
                 'productName' => $request->productName,
                 'coupon_code' => $request->coupon_code,
                 'category' => $request->category,
-                'size' => $request->size,
-                  'multiple_sizes' => json_encode($request->multiple_sizes),
-                'weight' => $request->weight, // Store as JSON array
-                'multiple_weights' => json_encode($request->multiple_weights),
+                   // Safe fallback for optional fields
+                'size' => $request->filled('size') ? $request->size : '',
+                'multiple_sizes' => $request->has('multiple_sizes') ? json_encode($request->multiple_sizes) : json_encode([]),
+            
+                'weight' => $request->filled('weight') ? $request->weight : '',
+                'multiple_weights' => $request->has('multiple_weights') ? json_encode($request->multiple_weights) : json_encode([]),
                 'productDescription1' => $request->productDescription1,
                 'productDescription2' => $request->productDescription2,
                 'price' => $request->price,
@@ -135,12 +139,13 @@ public function update_product(Request $request, $id)
         "shipping_fee" => "required|numeric|min:0",
         "availability" => "required|boolean",
         "on_sell" => "required|boolean",
-        'weight' => 'required|string|max:255',
-        'multiple_weights' => 'required|array|min:1',
-        'multiple_weights.*' => 'required|string|max:255|distinct',
-        "size" => "required|string|max:255",
-        "multiple_sizes" => "required|array|min:1",
-        "multiple_sizes.*" => "required|string|max:255|distinct",
+        'weight' => 'nullable|string|max:255',
+            'multiple_weights' => 'nullable|array',
+            'multiple_weights.*' => 'nullable|string|max:255|distinct',
+            
+            'size' => 'nullable|string|max:255',
+            'multiple_sizes' => 'nullable|array',
+            'multiple_sizes.*' => 'nullable|string|max:255|distinct',
         "category" => "required|exists:categories,id",
     ]);
 
@@ -194,10 +199,12 @@ public function update_product(Request $request, $id)
             'productName' => $request->productName,
             'coupon_code' => $request->coupon_code,
             'category_id' => $request->category,
-            'size' => $request->size,
-            'multiple_sizes' => json_encode($request->multiple_sizes),
-            'weight' => $request->weight,
-            'multiple_weights' => json_encode($request->multiple_weights),
+                // Safe fallback for optional fields
+                'size' => $request->filled('size') ? $request->size : '',
+                'multiple_sizes' => $request->has('multiple_sizes') ? json_encode($request->multiple_sizes) : json_encode([]),
+            
+                'weight' => $request->filled('weight') ? $request->weight : '',
+                'multiple_weights' => $request->has('multiple_weights') ? json_encode($request->multiple_weights) : json_encode([]),
             'productDescription1' => $request->productDescription1,
             'productDescription2' => $request->productDescription2,
             'price' => $request->price,

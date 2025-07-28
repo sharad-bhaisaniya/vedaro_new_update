@@ -152,7 +152,7 @@ Route::prefix('admin')->group(function () {
         Route::match(['get', 'post'], '/add-product', [AdminController::class, 'add_products'])->name('admin.add_product');
         Route::get('/manage-products', [AdminController::class, 'show_products'])->name('admin.manage_product');
         Route::get('/edit_product/{id}', [AdminController::class, 'edit_product'])->name('admin.edit_product');
-        Route::post('/update_product/{id}', [AdminController::class, 'update_product'])->name('admin.update_product');
+        Route::put('/update_product/{id}', [AdminController::class, 'update_product'])->name('admin.update_product');
         Route::delete('/manage-products/{id}', [AdminController::class, 'delete_product'])->name('admin.delete_product');
 
         // Category Management

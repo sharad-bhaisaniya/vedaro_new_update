@@ -513,6 +513,7 @@
 			<div>
 				Private Sale at |
 				<a href="/" class="text-white text-decoration-underline">VEDARO</a>
+				    <p>Last page: {{ session('redirect_after_login') }}</p>
 			</div>
 			<div class="small">IND / INR</div>
 		</div>
@@ -816,6 +817,8 @@
 			</div>
 		</div>
 		<main>
+    
+
 			@yield('content')
 		</main>
 

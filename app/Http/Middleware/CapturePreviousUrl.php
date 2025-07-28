@@ -1,4 +1,5 @@
 <?php
+// app/Http/Middleware/CapturePreviousUrl.php
 
 namespace App\Http\Middleware;
 
@@ -9,14 +10,15 @@ class CapturePreviousUrl
 {
     public function handle(Request $request, Closure $next)
     {
-        // Only capture on GET requests to avoid overwriting on POST (e.g., login form submission)
         if (
             $request->method() === 'GET' &&
-            !$request->is('login') &&
-            !$request->is('register') &&
-            !$request->is('logout')
+            !auth()->check() &&
+            !$request->is('login') &&    // avoid login page
+            !$request->is('logout') &&   // avoid logout
+            !$request->is('register') && // optional
+            !$request->ajax()
         ) {
-            session(['previous_url' => url()->full()]);
+            session(['url.intended' => url()->full()]);
         }
 
         return $next($request);

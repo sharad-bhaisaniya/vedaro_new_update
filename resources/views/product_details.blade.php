@@ -477,21 +477,27 @@
                             </div>
                     
                             <!-- Multiple size options -->
-                            @if(isset($product) && $product->multiple_sizes)
-                                @foreach(json_decode($product->multiple_sizes) as $index => $size)
-                                    <div class="size-option-card">
-                                        <input type="radio" name="selected_size" 
-                                               id="size{{ $index }}" value="{{ $size }}"
-                                               class="size-option-input">
-                                        <label for="size{{ $index }}" class="size-option-label">
-                                            <span class="size-value">{{ $size }}</span>
-                                            <!--@if($loop->first)-->
-                                            <!--    <span class="size-badge popular">Popular</span>-->
-                                            <!--@endif-->
-                                        </label>
-                                    </div>
-                                @endforeach
+                           @if(isset($product) && $product->multiple_sizes)
+                                @php
+                                    $sizes = json_decode($product->multiple_sizes, true);
+                                @endphp
+                            
+                                @if(is_array($sizes) && count($sizes) > 0)
+                                    @foreach($sizes as $index => $size)
+                                        @if(!empty($size))
+                                            <div class="size-option-card">
+                                                <input type="radio" name="selected_size" 
+                                                       id="size{{ $index }}" value="{{ $size }}"
+                                                       class="size-option-input">
+                                                <label for="size{{ $index }}" class="size-option-label">
+                                                    <span class="size-value">{{ $size }}</span>
+                                                </label>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endif
+
                         </div>
                     </div>
 
