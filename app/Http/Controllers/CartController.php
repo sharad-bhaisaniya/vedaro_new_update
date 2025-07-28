@@ -335,8 +335,6 @@ public function singleCheckoutView($product_id)
 }
 
 
-
-
 // -----------------------------------------------------------------------------
     public function store_address(Request $request)
     {

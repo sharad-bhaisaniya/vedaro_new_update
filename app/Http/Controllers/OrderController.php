@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\ShiprocketOrder;
 use Illuminate\Support\Facades\Log;
@@ -124,6 +125,8 @@ public function completedOrders()
                         ? \Carbon\Carbon::parse($order['created_at'])->format('d M Y, h:i A')
                         : 'N/A',
                     'customer_name' => $order['customer_name'] ?? 'Unknown',
+                    'customer_email' => $order['customer_email'] ?? 'Unknown',
+                    'customer_phone' => $order['customer_phone'] ?? 'Unknown',
                     'status' => $order['status'] ?? 'Pending',
                     'payment_method' => $order['payment_method'] ?? 'N/A',
                     'order_total' => $order['total'] ?? '0.00',
@@ -149,9 +152,6 @@ public function completedOrders()
         'shiprocketOrders' => $shiprocketOrders
     ]);
 }
-
-
-
 
 
     public function pendingOrders()
@@ -211,6 +211,8 @@ public function completedOrders()
                         ? \Carbon\Carbon::parse($order['created_at'])->format('d M Y, h:i A')
                         : 'N/A',
                     'customer_name' => $order['customer_name'] ?? 'Unknown',
+                    'customer_email' => $order['customer_email'] ?? 'Unknown',
+                    'customer_phone' => $order['customer_phone'] ?? 'Unknown',
                     'status' => $order['status'] ?? 'Canceled',
                     'payment_method' => $order['payment_method'] ?? 'N/A',
                     'order_total' => $order['total'] ?? '0.00',
@@ -275,11 +277,10 @@ public function completedOrders()
     }
 
 
-
-  public function shipOrder(Request $request)
+public function shipOrder(Request $request)
 {
     $orderId = $request->input('order_id');
-    $order = Order::where('order_id', $orderId)->first();
+    $order = Order::with('items.product')->where('order_id', $orderId)->first();
 
     if (!$order) {
         return response()->json([
@@ -302,12 +303,18 @@ public function completedOrders()
     Log::info('Shiprocket API Response:', $response);
 
     if ($response && isset($response['status_code']) && $response['status_code'] == 1) {
+        // Update order status
         $order->status = 'Shipped';
-        $order->save();  // Save the updated order in the database
+        $order->save();
+
+        // Simple stock update - just 3 lines
+        foreach ($order->items as $item) {
+            $item->product->decrement('stock', $item->product_qty);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Order shipped successfully!',
+            'message' => 'Order shipped and stock updated successfully!',
             'response' => $response
         ]);
     } else {
@@ -322,7 +329,6 @@ public function completedOrders()
         ]);
     }
 }
-
 
 private function createShiprocketOrder($order, $token)
 {
@@ -557,8 +563,6 @@ public function trackOrder(Request $request)
 
 
 
-
-
 public function cancelShiprocketOrder(Request $request)
 {
     $request->validate([
@@ -592,11 +596,5 @@ public function cancelShiprocketOrder(Request $request)
         ]);
     }
 }
-
-
-
-
-
-
 
 }

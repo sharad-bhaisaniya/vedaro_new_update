@@ -139,36 +139,7 @@
 	color: #2e7d32;
 	border: 1px solid #c8e6c9;
 	}
-	.faq-section {
-	background-color: #faf7f2;
-	}
-	.accordion-button {
-	background-color: white;
-	color: #333;
-	font-weight: 500;
-	padding: 1.25rem;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-	border-radius: 8px !important;
-	}
-	.accordion-button:not(.collapsed) {
-	background-color: white;
-	color: #b78d65;
-	box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-	}
-	.accordion-button:focus {
-	box-shadow: 0 0 0 0.25rem rgba(183, 141, 101, 0.25);
-	border-color: #b78d65;
-	}
-	.accordion-body {
-	padding: 1.5rem;
-	background-color: white;
-	border-radius: 0 0 8px 8px;
-	box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-	}
-	.accordion-item {
-	border-radius: 8px;
-	overflow: hidden;
-	}
+
 	/*Reels styling */
 	.horizontal-reels-container {
 	width: 100%;
@@ -308,8 +279,14 @@
 	transform: scale(1.08) !important;
 	}
 	.slick-dots{
-	display: none!important;
+	display: none !important;
 	}
+        /*style in mobile for categories on home*/
+    @media (max-width: 600px) {
+    .lead-image {
+        height: 50vh!important;
+    }
+}
 </style>
 @section('content')
 <!-- SweetAlert2 CDN -->
@@ -363,9 +340,7 @@ $activeBanner = $banners->where('is_active', true)->first();
 </section>
 @endif
 <!--Banner section Ends -->
-<section class="carousel" aria-label="hero banner carousel" style="    margin-bottom: 50px;">
-	<p class="sr-only">This is a carousel with auto-rotating slides. Activate any of the buttons to disable rotation. Use Next and Previous buttons to navigate, or jump to a slide using the slide dots.</p>
-	<!-- Previous button -->
+<section class="carousel" aria-label="hero banner carousel" style="margin-bottom: 50px;">
 	<button class="previous-button is-control">
 	<span class="fas fa-angle-left" aria-hidden="true"></span>
 	<span class="sr-only">Previous slide</span>
@@ -438,6 +413,8 @@ $activeBanner = $banners->where('is_active', true)->first();
 	<span class="sr-only">Next slide</span>
 	</button>
 </section>
+
+
 {{-- product section --}}
 <section class="position-relative w-100 mb-5" style="padding: 0;">
 	<!-- Scroll Buttons -->
@@ -541,11 +518,12 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 	View All Categories
 	</a>
 </div>
+
 <section class="row gx-1 gy-1 overflow-hidden mx-0">
 	@foreach($activeCategories as $index => $category)
 	@if($index === 0)
 	<!-- Left Side -->
-	<div class="col-12 col-md-6 position-relative" style="height: 100vh;">
+	<div class="col-12 col-md-6 position-relative   lead-image " style="height: 100vh;">
 		<img src="{{ $category->image ? asset('public/storage/products/' . $category->image) : 'https://via.placeholder.com/600x800?text=No+Image' }}"
 			alt="{{ $category->name }}" class="w-100 h-100" style="object-fit: cover;">
 		<div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">

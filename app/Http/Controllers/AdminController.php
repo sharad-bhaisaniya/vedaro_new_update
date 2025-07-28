@@ -32,11 +32,11 @@ public function add_products(Request $request)
             "shipping_fee" => "required|numeric|min:0",
             "availability" => "required|boolean",
             "on_sell" => "required|boolean",
-                'weight' => 'required|string|max:255', // Changed from array to string
-                'multiple_weights' => 'required|array|min:1',
-                'multiple_weights.*' => 'required|string|max:255|distinct',
+            'weight' => 'required|string|max:255', // Changed from array to string
+            'multiple_weights' => 'required|array|min:1',
+            'multiple_weights.*' => 'required|string|max:255|distinct',
             "size" => "required|string|max:255",
-             "multiple_sizes" => "required|array|min:1",
+            "multiple_sizes" => "required|array|min:1",
             "multiple_sizes.*" => "required|string|max:255|distinct",
             "category" => "required|exists:categories,id",
 
@@ -116,76 +116,127 @@ public function add_products(Request $request)
     }
 
     // Update Product
-    public function update_product(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+public function update_product(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
 
-        // Validate the form inputs
-        $request->validate([
-            "productName" => "required|string|max:255",
-            "price" => "required|numeric",
-            "discountPercentage" => "required|numeric",
-            "size" => "required|string|max:255",
-            "weight" => "required|numeric",
-            "productDescription1" => "required|string",
-            "productDescription2" => "required|string",
-            "category" => "required|exists:categories,id",
-            "availability" => "required|boolean",
-            "on_sell" => "required|boolean",
-            "stock" => "required|numeric",
-            "shipping_fee" => "required|numeric",
-            "coupon_code" => "nullable|string|max:255",
-            "productImage1" => "nullable|image",
-            "productImage2" => "nullable|image",
-            "productImage3" => "nullable|image",
-        ]);
+    $validated = $request->validate([
+        "productName" => "required|string|max:255",
+        "coupon_code" => "required|string|max:255",
+        "productDescription1" => "required|string",
+        "productDescription2" => "nullable|string",
+        "price" => "required|numeric|min:0",
+        "discountPercentage" => "required|numeric|min:0|max:100",
+        "discountPrice" => "nullable|numeric|min:0",
+        "productImage1" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+        "productImage2" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+        "productImage3" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+        "stock" => "required|integer|min:0",
+        "shipping_fee" => "required|numeric|min:0",
+        "availability" => "required|boolean",
+        "on_sell" => "required|boolean",
+        'weight' => 'required|string|max:255',
+        'multiple_weights' => 'required|array|min:1',
+        'multiple_weights.*' => 'required|string|max:255|distinct',
+        "size" => "required|string|max:255",
+        "multiple_sizes" => "required|array|min:1",
+        "multiple_sizes.*" => "required|string|max:255|distinct",
+        "category" => "required|exists:categories,id",
+    ]);
 
-        // Update product fields
+    try {
+        // Handle image uploads
+        $imagePaths = [
+            'image1' => $product->image1,
+            'image2' => $product->image2,
+            'image3' => $product->image3
+        ];
+
+        if ($request->hasFile('productImage1')) {
+            // Delete old image if exists
+            if ($product->image1) {
+                Storage::disk('public')->delete($product->image1);
+            }
+            $imagePaths['image1'] = $request->file('productImage1')->store('products', 'public');
+        }
+
+        if ($request->hasFile('productImage2')) {
+            if ($product->image2) {
+                Storage::disk('public')->delete($product->image2);
+            }
+            $imagePaths['image2'] = $request->file('productImage2')->store('products', 'public');
+        }
+
+        if ($request->hasFile('productImage3')) {
+            if ($product->image3) {
+                Storage::disk('public')->delete($product->image3);
+            }
+            $imagePaths['image3'] = $request->file('productImage3')->store('products', 'public');
+        }
+
+        // Calculate timer end time if timer is enabled
+        $endTime = null;
+        $addTimer = $request->has('addTimer');
+        
+        if ($addTimer) {
+            $totalSeconds = ($request->timerDays * 86400) + 
+                          ($request->timerHours * 3600) + 
+                          ($request->timerMinutes * 60) + 
+                          $request->timerSeconds;
+            
+            if ($totalSeconds > 0) {
+                $endTime = now()->addSeconds($totalSeconds);
+            }
+        }
+
+        // Update the product
         $product->update([
-            "productName" => $request->productName,
-            "price" => $request->price,
-            "discountPercentage" => $request->discountPercentage,
-            "size" => $request->size,
-            "weight" => $request->weight,
-            "productDescription1" => $request->productDescription1,
-            "productDescription2" => $request->productDescription2,
-            "category_id" => $request->category,
-            "availability" => $request->availability,
-            "on_sell" => $request->on_sell,
-            "stock" => $request->stock,
-            "shipping_fee" => $request->shipping_fee,
-            "coupon_code" => $request->coupon_code,
-            "add_timer" => $request->has('addTimer'),
-            "timer_days" => $request->timerDays,
-            "timer_hours" => $request->timerHours,
-            "timer_minutes" => $request->timerMinutes,
-            "timer_seconds" => $request->timerSeconds,
-
+            'productName' => $request->productName,
+            'coupon_code' => $request->coupon_code,
+            'category_id' => $request->category,
+            'size' => $request->size,
+            'multiple_sizes' => json_encode($request->multiple_sizes),
+            'weight' => $request->weight,
+            'multiple_weights' => json_encode($request->multiple_weights),
+            'productDescription1' => $request->productDescription1,
+            'productDescription2' => $request->productDescription2,
+            'price' => $request->price,
+            'discountPercentage' => $request->discountPercentage,
+            'discountPrice' => $request->discountPrice,
+            'image1' => $imagePaths['image1'],
+            'image2' => $imagePaths['image2'],
+            'image3' => $imagePaths['image3'],
+            'stock' => $request->stock,
+            'shipping_fee' => $request->shipping_fee,
+            'availability' => $request->availability,
+            'on_sell' => $request->on_sell,
+            'add_timer' => $addTimer,
+            'timer_end_at' => $endTime,
+            'timer_days' => $request->timerDays ?? 0,
+            'timer_hours' => $request->timerHours ?? 0,
+            'timer_minutes' => $request->timerMinutes ?? 0,
+            'timer_seconds' => $request->timerSeconds ?? 0,
         ]);
-
-        // Handle file uploads
-       if ($request->hasFile("productImage1")) {
-    $path = $request->file("productImage1")->store("product_images", "public"); // ✅ fix
-    $product->image1 = $path;
-    }
-    
-    if ($request->hasFile("productImage2")) {
-        $path = $request->file("productImage2")->store("product_images", "public"); // ✅ fix
-        $product->image2 = $path;
-    }
-
-    if ($request->hasFile("productImage3")) {
-        $path = $request->file("productImage3")->store("product_images", "public"); // ✅ fix
-        $product->image3 = $path;
-    }
-
-
-        $product->save();
 
         return redirect()
             ->route("admin.manage_product")
             ->with("success", "Product updated successfully!");
+
+    } catch (\Exception $e) {
+        // Delete any newly uploaded files if there was an error
+        if (isset($imagePaths['image1']) && $imagePaths['image1'] !== $product->image1) {
+            Storage::disk('public')->delete($imagePaths['image1']);
+        }
+        if (isset($imagePaths['image2']) && $imagePaths['image2'] !== $product->image2) {
+            Storage::disk('public')->delete($imagePaths['image2']);
+        }
+        if (isset($imagePaths['image3']) && $imagePaths['image3'] !== $product->image3) {
+            Storage::disk('public')->delete($imagePaths['image3']);
+        }
+
+        return back()->withInput()->with('error', 'Error updating product: ' . $e->getMessage());
     }
+}
     
     // Delete Product
     public function delete_product($id)

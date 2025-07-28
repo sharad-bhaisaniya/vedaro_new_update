@@ -33,11 +33,15 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12 col-md-6 text-center  mb-4 mb-md-0">
-                <h2 class="h2 mb-3 " style="    font-size: 50px; font-family:Syne, sans-serif;">Meet our Founder,<br> Una Langgaard</h2>
+                <h2 class="h2 mb-3 " style="    font-size: 50px; font-family:Syne, sans-serif;">Meet our Founder,<br>Bhavya Garodia</h2>
                 <div class="lead" style="font-size:16px">
-                    <p>Primavera was founded by Una Langgaard, a Copenhagen-born designer who moved to New York in the 90's.</p>
-                    <p>Growing up surrounded by the quiet elegance of Scandinavian design, she was also fascinated by the energy and chaos of New York. From the beginning, Primavera was about balance — sleek, architectural lines softened by the asymmetry of a petal, a vine, or the curve of a wave. Today, Primavera is celebrated as the epitome of quiet luxury.</p>
-                </div>
+                    <p>Vedaro was founded by Bhavya Garodia, a young visionary from Rajasthan with an old soul and a deep reverence for timeless beauty.</p>
+                    <p>
+                        Raised amidst the spiritual richness of Indian tradition and driven by a passion for design, Bhavya envisioned a brand where purity meets purpose. Vedaro was born not just to adorn, but to tell stories — of devotion, detail, and quiet luxury. Each piece reflects his belief: that true elegance lies in simplicity, and meaning is the finest ornament.
+                        
+                        </p>
+                                        <p>Today, Vedaro stands as a tribute to handcrafted silver — rare, rooted, and radiant.
+                        </p></div>
             </div>
 
             <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
@@ -78,56 +82,7 @@
             </div>
         </div>
     </section>
-  <!-- ---------------------------------------------------------------------------------------------------------------------- -->
-  <!--<section class="bg-[#FDF1E7] px-3 py-5">-->
-  <!--      <div class="text-center mb-5">-->
-  <!--        <p class="small tracking-widest text-muted text-uppercase">-->
-  <!--          Recent Entries From The-->
-  <!--        </p>-->
-  <!--        <h2 class="fs-3 fw-semibold text-dark">VEDARO Journal</h2>-->
-  <!--      </div>-->
 
-  <!--      <div class="row g-4 mx-auto" style="max-width: 1200px">-->
-  <!--        <div class="col-12 col-md-4">-->
-  <!--          <img src="https://cdn.pixabay.com/photo/2023/09/02/11/43/woman-8228723_1280.jpg" alt="Card 1" class="w-100 img-fluid" style="min-height: 600px; object-fit: cover">-->
-  <!--          <p class="small text-uppercase text-muted mt-3">News | Tech</p>-->
-  <!--          <h3 class="fs-5 fw-medium text-dark mt-1">-->
-  <!--            Eva Gutierrez Lindahl &amp; VEDARO: The Future of Jewelry-->
-  <!--          </h3>-->
-  <!--          <div class="mt-3">-->
-  <!--            <button class="btn bg-[#1E1E3F] text-white px-4 py-2 small text-uppercase" style="background-color: #1E1E3F">-->
-  <!--              View All-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </div>-->
-
-  <!--        <div class="col-12 col-md-4">-->
-  <!--          <img src="https://cdn.pixabay.com/photo/2021/12/07/02/38/woman-6851973_1280.jpg" alt="Card 2" class="w-100 img-fluid" style="min-height: 600px; object-fit: cover">-->
-  <!--          <p class="small text-uppercase text-muted mt-3">News | Stories</p>-->
-  <!--          <h3 class="fs-5 fw-medium text-dark mt-1">-->
-  <!--            Behind the collection: Small, beautiful things-->
-  <!--          </h3>-->
-  <!--          <div class="mt-3">-->
-  <!--            <button class="btn bg-[#1E1E3F] text-white px-4 py-2 small text-uppercase" style="background-color: #1E1E3F">-->
-  <!--              View All-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </div>-->
-
-  <!--        <div class="col-12 col-md-4">-->
-  <!--          <img src="https://cdn.pixabay.com/photo/2020/12/08/19/12/woman-5815354_1280.jpg" alt="Card 3" class="w-100 img-fluid object-cover" style="min-height: 600px">-->
-  <!--          <p class="small text-uppercase text-muted mt-3">Hollywood | News</p>-->
-  <!--          <h3 class="fs-5 fw-medium text-dark mt-1">-->
-  <!--            Lina Walker-Smith Shines in VEDARO While Filming in New York-->
-  <!--          </h3>-->
-  <!--          <div class="mt-3">-->
-  <!--            <button class="btn  text-white px-4 py-2 small text-uppercase" style="background-color: #1E1E3F">-->
-  <!--              View All-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--      </div>-->
-  <!--    </section>-->
   
   <section id="blog-posts-section" class="py-5" style="background-color: #FDF1E3;">
     <div class="container container-xl">
@@ -142,61 +97,61 @@
             <div class="col">
                 <div class="card h-100  border-0" style="background-color:#FDF1E3;">
                     <a href="/blogs/news/ava-gutierrez-primavera-the-future-of-jewelry-powered-by-ai">
-                        <img src="//primavera-precision.myshopify.com/cdn/shop/articles/eva-gutierrez-lindahl_4954340f-6b10-472d-87de-26554edb1533.jpg?v=1743070230&amp;width=2500" class="card-img-top" alt="A woman in a white pantsuit exits a car.">
+                        <img src="{{ asset('public/assets/images/about/ab1.jpeg') }}" class="card-img-top" alt="A woman in a white pantsuit exits a car.">
                     </a>
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">
-                            <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>
-                            <span class="text-dark">|</span>
-                            <a href="/blogs/news/tagged/tech" class="text-decoration-none text-muted">Tech</a>
-                        </div>
-                        <h5 class="card-title h5">
-                            <a href="/blogs/news/ava-gutierrez-primavera-the-future-of-jewelry-powered-by-ai" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Eva Gutierrez Lindahl &amp; Primavera: The Future of Jewelry</a>
-                        </h5>
-                    </div>
+                    <!--<div class="card-body d-flex flex-column">-->
+                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
+                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
+                    <!--        <span class="text-dark">|</span>-->
+                    <!--        <a href="#" class="text-decoration-none text-muted">Tech</a>-->
+                    <!--    </div>-->
+                    <!--    <h5 class="card-title h5">-->
+                    <!--        <a href="/blogs/news/ava-gutierrez-primavera-the-future-of-jewelry-powered-by-ai" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Eva Gutierrez Lindahl &amp; Primavera: The Future of Jewelry</a>-->
+                    <!--    </h5>-->
+                    <!--</div>-->
                 </div>
             </div>
 
             <div class="col">
-                <div class="card h-100  border-0" style="background-color: #FDF1E3;>
+                <div class="card h-100  border-0" style="background-color: #FDF1E3;">
                     <a href="/blogs/news/behind-the-collection-small-beautiful-things">
-                        <img src="//primavera-precision.myshopify.com/cdn/shop/articles/blog-2_ed53c0c2-3c16-4dcb-92d3-9cf250db00c5.jpg?v=1740459552&amp;width=2500" class="card-img-top" alt="An asymmetric gold ring with a break in the middle encrusted in diamonds.">
+                        <img src="{{ asset('public/assets/images/about/ab2.jpeg') }}" class="card-img-top" alt="An asymmetric gold ring with a break in the middle encrusted in diamonds.">
                     </a>
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">
-                            <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>
-                            <span class="text-dark">|</span>
-                            <a href="/blogs/news/tagged/stories" class="text-decoration-none text-muted">Stories</a>
-                        </div>
-                        <h5 class="card-title h5">
-                            <a href="/blogs/news/behind-the-collection-small-beautiful-things" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Behind the collection: Small, beautiful things</a>
-                        </h5>
-                    </div>
+                    <!--<div class="card-body d-flex flex-column">-->
+                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
+                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
+                    <!--        <span class="text-dark">|</span>-->
+                    <!--        <a href="/blogs/news/tagged/stories" class="text-decoration-none text-muted">Stories</a>-->
+                    <!--    </div>-->
+                    <!--    <h5 class="card-title h5">-->
+                    <!--        <a href="/blogs/news/behind-the-collection-small-beautiful-things" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Behind the collection: Small, beautiful things</a>-->
+                    <!--    </h5>-->
+                    <!--</div>-->
                 </div>
             </div>
 
             <div class="col">
                 <div class="card h-100  border-0" style="background-color: #FDF1E3;">
                     <a href="/blogs/news/lina-walker-smith-shines-in-primavera-while-filming-in-new-york">
-                        <img src="//primavera-precision.myshopify.com/cdn/shop/articles/instagram-1_7c6247e8-2245-4d57-ab7b-ab62f8a9537b.jpg?v=1740459609&amp;width=2500" class="card-img-top" alt="A blonde celebrity in a matching white-gold tennis necklace and bracelet set.">
+                        <img src="{{ asset('public/assets/images/about/ab4.jpeg') }}" class="card-img-top" alt="A blonde celebrity in a matching white-gold tennis necklace and bracelet set.">
                     </a>
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">
-                            <a href="/blogs/news/tagged/hollywood" class="text-decoration-none text-muted">Hollywood</a>
-                            <span class="text-dark">|</span>
-                            <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>
-                        </div>
-                        <h5 class="card-title h5">
-                            <a href="/blogs/news/lina-walker-smith-shines-in-primavera-while-filming-in-new-york" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Lina Walker-Smith Shines in Primavera While Filming in New York</a>
-                        </h5>
-                    </div>
+                    <!--<div class="card-body d-flex flex-column">-->
+                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
+                    <!--        <a href="/blogs/news/tagged/hollywood" class="text-decoration-none text-muted">Hollywood</a>-->
+                    <!--        <span class="text-dark">|</span>-->
+                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
+                    <!--    </div>-->
+                    <!--    <h5 class="card-title h5">-->
+                    <!--        <a href="/blogs/news/lina-walker-smith-shines-in-primavera-while-filming-in-new-york" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Lina Walker-Smith Shines in Primavera While Filming in New York</a>-->
+                    <!--    </h5>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>
 
         <div class="row mt-5">
             <div class="col-12 text-center">
-                <a href="/blogs/news" class="btn  btn-lg text-white " style="background-color:#32304E; border-radius:0;">View All</a>
+                <a href="#" class="btn  btn-lg text-white " style="background-color:#32304E; border-radius:0;">View All</a>
             </div>
         </div>
     </div>
@@ -269,125 +224,6 @@
 
   <!-- ----------------------------------------footer------------------------------------------ -->
   <!-- -----------------------------------------------Why Choose Us------------------------------------------- -->
-{{-- <div class="container py-5">
-  <div class="row">
-    <div class="col-md-12 text-center">
-      <h2 class="display-4">Why Choose <span class="text-warning">Mahakaaal Creations?</span></h2>
-      <p>At Mahakaaal Creations, we stand as a symbol of spirituality, authenticity, and divine craftsmanship. Here’s why our customers trust us:</p>
-    </div>
-  </div>
-  <div class="row">
-    <!-- Reason 1 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">Authentic & Divine Products</h5>
-          <p class="card-text">
-            We offer only the most authentic and handcrafted spiritual items, ensuring that every product brings true blessings and divine energy into your life.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- Reason 2 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">Uncompromising Quality</h5>
-          <p class="card-text">
-            Each product undergoes strict quality checks, ensuring that we only offer the finest and most durable spiritual items for your home and rituals.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- Reason 3 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">Exceptional Customer Service</h5>
-          <p class="card-text">
-            We are committed to providing a seamless shopping experience, with dedicated customer support to ensure your complete satisfaction.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <!-- Reason 4 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">A True Spiritual Connection</h5>
-          <p class="card-text">
-            Our products aren’t just items – they are tools that help you connect deeply with your spiritual practices, bringing you closer to the divine.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- Reason 5 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">Worldwide Delivery</h5>
-          <p class="card-text">
-            No matter where you are, we bring Mahakaaal Creations'  offerings to your doorstep, making them accessible to devotees across the globe.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- Reason 6 -->
-    <div class="col-md-4 mb-4">
-      <div class="card">
-
-        <div class="card-body">
-          <h5 class="card-title">Sustainable Practices</h5>
-          <p class="card-text">
-            We are committed to sustainability, using eco-friendly materials and ethical sourcing practices to protect both the divine and the environment.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="container py-5">
-  <div class="row align-items-center">
-
-    <div class="col-md-12">
-      <h2 class="display-4">Contact
-          <span class="text-warning">  Us</span></h2>
-      <p>
-
-        <b>  We invite </b>  you to explore our diverse offerings and immerse yourself in the spiritual experience that Mahakaaal Creations provides. From sacred idols to thoughtful gifts, each product is a testament to the divine energy that Mahakal represents. Join us in celebrating the power of Mahakaal, and let our creations be a part of your spiritual journey.
-
-
-      </p>
-      Got a question or need assistance? Reach out to us at <span class="text-warning">support@mahakaaal.com </span>or call us at <span class="text-warning"> +91 90796 73886.</span>
-
-
-
-      </p>
-    </div>
-
-
-
-    </div>
-  </div>
-</div>
-
-
-
-<style>
-  .text-warning {
-    --bs-text-opacity: 1;
-    color: #ee2d7a !important; /* This is the new color */
-}
-</style>
- --}}
-
 
 
 

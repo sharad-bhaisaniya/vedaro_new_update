@@ -14,7 +14,7 @@
     @foreach($processedOrders as $order)
     <div class="card mb-4">
         <div class="card-header">
-            <h3>Order #{{ $order['channel_order_id'] }}</h3>
+            <h3>Order {{ $order['channel_order_id'] }}</h3>
             <p class="mb-1">Date: {{ $order['order_date'] }}</p>
             <p class="mb-1">Status: <span class="badge bg-{{ $order['status'] === 'shipped' ? 'success' : 'warning' }}">
                 {{ ucfirst($order['status']) }}

@@ -31,6 +31,10 @@ use App\Mail\WelcomeMail;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\GlobalSearchController;
 
+Route::get('/test-aisensy', function () {
+    $service = new \App\Services\AiSensyService();
+    return $service->sendOtp('8109010648', 123456); // Replace with your number
+});
 
 
 // OTP Authentication Routes

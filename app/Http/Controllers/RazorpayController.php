@@ -24,7 +24,7 @@ public function initiatePayment(Request $request)
         Log::info('🟡 Razorpay payment init request:', $request->all());
 
         $user = auth()->user();
-        $orderIdStr = $request->order_id ?? '#MAHA-' . Str::upper(Str::random(8));
+        $orderIdStr = $request->order_id ?? '#VED-' . Str::upper(Str::random(8));
         $amount = (float) $request->amount;
         $amountInPaise = (int) ($amount * 100);
 
@@ -57,19 +57,28 @@ public function initiatePayment(Request $request)
         // 2. Fetch cart items from DB for this user
         $cartItems = Cart::with('product')->where('customer_id', $user->id)->get();
 
-        if ($cartItems->isEmpty()) {
-            Log::warning('No cart items found for user ID: ' . $user->id);
-        } else {
-            foreach ($cartItems as $cartItem) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $cartItem->product_id;
-                $orderItem->product_qty = $cartItem->product_qty;
-                $orderItem->price = $cartItem->product->discountPrice ?? $cartItem->product->price;
-                $orderItem->total = $orderItem->product_qty * $orderItem->price;
-                $orderItem->save();
+        $cartItems = $request->input('cartItems');
+            if (is_array($cartItems)) {
+                foreach ($cartItems as $cartItem) {
+                    $product = Product::find($cartItem['product_id']);
+            
+                    if (!$product) {
+                        Log::warning("⚠️ Product not found for ID: " . $cartItem['product_id']);
+                        continue;
+                    }
+            
+                    $orderItem = new OrderItem();
+                    $orderItem->order_id = $order->id;
+                    $orderItem->product_id = $cartItem['product_id'];
+                    $orderItem->product_qty = $cartItem['quantity'];
+                    $orderItem->price = $product->discountPrice ?? $product->price ?? 0;
+                    $orderItem->total = $orderItem->product_qty * $orderItem->price;
+                    $orderItem->save();
+                }
+            } else {
+                Log::warning('No cartItems passed in request.');
             }
-        }
+
 
         // 3. Create Razorpay Order
         $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));

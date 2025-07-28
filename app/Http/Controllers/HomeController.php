@@ -17,7 +17,9 @@ class HomeController extends Controller
 
 public function ShowOnHome()
 {
-    $products = Product::all();
+    // $products = Product::all();
+    $products = Product::orderBy('created_at', 'desc')->get();
+
     $featuredProducts = Product::where('availability', 1)->limit(1)->get();
     $categories = Category::all();
     $banners = Banner::all();
@@ -44,7 +46,9 @@ public function ShowOnHome()
   public function showLimitedEdition()
     {
         // Fetch products that have active timers and the timer has not ended yet
-                $limitedEditionProducts = Product::where('add_timer', 1)->get();
+        $limitedEditionProducts = Product::where('add_timer', 1)
+    ->orderBy('created_at', 'desc') // Latest first
+    ->get();
 
         // $limitedEditionProducts = Product::where('add_timer', true)
         //                                 ->where('timer_end_at', '>', Carbon::now())

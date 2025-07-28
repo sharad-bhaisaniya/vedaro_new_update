@@ -24,19 +24,19 @@
 	}
 </style>
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+  <div class="alert alert-danger">
+    <ul>
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
 @endif
 
 @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+  <div class="alert alert-success">
+    {{ session('success') }}
+  </div>
 @endif
 
 <div class="container mt-1">
@@ -58,7 +58,7 @@
 					</ul>
 				</div>
 				@endif
-                <form class="product_form" action="{{ route('admin.add_product') }}" method="POST" enctype="multipart/form-data">
+        <form class="product_form" action="{{ route('admin.add_product') }}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="form-group">
 						<label for="productName">Product Name</label>
@@ -78,57 +78,32 @@
 					</div>
 					<div class="form-group">
 						<label for="size">Size (cms or inches)</label>
-						<input type="text" class="form-control" id="size" name="size"  placeholder="(H x W x L) " required>
+						<input type="text" class="form-control" id="size" name="size" placeholder="(H x W x L) " required>
 					</div>
 					<div class="form-group">
-                    <label>Multiple Sizes</label>
-                    <div id="multiple-sizes-wrapper">
-                        <input type="text" name="multiple_sizes[]" class="form-control mb-2" placeholder="Size e.g. 12x12x6">
-                    </div>
-                    <button type="button" class="btn btn-sm btn-success mt-1" onclick="addSize()">Add Another Size</button>
-                </div>
-                
-               
+          <label>Multiple Sizes</label>
+          <div id="multiple-sizes-wrapper">
+            <input type="text" name="multiple_sizes[]" class="form-control mb-2" placeholder="Size e.g. 12x12x6">
+          </div>
+          <button type="button" class="btn btn-sm btn-success mt-1" onclick="addSize()">Add Another Size</button>
+        </div>
+         
+        
 					<div class="form-group">
 						<label for="weight">Default Weight in (grams)</label>
-						<input type="text" class="form-control" id="weight" name="weight"  placeholder="Weight" required>
+						<input type="text" class="form-control" id="weight" name="weight" placeholder="Weight" required>
 					</div>
 					
-					<!-- To this -->
-                    <div class="form-group mb-3">
-                        <label>Multiple Weights in (grams)</label>
-                        <div id="weights-wrapper">
-                            <div class="input-group mb-2">
-                                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" required>
-                                <button type="button" class="btn btn-success add-weight">+</button>
-                            </div>
-                        </div>
-                    </div>
+					          <div class="form-group mb-3">
+            <label>Multiple Weights in (grams)</label>
+            <div id="weights-wrapper">
+              <div class="input-group mb-2">
+                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 100g" required>
+                <button type="button" class="btn btn-success add-weight">+</button>
+              </div>
+            </div>
+          </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelector('.add-weight').addEventListener('click', function () {
-                            const wrapper = document.getElementById('weights-wrapper');
-                            const newInput = document.createElement('div');
-                            newInput.classList.add('input-group', 'mb-2');
-                            newInput.innerHTML = `
-                                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 250g" required>
-                                <button type="button" class="btn btn-danger remove-weight">-</button>
-                                 `;
-                            wrapper.appendChild(newInput);
-                        });
-                
-                        document.addEventListener('click', function (e) {
-                            if (e.target.classList.contains('remove-weight')) {
-                                e.target.parentElement.remove();
-                            }
-                        });
-                    });
-                </script>
-                
-                					
-					
-					
 					<div style="width:100%" class="form-group">
 						<label for="productDescription1">Product Description</label>
 						<textarea class="form-control" id="productDescription1" name="productDescription1" rows="4" placeholder="Enter product description" required></textarea>
@@ -164,7 +139,7 @@
 					<div class="form-group">
 						<label for="availability">Add in Featured</label>
 						<select class="form-control" id="availability" name="availability">
-						    <option value="0">Not Featured</option>
+						  <option value="0">Not Featured</option>
 							<option value="1" selected>Featured</option>
 							
 						</select>
@@ -178,11 +153,11 @@
 					</div>
 					<div class="form-group">
 						<label for="stock">Stock</label>
-						<input type="number" class="form-control" id="stock" name="stock"  placeholder="Enter stock quantity" required>
+						<input type="number" class="form-control" id="stock" name="stock" placeholder="Enter stock quantity" required>
 					</div>
 					<div class="form-group">
 						<label for="shipping_fee">Shipping Fee</label>
-						<input type="number" class="form-control" id="shipping_fee" name="shipping_fee"  placeholder="Enter shipping_fee" required>
+						<input type="number" class="form-control" id="shipping_fee" name="shipping_fee" placeholder="Enter shipping_fee" required>
 					</div>
 					<div class="form-group">
 						<label for="coupon_code">Coupon Code</label>
@@ -190,28 +165,20 @@
 						<button type="button" id="generateCoupon" class="btn btn-info mt-2">Generate Coupon Code</button>
 					</div>
 					<div class="form-group">
-                        <input type="checkbox" id="addTimer" name="addTimer" value="1">
-                        <label for="addTimer">Add Timer</label>
-                    </div>
-                    
-                    <div id="timerDurationFields" style="display: none; width:100%;">
+            <input type="checkbox" id="addTimer" name="addTimer" value="1">
+            <label for="addTimer">Add Timer</label>
+          </div>
+           
+          <div id="timerDurationFields" style="display: none; width:100%;">
                         <div class="form-group">
-                            <label for="timerHours">Days</label>
-                            <input type="number" class="form-control" id="timerDays" name="timerDays" placeholder="Enter Days" min="0">
+                            <label for="timerDatetime">Sale End Date and Time</label>
+                            <input type="datetime-local" class="form-control" id="timerDatetime" name="timerDatetime">
                         </div>
-                        <div class="form-group">
-                            <label for="timerHours">Hours</label>
-                            <input type="number" class="form-control" id="timerHours" name="timerHours" placeholder="Enter hours" min="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="timerMinutes">Minutes</label>
-                            <input type="number" class="form-control" id="timerMinutes" name="timerMinutes" placeholder="Enter minutes" min="0" max="59">
-                        </div>
-                        <div class="form-group">
-                            <label for="timerSeconds">Seconds</label>
-                            <input type="number" class="form-control" id="timerSeconds" name="timerSeconds" placeholder="Enter seconds" min="0" max="59">
-                        </div>
-                    </div>
+                        <input type="hidden" id="timerDays" name="timerDays">
+                        <input type="hidden" id="timerHours" name="timerHours">
+                        <input type="hidden" id="timerMinutes" name="timerMinutes">
+                        <input type="hidden" id="timerSeconds" name="timerSeconds">
+          </div>
 					<div style="width:100%;">
 						<button type="submit" class="btn btn-primary btn-block">Add Product</button>
 					</div>
@@ -222,85 +189,132 @@
 </div>
 <script>
 	$(document).ready(function() {
-	    // Preview Image 1
-	    $('#productImage1').on('change', function() {
-	        var reader = new FileReader();
-	        reader.onload = function(e) {
-	            $('#imagePreview1').attr('src', e.target.result).show();
-	        };
-	        reader.readAsDataURL(this.files[0]);
-	    });
-	    
-	    // Preview Image 2
-	    $('#productImage2').on('change', function() {
-	        var reader = new FileReader();
-	        reader.onload = function(e) {
-	            $('#imagePreview2').attr('src', e.target.result).show();
-	        };
-	        reader.readAsDataURL(this.files[0]);
-	    });
+	  // Preview Image 1
+	  $('#productImage1').on('change', function() {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#imagePreview1').attr('src', e.target.result).show();
+	    };
+	    reader.readAsDataURL(this.files[0]);
+	  });
+	   
+	  // Preview Image 2
+	  $('#productImage2').on('change', function() {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#imagePreview2').attr('src', e.target.result).show();
+	    };
+	    reader.readAsDataURL(this.files[0]);
+	  });
 	
-	    // Preview Image 3
-	    $('#productImage3').on('change', function() {
-	        var reader = new FileReader();
-	        reader.onload = function(e) {
-	            $('#imagePreview3').attr('src', e.target.result).show();
-	        };
-	        reader.readAsDataURL(this.files[0]);
-	    });
+	  // Preview Image 3
+	  $('#productImage3').on('change', function() {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      $('#imagePreview3').attr('src', e.target.result).show();
+	    };
+	    reader.readAsDataURL(this.files[0]);
+	  });
 	});
 	// --------------------------COUPON---------------------------
 	
 	$(document).ready(function(){
-	    $('#generateCoupon').click(function(){
-	        var couponCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-	        
-	        $('#coupon_code').val(couponCode);
-	    });
+	  $('#generateCoupon').click(function(){
+	    var couponCode = 'COUPON-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+	     
+	    $('#coupon_code').val(couponCode);
+	  });
 	});
 	// --------------------------------------discountPercentage----------------------------
 	$(document).ready(function() {
-	    $('#price, #discountPercentage').on('input', function() {
-	        var price = parseFloat($('#price').val());
-	        var discountPercentage = parseFloat($('#discountPercentage').val());
+	  $('#price, #discountPercentage').on('input', function() {
+	    var price = parseFloat($('#price').val());
+	    var discountPercentage = parseFloat($('#discountPercentage').val());
 	
-	        if (!isNaN(price) && !isNaN(discountPercentage)) {
-	            var discountAmount = (price * discountPercentage) / 100;
-	            var discountPrice = price - discountAmount;
+	    if (!isNaN(price) && !isNaN(discountPercentage)) {
+	      var discountAmount = (price * discountPercentage) / 100;
+	      var discountPrice = price - discountAmount;
 	
-	            $('#discountPrice').val(discountPrice.toFixed(2));  // Rounded to 2 decimal places
-	        } else {
-	            $('#discountPrice').val('');
-	        }
-	    });
-	    
-	    
-	   $('#addTimer').on('change', function() {
-        if ($(this).is(':checked')) {
-            $('#timerDurationFields').slideDown(); // Show with a sliding animation
-        } else {
-            $('#timerDurationFields').slideUp();   // Hide with a sliding animation
-            // Optionally clear the input fields when unchecked
-            $('#timerDays').val('');
-            $('#timerHours').val('');
-            $('#timerMinutes').val('');
-            $('#timerSeconds').val('');
-        }
-    });
+	      $('#discountPrice').val(discountPrice.toFixed(2)); // Rounded to 2 decimal places
+	    } else {
+	      $('#discountPrice').val('');
+	    }
+	  });
+	   
+	    $('#addTimer').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#timerDurationFields').slideDown(); // Show with a sliding animation
+            } else {
+                $('#timerDurationFields').slideUp();    // Hide with a sliding animation
+                // Optionally clear the input fields when unchecked
+                $('#timerDatetime').val('');
+                $('#timerDays').val('');
+                $('#timerHours').val('');
+                $('#timerMinutes').val('');
+                $('#timerSeconds').val('');
+            }
+        });
+
+        // Calculate timer duration on datetime input change
+        $('#timerDatetime').on('change', function() {
+            var selectedDatetime = new Date($(this).val());
+            var now = new Date();
+
+            if (selectedDatetime > now) {
+                var diff = selectedDatetime.getTime() - now.getTime(); // Difference in milliseconds
+
+                var seconds = Math.floor(diff / 1000);
+                var minutes = Math.floor(seconds / 60);
+                var hours = Math.floor(minutes / 60);
+                var days = Math.floor(hours / 24);
+
+                seconds %= 60;
+                minutes %= 60;
+                hours %= 24;
+
+                $('#timerDays').val(days);
+                $('#timerHours').val(hours);
+                $('#timerMinutes').val(minutes);
+                $('#timerSeconds').val(seconds);
+            } else {
+                // If selected date/time is in the past, clear values
+                $('#timerDays').val(0);
+                $('#timerHours').val(0);
+                $('#timerMinutes').val(0);
+                $('#timerSeconds').val(0);
+            }
+        });
 	});
 </script>
-
-
-<!--Script for size update also-->
-            <script>
-                    function addSize() {
-                        const wrapper = document.getElementById('multiple-sizes-wrapper');
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'multiple_sizes[]';
-                        input.className = 'form-control mb-2';
-                        input.placeholder = 'Size e.g. 12x12x6';
-                        wrapper.appendChild(input);
-                    }
-                </script>
+<script>
+          document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('.add-weight').addEventListener('click', function () {
+              const wrapper = document.getElementById('weights-wrapper');
+              const newInput = document.createElement('div');
+              newInput.classList.add('input-group', 'mb-2');
+              newInput.innerHTML = `
+                <input type="text" name="multiple_weights[]" class="form-control" placeholder="e.g. 250g" required>
+                <button type="button" class="btn btn-danger remove-weight">-</button>
+                 `;
+              wrapper.appendChild(newInput);
+            });
+         
+            document.addEventListener('click', function (e) {
+              if (e.target.classList.contains('remove-weight')) {
+                e.target.parentElement.remove();
+              }
+            });
+          });
+        </script>
+<script>
+    function addSize() {
+      const wrapper = document.getElementById('multiple-sizes-wrapper');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = 'multiple_sizes[]';
+      input.className = 'form-control mb-2';
+      input.placeholder = 'Size e.g. 12x12x6';
+      wrapper.appendChild(input);
+    }
+  </script>
 @endsection

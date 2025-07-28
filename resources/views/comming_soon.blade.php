@@ -296,47 +296,46 @@
         </div>
     </section>
 
-    <script>
-        // Select all time elements
-        const secondsEl = document.querySelector(".seconds .number"),
-              minutesEl = document.querySelector(".minutes .number"),
-              hoursEl = document.querySelector(".hours .number"),
-              daysEl = document.querySelector(".days .number");
-        
-        const timeContent = document.querySelector(".time-content");
-        const mainHeader = document.querySelector("header");
+  <script>
+    // Select all time elements
+    const secondsEl = document.querySelector(".seconds .number"),
+          minutesEl = document.querySelector(".minutes .number"),
+          hoursEl = document.querySelector(".hours .number"),
+          daysEl = document.querySelector(".days .number");
 
-        // Set the launch date (Year, Month (0-11), Day, Hour, Minute, Second)
-        // Example: 30 days from now. Today is July 22, 2025. Launch date is August 21, 2025.
-        const launchDate = new Date("2025-08-21T12:00:00").getTime();
+    const timeContent = document.querySelector(".time-content");
+    const mainHeader = document.querySelector("header");
 
-        const timeFunction = setInterval(() => {
-            const now = new Date().getTime();
-            const distance = launchDate - now;
+    // Updated launch date: July 30, 2025 at 06:30 AM
+    const launchDate = new Date("2025-07-30T06:30:00").getTime();
 
-            if (distance < 0) {
-                clearInterval(timeFunction);
-                // What happens when the countdown is over
-                mainHeader.textContent = "We're Live!";
-                timeContent.innerHTML = "<p>Our new website is officially open. Welcome!</p>";
-                return;
-            }
+    const timeFunction = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = launchDate - now;
 
-            // Time calculations
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if (distance < 0) {
+            clearInterval(timeFunction);
+            // What happens when the countdown is over
+            mainHeader.textContent = "We're Live!";
+            timeContent.innerHTML = "<p>Our new website is officially open. Welcome!</p>";
+            return;
+        }
 
-            // Add leading zero if number is less than 10
-            daysEl.textContent = days < 10 ? `0${days}` : days;
-            hoursEl.textContent = hours < 10 ? `0${hours}` : hours;
-            minutesEl.textContent = minutes < 10 ? `0${minutes}` : minutes;
-            secondsEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
+        // Time calculations
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        }, 1000); // Update every second
+        // Add leading zero if number is less than 10
+        daysEl.textContent = days < 10 ? `0${days}` : days;
+        hoursEl.textContent = hours < 10 ? `0${hours}` : hours;
+        minutesEl.textContent = minutes < 10 ? `0${minutes}` : minutes;
+        secondsEl.textContent = seconds < 10 ? `0${seconds}` : seconds;
 
-    </script>
+    }, 1000); // Update every second
+</script>
+
 
 </body>
 </html>

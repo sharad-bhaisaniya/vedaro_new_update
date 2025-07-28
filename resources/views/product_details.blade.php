@@ -4,10 +4,7 @@
 <link rel="stylesheet" href="{{ asset('public/assets/css/product_details.css') }}">
 
 <div class="product_details pt-5"style="margin-top: 40px;">
-<!-- <div class="sect_head">
-	<h3 style="font-size: 3.5rem;">🛍️ Product Details</h3>
-	<p>Review your selected items before completing the order.</p>
-	</div> -->
+
 	
 	<style>
 	
@@ -190,7 +187,7 @@
         /*Styling for the Weight Select by user */
                 
                 .weight-selector-container {
-                    margin: 1.5rem 0;
+                    /*margin: 1.5rem 0;*/
                     padding: 1.5rem;
                     /*background: #f8f9fa;*/
                     border-radius: 12px;
@@ -299,7 +296,7 @@
 
         /*styling for size*/
                 .size-selector-container {
-                    margin: 1.5rem 0;
+                    /*margin: 1.5rem 0;*/
                     padding: 1.5rem;
                     border-radius: 12px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -361,7 +358,6 @@
                     font-size: 0.8rem;
                     font-weight: 600;
                     color: #17a2b8;
-                    margin-bottom: 4px;
                     padding: 4px;
                 }
                 
@@ -386,165 +382,179 @@
                 }
 </style>
 
-	
-	
-@if(session('success'))
-<div class="success-message">
-	{{ session('success') }}
-</div>
-@endif
-<div class="product_details_section mt-4" ">
-	<div class="card-wrapper">
-		<div class="card " style="display:flex; width: 100%;">
-			<!-- card left -->
-			<div class="product-imgs" style="width: 100%;">
-				<div class="img-display">
-					<div class="img-showcase">
-						<img src="{{ asset('/storage/products/'.$product->image1) }}" alt="Product Image 1">
-						<img src="{{ asset('/storage/products/'.$product->image2) }}" alt="Product Image 2">
-						<img src="{{ asset('/storage/products/'.$product->image3) }}" alt="Product Image 3">
-					</div>
-				</div>
-				<div class="img-select">
-					<div class="img-item">
-						<a href="#" data-id="1">
-						<img src="{{ asset('/storage/products/'.$product->image1) }}" alt="Product Image 1">
-						</a>
-					</div>
-					<div class="img-item">
-						<a href="#" data-id="2">
-						<img src="{{ asset('/storage/products/'.$product->image2) }}" alt="Product Image 1">
-						</a>
-					</div>
-					<div class="img-item">
-						<a href="#" data-id="3">
-						<img src="{{ asset('/storage/products/'.$product->image3) }}" alt="Product Image 1">
-						</a>
-					</div>
-				</div>
-			</div>
-			
-			
-			<!-- card right -->
-			<div class="product-content">
-				<!--<span class="dis">save &nbsp;{{ $product->discountPercentage }}%</span>-->
-					<div class="badge-wrapper">
-                    @if($product->add_timer == 1)
-                        <span class="product-badge limited-badge">
-                            <i class="fas fa-star"></i> Limited Edition
-                        </span>
-                    @endif
-                </div>
-				<h2 class="product-title">{{ $product->productName }}</h2>
-				<!-- <div class="product-rating">
-					<div class="average-rating__stars">
-						<div class="">
-							@for ($i = 1; $i <= 5; $i++)
-							@if ($i <= floor($averageRating))
-							<span class="star filled">&#9733;</span> 
-							@elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
-							<span class="star half">&#9733;</span> 
-							@else
-							<span class="star">&#9734;</span> 
-							@endif
-							@endfor
-						</div>
-						<p>{{ number_format($averageRating, 1) }} ({{ $totalReviews }} ) </p>
-					</div>
-					</div> -->
+        	
+        	
+        @if(session('success'))
+        <div class="success-message">
+        	{{ session('success') }}
+        </div>
+        @endif
+        <div class="product_details_section mt-4" ">
+        	<div class="card-wrapper">
+        		<div class="card " style="display:flex; width: 100%;">
+        			<!-- card left -->
+        			<div class="product-imgs" style="width: 100%;">
+        				<div class="img-display">
+        					<div class="img-showcase">
+        						<img src="{{ asset('/storage/products/'.$product->image1) }}" alt="Product Image 1">
+        						<img src="{{ asset('/storage/products/'.$product->image2) }}" alt="Product Image 2">
+        						<img src="{{ asset('/storage/products/'.$product->image3) }}" alt="Product Image 3">
+        					</div>
+        				</div>
+        				<div class="img-select">
+        					<div class="img-item">
+        						<a href="#" data-id="1">
+        						<img src="{{ asset('/storage/products/'.$product->image1) }}" alt="Product Image 1">
+        						</a>
+        					</div>
+        					<div class="img-item">
+        						<a href="#" data-id="2">
+        						<img src="{{ asset('/storage/products/'.$product->image2) }}" alt="Product Image 1">
+        						</a>
+        					</div>
+        					<div class="img-item">
+        						<a href="#" data-id="3">
+        						<img src="{{ asset('/storage/products/'.$product->image3) }}" alt="Product Image 1">
+        						</a>
+        					</div>
+        				</div>
+        			</div>
+        			
+        			
+        			<!-- card right -->
+        			<div class="product-content">
+        				<!--<span class="dis">save &nbsp;{{ $product->discountPercentage }}%</span>-->
+        					<div class="badge-wrapper">
+                            @if($product->add_timer == 1)
+                                <span class="product-badge limited-badge">
+                                    <i class="fas fa-star"></i> Limited Edition
+                                </span>
+                            @endif
+                        </div>
+        				<h2 class="product-title">{{ $product->productName }}</h2>
+        				<!-- <div class="product-rating">
+        					<div class="average-rating__stars">
+        						<div class="">
+    							@for ($i = 1; $i <= 5; $i++)
+    							@if ($i <= floor($averageRating))
+    							<span class="star filled">&#9733;</span> 
+    							@elseif ($i == ceil($averageRating) && $averageRating - floor($averageRating) > 0)
+    							<span class="star half">&#9733;</span> 
+    							@else
+    							<span class="star">&#9734;</span> 
+    							@endif
+    							@endfor
+    						</div>
+    						<p>{{ number_format($averageRating, 1) }} ({{ $totalReviews }} ) </p>
+    					</div>
+    					</div> -->
 				<div class="product-price">
 					<p class="new-price">
 						<span>₹{{ $product->discountPrice }} </span>
-						<span>
-					<p class="last-price"><span>₹{{ $product->price }}</span></p>
-					</span>
+					<!--	<span>-->
+					<!--<p class="last-price"><span>₹{{ $product->price }}</span></p>-->
+					<!--</span>-->
 					</p>
 				</div>
 				<p class="product_disc">{{ $product->productDescription1 }}</p>
 				<div style="width: 90%; margin: 0 auto">
 				    
 				    <div class="size-selector-container">
-    <h4 class="size-selector-title">Select Size Option</h4>
+                        <h4 class="size-selector-title">Select Size Option</h4>
+                    
+                        <input type="hidden" name="size" id="selectedSize" value="{{ old('size', $product->size ?? '') }}">
+                    
+                        <div class="size-options-grid">
+                            <!-- Default size option -->
+                            <div class="size-option-card">
+                                <input type="radio" name="selected_size" 
+                                       id="defaultSize" value="{{ old('size', $product->size ?? '') }}" 
+                                       class="size-option-input" checked>
+                                <label for="defaultSize" class="size-option-label">
+                                    <span class="size-value">{{ old('size', $product->size ?? '') }}</span>
+                                    <!--<span class="size-badge">Default</span>-->
+                                </label>
+                            </div>
+                    
+                            <!-- Multiple size options -->
+                            @if(isset($product) && $product->multiple_sizes)
+                                @foreach(json_decode($product->multiple_sizes) as $index => $size)
+                                    <div class="size-option-card">
+                                        <input type="radio" name="selected_size" 
+                                               id="size{{ $index }}" value="{{ $size }}"
+                                               class="size-option-input">
+                                        <label for="size{{ $index }}" class="size-option-label">
+                                            <span class="size-value">{{ $size }}</span>
+                                            <!--@if($loop->first)-->
+                                            <!--    <span class="size-badge popular">Popular</span>-->
+                                            <!--@endif-->
+                                        </label>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
 
-    <input type="hidden" name="size" id="selectedSize" value="{{ old('size', $product->size ?? '') }}">
 
-    <div class="size-options-grid">
-        <!-- Default size option -->
-        <div class="size-option-card">
-            <input type="radio" name="selected_size" 
-                   id="defaultSize" value="{{ old('size', $product->size ?? '') }}" 
-                   class="size-option-input" checked>
-            <label for="defaultSize" class="size-option-label">
-                <span class="size-value">{{ old('size', $product->size ?? '') }}</span>
-                <!--<span class="size-badge">Default</span>-->
-            </label>
-        </div>
 
-        <!-- Multiple size options -->
-        @if(isset($product) && $product->multiple_sizes)
-            @foreach(json_decode($product->multiple_sizes) as $index => $size)
-                <div class="size-option-card">
-                    <input type="radio" name="selected_size" 
-                           id="size{{ $index }}" value="{{ $size }}"
-                           class="size-option-input">
-                    <label for="size{{ $index }}" class="size-option-label">
-                        <span class="size-value">{{ $size }}</span>
-                        <!--@if($loop->first)-->
-                        <!--    <span class="size-badge popular">Popular</span>-->
-                        <!--@endif-->
-                    </label>
-                </div>
-            @endforeach
-        @endif
-    </div>
-</div>
+                    <div class="weight-selector-container">
+                        <!--<h4 class="weight-selector-title">Products In Stock's</h4>-->
+                                 <div class="weight-option-card">
+                            <input type="radio" name="selected_weight" 
+                                   id="defaultWeight" value="{{  $product->stock ?? '' }}" 
+                                   class="weight-option-input " checked >
+                            <label for="defaultWeight" class="weight-option-label w-100">
+                                <span class="weight-value"> Only {{  $product->stock ?? '0' }} piece(s) remaining</span>
+                                <!--<span class="weight-badge">Default</span>-->
+                            </label>
+                        </div>
+                       
+                    
+                    </div>
 
-					<div class="product-variants">
+					<!--<div class="product-variants">-->
 					    
+					    	
 					   
-
+                                <!--Weight Section Option-->
 					
-					<div class="weight-selector-container">
-    <h4 class="weight-selector-title">Select Weight Option</h4>
-    
-    <input type="hidden" name="weight" id="selectedWeight" value="{{ old('weight', $product->weight ?? '') }}">
-
-<div class="weight-options-grid">
-    <!-- Default weight option -->
-    <div class="weight-option-card">
-        <input type="radio" name="selected_weight" 
-               id="defaultWeight" value="{{ old('weight', $product->weight ?? '') }}" 
-               class="weight-option-input" checked>
-        <label for="defaultWeight" class="weight-option-label">
-            <span class="weight-value">{{ old('weight', $product->weight ?? '') }}g</span>
-            <span class="weight-badge">Default</span>
-        </label>
-    </div>
-    
-    <!-- Multiple weight options -->
-    @if(isset($product) && $product->multiple_weights)
-        @foreach(json_decode($product->multiple_weights) as $index => $weight)
-            <div class="weight-option-card">
-                <input type="radio" name="selected_weight" 
-                       id="weight{{ $index }}" value="{{ $weight }}"
-                       class="weight-option-input">
-                <label for="weight{{ $index }}" class="weight-option-label">
-                    <span class="weight-value">{{ $weight }}g</span>
-                    @if($loop->first)
-                        <span class="weight-badge popular">Popular</span>
-                    @endif
-                </label>
-            </div>
-        @endforeach
-    @endif
-</div>
-</div>
-
-
-					
-						
-					
-					</div>
+                            <!--	<div class="weight-selector-container">-->
+                        <!--    <h4 class="weight-selector-title">Select Weight Option</h4>-->
+                            
+                        <!--    <input type="hidden" name="weight" id="selectedWeight" value="{{ old('weight', $product->weight ?? '') }}">-->
+                        
+                        <!--<div class="weight-options-grid">-->
+                            <!-- Default weight option -->
+                        <!--    <div class="weight-option-card">-->
+                        <!--        <input type="radio" name="selected_weight" -->
+                        <!--               id="defaultWeight" value="{{ old('weight', $product->weight ?? '') }}" -->
+                        <!--               class="weight-option-input" checked>-->
+                        <!--        <label for="defaultWeight" class="weight-option-label">-->
+                        <!--            <span class="weight-value">{{ old('weight', $product->weight ?? '') }}g</span>-->
+                        <!--            <span class="weight-badge">Default</span>-->
+                        <!--        </label>-->
+                        <!--    </div>-->
+                            
+                            <!-- Multiple weight options -->
+                        <!--    @if(isset($product) && $product->multiple_weights)-->
+                        <!--        @foreach(json_decode($product->multiple_weights) as $index => $weight)-->
+                        <!--            <div class="weight-option-card">-->
+                        <!--                <input type="radio" name="selected_weight" -->
+                        <!--                       id="weight{{ $index }}" value="{{ $weight }}"-->
+                        <!--                       class="weight-option-input">-->
+                        <!--                <label for="weight{{ $index }}" class="weight-option-label">-->
+                        <!--                    <span class="weight-value">{{ $weight }}g</span>-->
+                        <!--                    @if($loop->first)-->
+                        <!--                        <span class="weight-badge popular">Popular</span>-->
+                        <!--                    @endif-->
+                        <!--                </label>-->
+                        <!--            </div>-->
+                        <!--        @endforeach-->
+                        <!--    @endif-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        			
+					<!--</div>-->
 				
                     
                     @if($product->stock > 0)
@@ -598,14 +608,14 @@
 
 
 
-
-					<div class="add_note_form">
-						<div class="form-group" style="width: 100%;">
-							<input type="text" id="note" name="note" placeholder="Add a note for this product" style="padding:5px; width: 100%;border: none; border-bottom: 1px solid #ccc; border-radius: 0;">
-						</div>
-						<div class="note_submit" style="text-align: left;margin: 10px 0"><input class=" text-white" style="border-radius:0; background-color:#2B2542;" type="submit"></div>
-					</div>
-				{{--	<div class="product-detail">
+                        <!--Add note-->
+					<!--<div class="add_note_form">-->
+					<!--	<div class="form-group" style="width: 100%;">-->
+					<!--		<input type="text" id="note" name="note" placeholder="Add a note for this product" style="padding:5px; width: 100%;border: none; border-bottom: 1px solid #ccc; border-radius: 0;">-->
+					<!--	</div>-->
+					<!--	<div class="note_submit" style="text-align: left;margin: 10px 0"><input class=" text-white" style="border-radius:0; background-color:#2B2542;" type="submit"></div>-->
+					<!--</div>-->
+				{{--	<div class="product-detail mt-3">
 						<ul class="about-ul">
 							<li class="about-list"> <span><i class="fas fa-arrow-circle-right"></i></span>Available: <span>{{ $product->stock ? 'In Stock' : 'Out of Stock' }}</span></li>
 							<li class="about-list"> <span><i class="fas fa-arrow-circle-right"></i></span>Stock: <span>{{ $product->stock }}</span></li>
@@ -716,7 +726,7 @@
 
 					
 					
-				<div class="product_details_accordion_container">
+				<div class="product_details_accordion_container mt-5">
     <div class="product_details_accordion_item">
         <div class="product_details_accordion_header" data-tab="tab1">
             <span>Description</span>
@@ -757,6 +767,107 @@
 		</div>
 	</div>
 </div>
+
+                {{--FAQ Section --}}
+            <section class="faq-section py-5">
+	<div class="container">
+		<h2 class="text-center mb-5">Frequently Asked Questions</h2>
+		<div class="accordion" id="faqAccordion">
+			<!-- Question 1 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingOne">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+					What materials are used in Vedaro jewellery?
+					</button>
+				</h3>
+				<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						Our jewellery is crafted using high-quality materials including 925 sterling silver, 
+						14k and 18k gold (both solid and plated options), genuine gemstones, and ethically 
+						sourced diamonds. Each piece is nickel-free and hypoallergenic for sensitive skin.
+					</div>
+				</div>
+			</div>
+			<!-- Question 2 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					How do I determine my ring size?
+					</button>
+				</h3>
+				<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						You can use our printable ring size guide available on the product page, or visit 
+						any local jeweler for professional sizing. We also offer free resizing within 
+						30 days of purchase for most of our rings.
+					</div>
+				</div>
+			</div>
+			<!-- Question 3 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingThree">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+					What is your return policy?
+					</button>
+				</h3>
+				<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						We offer a 30-day return policy for unworn, undamaged jewellery with original 
+						packaging and tags. Custom pieces and engraved items are final sale. Returns are 
+						processed within 3-5 business days after we receive the item.
+					</div>
+				</div>
+			</div>
+			<!-- Question 4 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingFour">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+					How should I care for my jewellery?
+					</button>
+				</h3>
+				<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						<ul>
+							<li>Store pieces separately in soft pouches to prevent scratches</li>
+							<li>Remove jewellery before swimming, showering, or applying cosmetics</li>
+							<li>Clean with a soft, lint-free cloth after each wear</li>
+							<li>For deeper cleaning, use a mild soap solution and soft brush</li>
+							<li>Avoid exposure to harsh chemicals, perfumes, and chlorinated water</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- Question 5 -->
+			<div class="accordion-item mb-3 border-0">
+				<h3 class="accordion-header" id="headingFive">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+						data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+					Do you offer international shipping?
+					</button>
+				</h3>
+				<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" 
+					data-bs-parent="#faqAccordion">
+					<div class="accordion-body">
+						Yes, we ship worldwide via DHL Express. International orders may be subject to 
+						customs fees and import taxes which are the responsibility of the customer. 
+						Delivery times vary by destination but typically range from 3-7 business days 
+						after dispatch.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
 <!-- Accordion Container -->
 <div class="main_review_section">
 	<div class="review-container">

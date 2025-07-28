@@ -9,7 +9,7 @@
             <h2 class="m-0 font-weight-bold text-primary">
                 <i class="fas fa-ban mr-2"></i>Canceled Orders
             </h2>
-            <div class="d-flex">
+            <div class="d-flex gap-2">
                 <div class="input-group mr-3" style="width: 250px;">
                     <input type="text" class="form-control" placeholder="Search orders..." id="searchInput">
                     <div class="input-group-append">
@@ -43,7 +43,7 @@
                         @foreach($orders as $order)
                         <tr>
                             <td class="font-weight-bold">
-                                #{{ is_array($order) ? $order['order_id'] ?? $order['channel_order_id'] ?? 'N/A' : $order->order_id }}
+                                {{ is_array($order) ? $order['channel_order_id'] ?? $order['channel_order_id'] ?? 'N/A' : $order->order_id }}
                             </td>
                             <td>
                                 @if(is_array($order))
@@ -56,10 +56,10 @@
                             </td>
                             <td>
                                 <div class="font-weight-bold">{{ is_array($order) ? $order['customer_name'] ?? 'Unknown' : $order->full_name }}</div>
-                                <small class="text-muted">{{ is_array($order) ? $order['email'] ?? 'N/A' : $order->email }}</small>
+                                <small class="text-muted">{{ is_array($order) ? $order['customer_email'] ?? 'N/A' : $order->email }}</small>
                             </td>
                             <td>
-                                {{ is_array($order) ? $order['phone'] ?? 'N/A' : $order->phone }}
+                                {{ is_array($order) ? $order['customer_phone'] ?? 'N/A' : $order->phone }}
                             </td>
                             <td class="font-weight-bold text-danger">
                                 ₹{{ is_array($order) ? number_format($order['order_total'] ?? $order['total'] ?? 0, 2) : number_format($order->amount, 2) }}

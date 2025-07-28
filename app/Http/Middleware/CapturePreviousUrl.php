@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,10 +9,14 @@ class CapturePreviousUrl
 {
     public function handle(Request $request, Closure $next)
     {
-        // Store the previous URL in the session (only if it's not the login or register page)
-        if (!in_array(url()->current(), [route('login'), route('register')])) {
-            session(['previous_previous_url' => session('previous_url', url()->previous())]);
-            session(['previous_url' => url()->previous()]);
+        // Only capture on GET requests to avoid overwriting on POST (e.g., login form submission)
+        if (
+            $request->method() === 'GET' &&
+            !$request->is('login') &&
+            !$request->is('register') &&
+            !$request->is('logout')
+        ) {
+            session(['previous_url' => url()->full()]);
         }
 
         return $next($request);

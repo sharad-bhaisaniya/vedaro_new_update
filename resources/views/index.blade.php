@@ -5,12 +5,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
 @section('content')
 <div class="main_banner">
-    <div class="main_banner_content">
-
-        <a href="/shop" class="shop_now_btn">Shop Now</a>
-    </div>
+	<div class="main_banner_content">
+		<a href="/shop" class="shop_now_btn">Shop Now</a>
+	</div>
 </div>
-
 <div class="container">
 	@if(session('success'))
 	<div class="success-message">
@@ -95,14 +93,14 @@
 									<p class="main_price">₹{{ $product->price }}</p>
 								</div>
 							</div>
-						<div class="button-container">
-    <button class="btn add-to-cart-btn" data-product-id="{{ $product->id }}">
-        <i class="fa fa-shopping-cart"></i> <span class="btn-text">Add to Cart</span>
-    </button>
-    <button class="btn add-to-wishlist-btn" data-product-id="{{ $product->id }}">
-        <i class="fas fa-cart-plus"></i> <span class="btn-text">Buy Now</span>
-    </button>
-</div>
+							<div class="button-container">
+								<button class="btn add-to-cart-btn" data-product-id="{{ $product->id }}">
+								<i class="fa fa-shopping-cart"></i> <span class="btn-text">Add to Cart</span>
+								</button>
+								<button class="btn add-to-wishlist-btn" data-product-id="{{ $product->id }}">
+								<i class="fas fa-cart-plus"></i> <span class="btn-text">Buy Now</span>
+								</button>
+							</div>
 						</div>
 					</a>
 				</div>
@@ -192,43 +190,38 @@
 </section>
 </div>
 <style>
-.main_banner {
-    position: relative;
-}
-
-.main_banner::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Dark overlay */
-    z-index: 1;
-}
-
-.main_banner_content {
-    position: relative;
-    z-index: 2;
-}
-
-.shop_now_btn {
-       display: inline-block;
-    margin-top: 15px;
-    padding: 12px 24px;
-    background: #ff009c;
-    color: white;
-    font-size: 18px;
-    text-decoration: none;
-    border-radius: 50px;
-    transition: 0.3s ease-in-out;
-    width: 300px;
-}
-
-.shop_now_btn:hover {
-    background: #b22d7e;
-}
-
+	.main_banner {
+	position: relative;
+	}
+	.main_banner::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+	z-index: 1;
+	}
+	.main_banner_content {
+	position: relative;
+	z-index: 2;
+	}
+	.shop_now_btn {
+	display: inline-block;
+	margin-top: 15px;
+	padding: 12px 24px;
+	background: #ff009c;
+	color: white;
+	font-size: 18px;
+	text-decoration: none;
+	border-radius: 50px;
+	transition: 0.3s ease-in-out;
+	width: 300px;
+	}
+	.shop_now_btn:hover {
+	background: #b22d7e;
+	}
 	.success_msgs_home {
 	position: fixed;
 	background: #b83131;
@@ -282,56 +275,47 @@
 	border-radius: 50%;
 	color: white;
 	}
-	
 	@media (max-width: 500px) {
-    /* Show only the Buy Now text and hide icon */
-    .add-to-wishlist-btn i {
-        display: none; /* Hide the icon for Buy Now */
-    }
-
-    .add-to-wishlist-btn .btn-text {
-        display: inline; /* Ensure Buy Now text is visible */
-    }
-
-    /* Show only the Add to Cart icon and hide text */
-    .add-to-cart-btn i {
-        display: inline; /* Show the icon for Add to Cart */
-    }
-
-    .add-to-cart-btn .btn-text {
-        display: none; /* Hide the Add to Cart text */
-    }
-
-    /* Rest of your existing mobile styles for buttons */
-    .product-card .button-container {
-        padding: 0;
-        border-top: none;
-        bottom: 4px;
-        display:none;
-    }
-
-    .product-card .btn {
-        padding: 10px 15px;  /* Adjust padding for mobile */
-        font-size: 14px;  /* Adjust font size */
-        color: #ee2e7a;
-        background: none !important;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-    }
-
-    .product-card .btn .fa,
-    .product-card .btn .fas {
-        font-size: 18px;  /* Adjust icon size */
-    }
-
-    .product-card .button-container {
-        padding: 0;
-        border-top: none;
-        bottom: 4px;
-    }
-}
-
+	/* Show only the Buy Now text and hide icon */
+	.add-to-wishlist-btn i {
+	display: none; /* Hide the icon for Buy Now */
+	}
+	.add-to-wishlist-btn .btn-text {
+	display: inline; /* Ensure Buy Now text is visible */
+	}
+	/* Show only the Add to Cart icon and hide text */
+	.add-to-cart-btn i {
+	display: inline; /* Show the icon for Add to Cart */
+	}
+	.add-to-cart-btn .btn-text {
+	display: none; /* Hide the Add to Cart text */
+	}
+	/* Rest of your existing mobile styles for buttons */
+	.product-card .button-container {
+	padding: 0;
+	border-top: none;
+	bottom: 4px;
+	display:none;
+	}
+	.product-card .btn {
+	padding: 10px 15px;  /* Adjust padding for mobile */
+	font-size: 14px;  /* Adjust font size */
+	color: #ee2e7a;
+	background: none !important;
+	margin-right: 10px;
+	display: flex;
+	align-items: center;
+	}
+	.product-card .btn .fa,
+	.product-card .btn .fas {
+	font-size: 18px;  /* Adjust icon size */
+	}
+	.product-card .button-container {
+	padding: 0;
+	border-top: none;
+	bottom: 4px;
+	}
+	}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- jQuery (must load before Slick) -->
