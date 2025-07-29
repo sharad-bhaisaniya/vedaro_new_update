@@ -209,7 +209,10 @@ Route::get('/register', [AuthController::class, 'register'])->name('register'); 
 Route::post('/register', [AuthController::class, 'register']); // Handle registration
 
 // Login routes
-Route::get('/login', [AuthController::class, 'index'])->name('login'); // Login form
+// Route::get('/login', [AuthController::class, 'index'])->name('login'); // Login form
+// web.php
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login', [AuthController::class, 'login']); // Handle login
 
 // Logout route

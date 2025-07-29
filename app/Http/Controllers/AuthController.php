@@ -91,35 +91,40 @@ class AuthController extends Controller
 
         return view('auth.verify_otp');
     }
+    public function showLoginForm()
+{
+    if (Auth::check()) {
+        $user = Auth::user();
+        return view('profile', compact('user'));
+    } 
+    else if (!str_contains(url()->previous(), 'login')) {
+        \Illuminate\Support\Facades\Redirect::setIntendedUrl(url()->previous());
+    }
+
+    return view('auth.login');
+}
+
 
 public function login(Request $request)
 {
     $request->validate([
-        "email" => "required|email",
-        "password" => "required",
+        'email' => 'required|email',
+        'password' => 'required',
     ]);
 
     $user = User::where('email', $request->email)->first();
-
+    
     if ($user && Hash::check($request->password, $user->password)) {
         Auth::login($user);
-
-        // Check if the user was redirected to login from a specific page
-        // Capture the intended URL if it's not the home or login page
-        $redirectTo = route('home'); // Default to home if coming from home or login page
-
-        // Manually check where the user is coming from
-        if (session()->has('url.intended') && !in_array(session('url.intended'), [route('home'), route('login')])) {
-            $redirectTo = session('url.intended');  // User was trying to go to checkout or other protected pages
-        }
-
-        // Redirect the user to the intended page or home
-        return redirect()->to($redirectTo)->with('success', 'You are now logged in!');
+        // dd(session('url.intended'));
+        // ✅ Laravel will use session('url.intended') set by middleware
+        return redirect()->intended(route('home')); // fallback to home if no intended
         
     }
 
-    return back()->with('error', 'Invalid credentials. Please try again.');
+    return back()->with('error', 'Invalid credentials');
 }
+
 
 // public function login(Request $request)
 // {
@@ -156,15 +161,20 @@ public function login(Request $request)
     }
 
 
-public function index()
-{
-    if (Auth::check()) {
-        $user = Auth::user(); // get the logged-in user
-        return view('profile', compact('user')); // pass to view
-    } else {
-        return view('auth.login');
-    }
-}
+// public function index()
+// {
+//     if (Auth::check()) {
+//         $user = Auth::user();
+//         return view('profile', compact('user'));
+//     } else {
+//         // Set the intended URL
+//         if (!str_contains(url()->previous(), 'login')) {
+//             Redirect::setIntendedUrl(url()->full()); // ya url()->current()
+//         }
+
+//         return redirect()->route('login');
+//     }
+// }
 
     public function home()
     {

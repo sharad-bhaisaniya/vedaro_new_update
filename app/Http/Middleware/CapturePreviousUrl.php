@@ -1,10 +1,10 @@
 <?php
-// app/Http/Middleware/CapturePreviousUrl.php
 
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CapturePreviousUrl
 {
@@ -13,12 +13,12 @@ class CapturePreviousUrl
         if (
             $request->method() === 'GET' &&
             !auth()->check() &&
-            !$request->is('login') &&    // avoid login page
-            !$request->is('logout') &&   // avoid logout
-            !$request->is('register') && // optional
+            !$request->is('login') &&
+            !$request->is('logout') &&
             !$request->ajax()
         ) {
-            session(['url.intended' => url()->full()]);
+             session(['url.intended' => url()->full()]);
+            // Log::info('URL Captured: ' . url()->full()); // Debug
         }
 
         return $next($request);
