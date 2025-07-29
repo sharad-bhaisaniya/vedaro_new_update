@@ -617,7 +617,7 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 					Eternally Beautiful
 				</h2>
 				<p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.7;">
-					At Primavera, luxury meets responsibility. Our fine jewelry is crafted with
+					At Vedaro, luxury meets responsibility. Our fine jewelry is crafted with
 					ethically sourced gemstones and recycled precious metals, ensuring beauty
 					without compromise. We partner with sustainable suppliers to create pieces
 					that shine with integrity—for you and the planet.

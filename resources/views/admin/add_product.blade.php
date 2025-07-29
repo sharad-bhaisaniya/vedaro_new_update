@@ -23,54 +23,53 @@
 	/*width: 97% !important;*/
 	}
 </style>
-@if ($errors->any())
-  <div class="alert alert-danger">
-    <ul>
-      @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-      @endforeach
-    </ul>
-  </div>
-@endif
-
-@if (session('success'))
-  <div class="alert alert-success">
-    {{ session('success') }}
-  </div>
-@endif
 
 <div class="container mt-1">
+  {{-- Laravel validation errors --}}
+@if ($errors->any())
+    <div style="background-color: #ffe0e0; padding: 15px; border: 1px solid #ff4d4d; color: #b30000; border-radius: 5px; margin-bottom: 20px;">
+        <strong>There were some issues:</strong>
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+{{-- Custom controller error --}}
+@if (session('error'))
+    <div style="background-color: #ffe0e0; padding: 15px; border: 1px solid #ff4d4d; color: #b30000; border-radius: 5px; margin-bottom: 20px;">
+        <strong>Error:</strong> {{ session('error') }}
+    </div>
+@endif
+
+{{-- Success message --}}
+@if (session('success'))
+    <div style="background-color: #e6ffed; padding: 15px; border: 1px solid #28a745; color: #155724; border-radius: 5px; margin-bottom: 20px;">
+        <strong>Success:</strong> {{ session('success') }}
+    </div>
+@endif
+
+
 	<div class="row justify-content-end">
 		<div class="col-lg-12 col-md-10 col-sm-12">
 			<h2 class="text-center mb-4">Add Product</h2>
-			<div class="form-container">
-				@if(session('success'))
-				<div class="alert alert-success">
-					{{ session('success') }}
-				</div>
-				@endif
-				@if($errors->any())
-				<div class="alert alert-danger">
-					<ul>
-						@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-						@endforeach
-					</ul>
-				</div>
-				@endif
+				<div class="form-container">
+			
         <form class="product_form" action="{{ route('admin.add_product') }}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="form-group">
 						<label for="productName">Product Name</label>
-						<input type="text" class="form-control" id="productName" name="productName" placeholder="Enter product name" required>
+						<input type="text" class="form-control" id="productName" name="productName" placeholder="Enter product name" value="{{ old('productName') }}" required>
 					</div>
 					<div class="form-group">
 						<label for="price">Price</label>
-						<input type="number" class="form-control" id="price" name="price" step="0.01" placeholder="Enter product price" required>
+						<input type="number" class="form-control" id="price" name="price" step="0.01" placeholder="Enter product price"  value="{{ old('price') }}" required>
 					</div>
 					<div class="form-group">
 						<label for="discountPercentage">Discount Percentage</label>
-						<input type="number" class="form-control" id="discountPercentage" name="discountPercentage" placeholder="Enter discount %" value="0">
+						<input type="number" class="form-control" id="discountPercentage" name="discountPercentage" placeholder="Enter discount %" value="{{ old('discountPercentage', 0) }}">
 					</div>
 					<div class="form-group">
 						<label for="discountPrice">Discount Price</label>
@@ -106,11 +105,11 @@
 
 					<div style="width:100%" class="form-group">
 						<label for="productDescription1">Product Description</label>
-						<textarea class="form-control" id="productDescription1" name="productDescription1" rows="4" placeholder="Enter product description" required></textarea>
+						<textarea class="form-control" id="productDescription1" name="productDescription1" rows="4" placeholder="Enter product description" required>{{ old('productDescription1') }}</textarea>
 					</div>
 					<div style="width:100%" class="form-group">
 						<label for="productDescription2">Product Description 2</label>
-						<textarea class="form-control" id="productDescription2" name="productDescription2" rows="4" placeholder="Enter product description" required></textarea>
+						<textarea class="form-control" id="productDescription2" name="productDescription2" rows="4" placeholder="Enter product description" required>{{ old('productDescription2') }}</textarea>
 					</div>
 					<div class="form-group">
 						<label for="productImage">Product Image 1</label>
@@ -132,7 +131,8 @@
 						<select name="category" id="category" class="form-control" required>
 							<option value="" disabled selected>Select a category</option>
 							@foreach ($categories as $category)
-								<option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+								<option  value="{{ $category['id'] }}" {{ old('category') == $category['id'] ? 'selected' : '' }}>
+                                 {{ $category['name'] }}</option>
 							@endforeach
 						</select>
 					</div>

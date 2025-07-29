@@ -34,7 +34,7 @@
     </div>
 
     <div class="tab-content active" id="login-tab">
-        <form action="{{ route('send-otp') }}" method="POST">
+        <form action="{{ route('wh.send.otp') }}" method="POST">
             @csrf
             <input type="hidden" name="action" value="login">
             <div class="form-group">
@@ -48,7 +48,7 @@
     </div>
 
     <div class="tab-content" id="register-tab">
-        <form action="{{ route('send-otp') }}" method="POST">
+        <form action="{{ route('wh.send.otp') }}" method="POST">
             @csrf
             <input type="hidden" name="action" value="register">
             <div class="form-group">

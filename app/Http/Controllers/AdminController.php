@@ -106,7 +106,9 @@ public function add_products(Request $request)
     }
 
     $categories = Category::all();
-    return view('admin.add_product', compact('categories'));
+    return view('admin.add_product', compact('categories'))
+       ->with('success', 'Product form loaded successfully!');
+
 }
 
 

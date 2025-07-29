@@ -38,11 +38,17 @@ Route::get('/test-aisensy', function () {
 
 
 // OTP Authentication Routes
+// Show form
 Route::get('/login-with-otp', [OtpController::class, 'showLoginWithOtpForm'])->name('login-with-otp');
-Route::post('/wh-send-otp', [OtpController::class, 'sendOtp'])->name('send-otp');
-Route::get('/wh-verify-otp', [OtpController::class, 'showVerifyOtpForm'])->name('verify-otp');
-Route::post('/wh-verify-otp', [OtpController::class, 'verifyOtp'])->name('verify-otp');
-Route::post('/wh-resend-otp', [OtpController::class, 'sendOtp'])->name('resend-otp');
+// Send OTP
+Route::post('/wh-send-otp', [OtpController::class, 'sendOtp'])->name('wh.send.otp');
+// Show Verify OTP form
+Route::get('/wh-verify-otp', [OtpController::class, 'showVerifyOtpForm'])->name('wh.verify.otp');
+// Verify OTP
+Route::post('/wh-verify-otp', [OtpController::class, 'verifyOtp'])->name('wh.verify.otp.post');
+// Resend OTP
+Route::post('/wh-resend-otp', [OtpController::class, 'resendOtp'])->name('wh.resend.otp');
+
 
 // The "Coming Soon" Page Itself - MUST be accessible
 Route::get('/comming_soon', function () {

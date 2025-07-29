@@ -1,23 +1,57 @@
 @extends('layouts.admin_lay')
 @section('title', 'Dashboard')
 @section('content')
+<style>
+    .row {
+        justify-content: flex-start !important;
+    }
+    .card {
+        /*height: 169px !important;*/
+    }
+    canvas {
+        max-height: 300px;
+    }
+</style>
 
 <div class="d-flex">
-    <!-- Sidebar -->
-    
-    <!-- Content Area -->
     <div class="content flex-grow-1">
         <button class="btn btn-secondary toggle-sidebar mb-3" onclick="toggleSidebar()">☰ Menu</button>
         <div class="container">
             <h2 class="mb-4">Dashboard Overview</h2>
             <div class="row">
+                
+                 <!-- Charts Section -->
+            <div class="row mt-5">
+                <!-- Doughnut Chart -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Order Status (Doughnut Chart)</h5>
+                            <canvas id="orderDoughnutChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+           <!-- Radar Chart -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Dashboard Metrics (Polar Area Chart)</h5>
+                        <canvas id="dashboardPolarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+
+                
+                
                 <!-- Total Orders -->
                 <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Total Orders</h5>
                             <p class="card-text display-6">{{ $totalOrders }}</p>
-                            <!--<a href="completed_orders" class="btn btn-primary">View Details</a>-->
                         </div>
                     </div>
                 </div>
@@ -76,22 +110,18 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
+           
         </div>
     </div>  
 </div>
-<style>
-    .row {
 
-    justify-content: flex-start !important;
-}
-.card{
-        height: 169px !important;
-}
-</style>
-<!-- Sidebar Toggle Script -->
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Sidebar Toggle -->
 <script>
     function toggleSidebar() {
         const sidebar = document.querySelector('.sidebar');
@@ -99,6 +129,58 @@
             sidebar.classList.toggle('open');
         }
     }
+
+    // Doughnut Chart: Order Status
+    const doughnutCtx = document.getElementById('orderDoughnutChart').getContext('2d');
+    new Chart(doughnutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Paid', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [{{ $paidOrders }}, {{ $pendingOrders }}, {{ $cancelledOrders }}],
+                backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+   // Polar Area Chart: Dashboard Metrics
+const polarCtx = document.getElementById('dashboardPolarChart').getContext('2d');
+new Chart(polarCtx, {
+    type: 'polarArea',
+    data: {
+        labels: ['Total Orders', 'Paid Orders', 'Pending Orders', 'Cancelled Orders', 'Products', 'Users'],
+        datasets: [{
+            label: 'Dashboard Overview',
+            data: [{{ $totalOrders }}, {{ $paidOrders }}, {{ $pendingOrders }}, {{ $cancelledOrders }}, {{ $productCount }}, {{ $userCount }}],
+            backgroundColor: [
+                '#0d6efd',
+                '#198754',
+                '#ffc107',
+                '#dc3545',
+                '#20c997',
+                '#6f42c1'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'right'
+            }
+        }
+    }
+});
+
 </script>
 
 @endsection

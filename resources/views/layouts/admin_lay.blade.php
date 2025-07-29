@@ -295,7 +295,7 @@
       </li>
       <li>
         <a href="/admin/manage-products">
-          <i class="fas fa-edit"></i> Manage Products
+          <i class="bi bi-box-seam-fill  me-2"></i>Manage Products
         </a>
       </li>
       <li>

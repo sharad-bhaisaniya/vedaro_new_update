@@ -132,4 +132,26 @@ class OtpController extends Controller
 
         return redirect()->intended(route('home'))->with('success', 'You are now logged in!');
     }
+    
+    public function resendOtp(Request $request)
+{
+    if (!Session::has('otp_phone')) {
+        return redirect()->route('login-with-otp')->with('error', 'Session expired. Please start again.');
+    }
+
+    $phone = Session::get('otp_phone');
+    $otp = rand(100000, 999999);
+
+    Session::put('otp_code', $otp);
+    Session::put('otp_expires_at', now()->addMinutes(10));
+
+    $result = $this->aiSensyService->sendOtp($phone, $otp);
+
+    if (!$result['success']) {
+        return redirect()->back()->with('error', 'Failed to resend OTP: ' . ($result['message'] ?? 'Unknown error.'));
+    }
+
+    return redirect()->back()->with('success', 'A new OTP has been sent to your WhatsApp number.');
+}
+
 }

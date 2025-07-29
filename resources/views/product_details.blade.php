@@ -7,6 +7,13 @@
 
 	
 	<style>
+	/*Small Images bottom side the main image */
+	.img-select{
+	        height: 100px;
+    overflow: hidden;
+     /*border: 2px solid red; */
+    margin-top: 10px;
+	}
 	
         	@media (max-width: 575px) {
          .btn-shine {
@@ -750,8 +757,8 @@
         </div>
         <div id="tab2" class="product_details_accordion_content">
             <h4>Specifications</h4>
-            <p>{{ $product->size }}</p>
-            <p>{{ $product->weight }}</p>
+            <p>Size:{{ $product->size }}</p>
+            <p>Weight:{{ $product->weight }}g</p>
         </div>
     </div>
     <div class="product_details_accordion_item">

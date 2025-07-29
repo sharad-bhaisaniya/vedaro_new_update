@@ -475,6 +475,24 @@ public function fetchShiprocketOrders()
                 'total' => ($product['price'] ?? 0) * ($product['quantity'] ?? 0)
             ];
         }
+            // Store in DB - prevent duplicates
+        \App\Models\ShiprocketOrder::updateOrCreate(
+            ['order_id' => $order['id']], // unique key
+            [
+                'channel_order_id' => $order['channel_order_id'] ?? null,
+                'shipment_id'   => $shipment['shipment_id'] ?? ($shipment['id'] ?? null), // adjust if nested
+                'awb_code' => $shipment['awb'] ?? null,  // Correct key
+                'courier_name' => $shipment['courier'] ?? null, // Correct key
+                'destination' => $order['customer_city'] ?? null,
+                'origin' => 'Warehouse', // Replace if you have origin data
+                'pincode' => $order['customer_pincode'] ?? null,
+                'status' => $order['status'] ?? 'Pending',
+                'tracking_url' => isset($shipment['awb']) ? "https://shiprocket.co/tracking/" . $shipment['awb'] : null,
+                'weight' => $shipment['weight'] ?? 0.0,
+                // 'size' =>  $order['size']  // helper function
+            ]
+        );
+
 
         $processedOrders[] = [
             'order_id' => $order['id'] ?? null,

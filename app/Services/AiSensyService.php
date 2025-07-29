@@ -11,7 +11,7 @@ class AiSensyService
     {
         try {
             // Clean and validate phone number
-            $phone = preg_replace('/\D/', '', $phone); // Only digits
+            $phone = preg_replace('/\D/', '', $phone); // Remove non-digits
             if (strlen($phone) !== 10) {
                 Log::error('❌ Invalid phone number: ' . $phone);
                 return [
@@ -20,13 +20,35 @@ class AiSensyService
                 ];
             }
 
+            $fullPhone = '91' . $phone;
+
             $payload = [
                 'apiKey'         => env('AISENSY_API_KEY'),
                 'campaignName'   => env('AISENSY_API_CAMPAIGN_NAME', 'vedaro_login'),
-                'destination'    => $phone,
+                'destination'    => $fullPhone,
                 'userName'       => 'Vedaro',
                 'templateParams' => [(string) $otp],
-                'source'         => 'vedaro.app',
+                'source'         => 'new-landing-page form',
+                'media'          => (object)[],
+                'buttons'        => [
+                    [
+                        'type'       => 'button',
+                        'sub_type'   => 'url',
+                        'index'      => 0,
+                        'parameters' => [
+                            [
+                                'type' => 'text',
+                                'text' => '$sampleParam$i'
+                            ]
+                        ]
+                    ]
+                ],
+                'carouselCards'      => [],
+                'location'           => (object)[],
+                'attributes'         => (object)[],
+                'paramsFallbackValue'=> [
+                    'FirstName' => 'user'
+                ]
             ];
 
             Log::info('📤 Sending OTP via AiSensy:', $payload);
