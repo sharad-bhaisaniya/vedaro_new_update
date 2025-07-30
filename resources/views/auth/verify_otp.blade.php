@@ -1,159 +1,134 @@
-@extends('layouts.main')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OTP Verification</title>
 
-@section('content')
-<div class="container" style="height: 100vh; display: flex; justify-content: center; align-items: center;">
-    <!-- OTP Verification Section -->
-    <div class="col-md-4 user_login_form">
-        <h2 class="text-center">Verify OTP</h2>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('verify-otp') }}">
-            @csrf
-            <div class="form-group">
-                <label for="otp">Enter OTP</label>
-                <input type="text" class="form-control" id="otp" name="otp" value="{{ old('otp') }}" required>
-                @error('otp')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
-        </form>
-
-        <!-- Resend OTP Button: Show only if success message is present and OTP is not yet sent again -->
-        @if(session('success') && !session('otp_sent'))
-            <div class="resend-otp mt-3">
-                <form action="{{ route('resend-otp') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-warning w-100">Resend OTP</button>
-                </form>
-            </div>
-        @endif
-    </div>
-</div>
-
-<!-- Login Section -->
-
-<style>
-    /* Center the forms on the page */
-    .user_login_form {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 30px;
-        background-color: #fff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+  <style>
+    body {
+      background-color: #f7e9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
     }
 
-    /* Header Styles */
-    .user_login_form h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 24px;
-        color: #333;
+    .login-card {
+      background-color: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
     }
 
-    /* Input Styles */
-    .form-group {
-        margin-bottom: 20px;
+    .form-control:focus {
+      border-color: #8e62f2;
+      box-shadow: 0 0 0 0.25rem rgba(142, 98, 242, 0.25);
     }
 
-    .form-group label {
-        display: block;
-        font-size: 14px;
-        color: #555;
-        margin-bottom: 5px;
+    .btn-verify {
+      background-color: #8e62f2;
+      border: none;
+      font-weight: 500;
     }
 
-    .form-group input {
-        width: 100%;
-        padding: 10px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
+    .btn-verify:hover {
+      background-color: #7a52e0;
     }
 
-    .form-group input:focus {
-        border-color: #4CAF50;
-        outline: none;
+    .btn-resend {
+      background-color: #f39c12;
+      border: none;
+      font-weight: 500;
     }
 
-    /* Button Styles */
-    .user_login_form button[type="submit"] {
-        width: 100%;
-        padding: 12px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-bottom: 20px;
+    .btn-resend:hover {
+      background-color: #e67e22;
     }
 
-    button[type="submit"]:hover {
-        background-color: #45a049;
+    .auth-links {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 1.5rem;
     }
 
-    /* Resend OTP Button Styles */
-    .resend-otp button {
-        background-color: #f39c12;
-        color: white;
-        border: none;
-        padding: 12px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
+    .auth-links a {
+      color: #6c757d;
+      text-decoration: none;
     }
 
-    .resend-otp button:hover {
-        background-color: #e67e22;
+    .auth-links a:hover {
+      color: #8e62f2;
+      text-decoration: underline;
     }
 
-    /* Error and Success Messages */
     .alert {
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        text-align: center;
+      border-radius: 0.5rem;
     }
+  </style>
+</head>
+<body>
 
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
+  <div class="login-card">
+    <h3 class="text-center mb-3 fw-bold">Verify OTP</h3>
+    <p class="text-center text-muted mb-4">Enter the code sent to your phone</p>
 
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
+    @if(session('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
 
-    /* Link Styles */
-    .user_login_form a {
-        text-decoration: none;
-        font-size: 14px;
-        color: #007bff;
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-    }
+    @if(session('error'))
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    @endif
 
-    .user_login_form a:hover {
-        text-decoration: underline;
-    }
-</style>
+    <form method="POST" action="{{ route('verify-otp') }}">
+      @csrf
+      <div class="mb-4">
+        <input type="text" class="form-control" id="otp" name="otp" value="{{ old('otp') }}" placeholder="Enter OTP" required>
+        @error('otp')
+          <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>
+        @enderror
+      </div>
 
-@endsection
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-verify btn-lg">
+          <i class="bi bi-shield-check me-2"></i>Verify OTP
+        </button>
+      </div>
+    </form>
+
+    @if(session('success') && !session('otp_sent'))
+      <form action="{{ route('resend-otp') }}" method="POST">
+        @csrf
+        <div class="d-grid">
+          <button type="submit" class="btn btn-resend btn-lg">
+            <i class="bi bi-arrow-repeat me-2"></i>Resend OTP
+          </button>
+        </div>
+      </form>
+    @endif
+
+    <div class="auth-links">
+      <a href="{{ url('/login') }}">Back to Login</a>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

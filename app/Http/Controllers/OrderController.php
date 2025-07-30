@@ -603,8 +603,10 @@ public function cancelShiprocketOrder(Request $request)
     ]);
 
     $result = $response->json();
+               
+            if ($response->successful()) {
+               
 
-    if ($response->successful()) {
         return response()->json(['success' => true, 'message' => 'Order cancelled successfully.']);
     } else {
         return response()->json([

@@ -25,7 +25,7 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header  text-white d-flex justify-content-between align-items-center"style="background:rgb(88 149 239 / 66%)">
             <h5 class="mb-0">   <i class="fas fa-cogs"></i> Manage Categories</h5>
-            <a href="" class="btn btn-sm btn-light">
+            <a href="{{route('admin.categories')}}" class="btn btn-sm btn-light">
                 ➕ Add Category
             </a>
         </div>
@@ -77,9 +77,9 @@
                                     @endif
                                 </td>
                                 <td class="table-actions">
-                                    <a href="{{ route('admin.edit_category', $category->id) }}" class="btn btn-sm btn-outline-warning">
-                                        ✏️ Edit
-                                    </a>
+                                    <!--<a href="{{ route('admin.edit_category', $category->id) }}" class="btn btn-sm btn-outline-warning">-->
+                                    <!--    ✏️ Edit-->
+                                    <!--</a>-->
 
                                     <form action="{{ route('admin.delete_category', $category->id) }}" method="POST" class="d-inline-block">
                                         @csrf

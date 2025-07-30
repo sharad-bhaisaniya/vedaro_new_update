@@ -416,7 +416,7 @@ $activeBanner = $banners->where('is_active', true)->first();
 
 
 {{-- product section --}}
-<section class="position-relative w-100 mb-5" style="padding: 0;">
+<section class="position-relative w-100 mb-4" style="padding: 0;">
 	<!-- Scroll Buttons -->
 	<button onclick="scrollToLeft()" class="btn position-absolute start-0 top-50 translate-middle-y px-2 py-2 shadow-sm" style="z-index: 10; background-color: #1c1b33; color: white;">
 	<i class="fas fa-chevron-left"></i>
@@ -508,8 +508,13 @@ $activeBanner = $banners->where('is_active', true)->first();
 	</div>
 </div>
 </div>
+
+
+
+
+
 {{--  Traditional content --}}
-@php
+{{--@php
 $activeCategories = $categories->where('active', true)->take(4)->values(); // Get only active, max 4
 @endphp
 @if($activeCategories->count())
@@ -574,7 +579,94 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 	@endif
 	@endforeach
 </section>
+@endif--}}
+@php
+$activeCategories = $categories->all(); // Get 8 active categories
+@endphp
+
+@if($activeCategories)
+<div class="d-flex justify-content-end align-items-center mb-4" style="margin-right:5px;">
+    <a href="{{route('categories_page')}}" id="toggleCategoryView" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+        View All Categories
+    </a>
+</div>
+
+<section class="row mx-3 justify-content-start gap-2 mb-5" style="--bs-gutter-x: 5px; --bs-gutter-y: 5px;">
+    @foreach($activeCategories as $index => $category)
+    <div class="col-6 col-md-2 position-relative gap-4 category-tile p-1">
+        <div class="category-image-container rounded-4 h-100">
+            <img src="{{ $category->image ? asset('public/storage/products/' . $category->image) : 'https://via.placeholder.com/600x800?text=No+Image' }}"
+                alt="{{ $category->name }}" class="w-100 h-100 rounded-4" style="object-fit: cover;">
+        </div>
+        <div class="category-overlay d-flex align-items-center justify-content-center rounded-4">
+            <a href="{{ route('product.show', ['id' => $category->id]) }}" 
+                class="category-name text-white text-decoration-none text-uppercase">
+                {{ $category->name }}
+            </a>
+        </div>
+    </div>
+    @endforeach
+</section>
+
+
+<style>
+    .category-tile {
+        height: 200px;
+            min-width: 290px;
+    }
+    
+    .category-image-container {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .category-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease;
+    }
+    
+    .category-overlay:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .category-name {
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .rounded-4 {
+        border-radius: 15px !important;
+    }
+    
+    @media (max-width: 768px) {
+        .category-tile {
+            height: 150px;
+        }
+        
+        .category-name {
+            font-size: 1rem;
+        }
+    }
+</style>
 @endif
+
+
+
+
+
+
+
+
+
+
 {{-- video sectionstart --}}
 <section class="position-relative w-100" style="height: 80vh">
 	<video autoplay="" muted="" loop="" playsinline="" src="https://cdn.pixabay.com/video/2020/02/15/32387-392248830_tiny.mp4" alt="Model with Necklace" class="w-100 h-100 object-cover"></video>
@@ -673,7 +765,7 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 					@endif
 				</div>
 				<!-- Main Image -->
-				<div class="flex-grow-1 order-0 order-md-1">
+				<div class="flex-grow-1 order-0 order-md-1 w-md-50 main-image">
 					<img id="mainImage" src="{{ asset('storage/products/' . $product->image1) }}" class="img-fluid border transition-all duration-300 w-100" style="height: 500px; object-fit: cover;">
 				</div>
 			</div>
@@ -750,7 +842,7 @@ $activeCategories = $categories->where('active', true)->take(4)->values(); // Ge
 					with a New York pulse
 				</h2>
 				<p class="text-muted mb-4" style="line-height: 1.7;">
-					VEDARO was founded by Una Langgaard, a Copenhagen-born designer who moved to New York in the 90’s. Growing up surrounded by the quiet elegance of Scandinavian design, she was also fascinated by the energy and chaos of New York. From the beginning, VEDARO was about balance — sleek, architectural lines softened by the asymmetry of a petal, a vine, or the curve of a wave. Today, VEDARO is celebrated as the epitome of quiet luxury.
+					Vedaro was founded by Bhavya Garodia, a young visionary from Rajasthan with an old soul and a deep reverence for timeless beauty. Raised amidst the spiritual richness of Indian tradition and driven by a passion for design, Bhavya envisioned a brand where purity meets purpose. Vedaro was born not just to adorn, but to tell stories — of devotion, detail, and quiet luxury. Each piece reflects his belief: that true elegance lies in simplicity, and meaning is the finest ornament.
 				</p>
 				<a href="/about">
 				<button class="btn border border-dark text-dark text-uppercase px-4 py-2 small fw-semibold" style="transition: 0.3s;">

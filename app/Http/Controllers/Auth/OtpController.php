@@ -63,6 +63,7 @@ class OtpController extends Controller
         if ($request->action === 'register') {
             Session::put('registration_data', [
                 'name'  => $request->name,
+                'last_name' => $request -> last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
             ]);
@@ -113,7 +114,8 @@ class OtpController extends Controller
             $userData = Session::get('registration_data');
 
             $user = User::create([
-                'name'     => $userData['name'],
+                'first_name'     => $userData['name'],
+                'last_name'     => $userData['last_name'],
                 'email'    => $userData['email'],
                 'phone'    => $userData['phone'],
                 'password' => Hash::make(rand(100000, 999999)), // Random password

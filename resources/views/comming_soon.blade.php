@@ -306,8 +306,8 @@
     const timeContent = document.querySelector(".time-content");
     const mainHeader = document.querySelector("header");
 
-    // Updated launch date: July 30, 2025 at 06:30 AM
-    const launchDate = new Date("2025-07-30T06:30:00").getTime();
+    // Updated launch date: July 30, 2025 at 18:30 AM
+    const launchDate = new Date("2025-07-30T18:30:00").getTime();
 
     const timeFunction = setInterval(() => {
         const now = new Date().getTime();

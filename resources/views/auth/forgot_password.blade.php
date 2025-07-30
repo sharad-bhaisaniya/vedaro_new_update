@@ -1,119 +1,104 @@
-<!-- resources/views/auth/forgot_password.blade.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forgot Password</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f7e9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .login-card {
+      background-color: white;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+    }
+    .form-control:focus {
+      border-color: #8e62f2;
+      box-shadow: 0 0 0 0.25rem rgba(142, 98, 242, 0.25);
+    }
+    .btn-purple {
+      background-color: #8e62f2;
+      border: none;
+      font-weight: 500;
+      color: white;
+    }
+    .btn-purple:hover {
+      background-color: #7a52e0;
+    }
+    .auth-links {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .auth-links a {
+      color: #6c757d;
+      text-decoration: none;
+    }
+    .auth-links a:hover {
+      color: #8e62f2;
+      text-decoration: underline;
+    }
+    .form-control {
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
 
-@extends('layouts.main')
+<div class="login-card">
+  <h3 class="text-center mb-3 fw-bold">Reset Password</h3>
+  <p class="text-center text-muted mb-4">Enter your email to receive a reset link</p>
 
-@section('title', 'Forgot Password')
+  @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
 
-@section('content')
-    <div class="user_login_form">
-        <h2>Forgot Password</h2>
-        
-        <!-- Success or error messages -->
-        @if(session('success'))
-            <div class="success-message">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="error-message">
-                {{ session('error') }}
-            </div>
-        @endif
+  @if ($errors->any()))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      @foreach ($errors->all() as $error)
+        {{ $error }}
+      @endforeach
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
 
-        <!-- Form to request password reset -->
-        <form action="{{ route('password.email') }}" method="POST">
-            @csrf
-            
-            <div class="form-group">
-                <label for="email">Enter Your Email:</label>
-                <input type="email" name="email" class="form-control" required>
-                @error('email')
-                    <div class="error-message">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-
-            <button type="submit" class="btn btn-primary">Send Reset Link</button>
-        </form>
+  <form action="{{ route('password.email') }}" method="POST">
+    @csrf
+    <div class="mb-3">
+      <input type="email" name="email" class="form-control" placeholder="Enter your email address" 
+             value="{{ old('email') }}" required autofocus>
     </div>
 
-    <style>
-        /* Reuse styles from login page, or customize as needed */
-        .user_login_form {
-            max-width: 400px;
-            margin: 150px auto 20px;
-            padding: 30px;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        
-        .user_login_form h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 24px;
-            color: #333;
-        }
+    <div class="d-grid mb-3">
+      <button type="submit" class="btn btn-purple btn-lg">
+        <i class="bi bi-send me-2"></i>Send Reset Link
+      </button>
+    </div>
+  </form>
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+  <div class="auth-links">
+    <a href="{{ url('/login') }}"><i class="bi bi-arrow-left me-1"></i>Back to Login</a>
+  </div>
+</div>
 
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-
-        .user_login_form button[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        .error-message, .success-message {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
-@endsection
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

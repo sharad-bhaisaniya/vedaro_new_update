@@ -7,6 +7,7 @@
     }
     .card {
         /*height: 169px !important;*/
+            min-height: 169px;
     }
     canvas {
         max-height: 300px;

@@ -47,9 +47,9 @@
             <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
                 <div class="text-center text-md-end">
                     <img
-                        src="//primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=2200"
+                        src="{{ asset('public/assets/images/about/pic.jpg') }}"
                         alt="Una Langgaard, a white woman with gray hair smiles at the camera."
-                        srcset="//primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=200 200w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=300 300w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=400 400w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=500 500w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=600 600w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=800 800w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=1000 1000w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=1200 1200w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=1400 1400w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=1600 1600w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=1800 1800w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=2000 2000w, //primavera-precision.myshopify.com/cdn/shop/files/una-langgaard.jpg?v=1738239436&amp;width=2200 2200w"
+
                         width="2200" height="2200" loading="lazy" class="img-fluid rounded"
                     >
                 </div>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\ShiprocketOrder;
 use App\Models\GiftProduct;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
@@ -41,7 +42,6 @@ public function add_products(Request $request)
             'multiple_sizes' => 'nullable|array',
             'multiple_sizes.*' => 'nullable|string|max:255|distinct',
             "category" => "required|exists:categories,id",
-
         ]);
 
         try {
@@ -50,32 +50,47 @@ public function add_products(Request $request)
             $imagePath2 = $request->file('productImage2') ? $request->file('productImage2')->store('products', 'public') : null;
             $imagePath3 = $request->file('productImage3') ? $request->file('productImage3')->store('products', 'public') : null;
 
-            // Calculate timer end time if timer is enabled
+            // Timer calculation
             $endTime = null;
             $addTimer = $request->has('addTimer');
-            
+
             if ($addTimer) {
                 $totalSeconds = ($request->timerDays * 86400) + 
-                               ($request->timerHours * 3600) + 
-                               ($request->timerMinutes * 60) + 
-                               $request->timerSeconds;
-                
+                                ($request->timerHours * 3600) + 
+                                ($request->timerMinutes * 60) + 
+                                $request->timerSeconds;
+
                 if ($totalSeconds > 0) {
                     $endTime = now()->addSeconds($totalSeconds);
                 }
             }
 
+            // Weight conversion: grams to kg
+            $convertedWeight = null;
+            if ($request->filled('weight') && is_numeric($request->weight)) {
+                $convertedWeight = (string) ($request->weight / 1000); // Store as string in kg
+            }
+
+            $convertedMultipleWeights = [];
+            if ($request->has('multiple_weights')) {
+                foreach ($request->multiple_weights as $w) {
+                    if (is_numeric($w)) {
+                        $convertedMultipleWeights[] = (string) ($w / 1000); // Convert to kg
+                    } else {
+                        $convertedMultipleWeights[] = $w; // fallback if it's not numeric
+                    }
+                }
+            }
+
             // Create the product
-           $product = Product::create([
+            $product = Product::create([
                 'productName' => $request->productName,
                 'coupon_code' => $request->coupon_code,
                 'category' => $request->category,
-                   // Safe fallback for optional fields
                 'size' => $request->filled('size') ? $request->size : '',
                 'multiple_sizes' => $request->has('multiple_sizes') ? json_encode($request->multiple_sizes) : json_encode([]),
-            
-                'weight' => $request->filled('weight') ? $request->weight : '',
-                'multiple_weights' => $request->has('multiple_weights') ? json_encode($request->multiple_weights) : json_encode([]),
+                'weight' => $convertedWeight ?? '',
+                'multiple_weights' => json_encode($convertedMultipleWeights),
                 'productDescription1' => $request->productDescription1,
                 'productDescription2' => $request->productDescription2,
                 'price' => $request->price,
@@ -92,24 +107,23 @@ public function add_products(Request $request)
                 'timer_end_at' => $endTime,
             ]);
 
-
             return redirect()->route('admin.add_product')->with('success', 'Product added successfully!');
-            
+
         } catch (\Exception $e) {
-            // Delete uploaded files if there was an error
+            // Delete uploaded images if any error occurs
             if (isset($imagePath1)) Storage::disk('public')->delete($imagePath1);
             if (isset($imagePath2)) Storage::disk('public')->delete($imagePath2);
             if (isset($imagePath3)) Storage::disk('public')->delete($imagePath3);
-            
+
             return back()->withInput()->with('error', 'Error adding product: ' . $e->getMessage());
         }
     }
 
     $categories = Category::all();
     return view('admin.add_product', compact('categories'))
-       ->with('success', 'Product form loaded successfully!');
-
+        ->with('success', 'Product form loaded successfully!');
 }
+
 
 
 
@@ -266,10 +280,10 @@ public function update_product(Request $request, $id)
         $userCount = User::count();
     
         // Get order counts based on status
-        $totalOrders = Order::count();
-        $paidOrders = Order::where('status', 'paid')->count();
+        $totalOrders = ShiprocketOrder::count();
+        $paidOrders = ShiprocketOrder::where('status', 'new')->count();
         $pendingOrders = Order::where('status', 'pending')->count();
-        $cancelledOrders = Order::where('status', 'cancel')->count();
+        $cancelledOrders = ShiprocketOrder::where('status', 'CANCELED')->count();
     
         // Pass the counts to the view
         return view("admin.dashboard", compact(

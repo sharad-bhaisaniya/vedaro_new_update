@@ -537,7 +537,10 @@
 										<div class="col-md-2 mega-column" style="    border-right: 2px solid #ccc;">
 											<h6>Categories</h6>
 											<ul>
-												@foreach($categories as $category)
+											    @php
+                                                    $minCategories = $categories->take(6); // Get only first 4 categories
+                                                @endphp
+												@foreach($minCategories as $category)
 												<li>
 													<a href="{{ route('categories_page', ['category' => $category->id]) }}" 
 														class="category-item" 
