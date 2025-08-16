@@ -50,15 +50,24 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <div class="container mt-3">
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
     <h2 class="mb-4">
           <i class="bi bi-box-seam-fill text-primary me-2"></i>Manage Products
     </h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
@@ -67,8 +76,8 @@
                     <th>ID</th>
                     <th><i class="bi bi-box"></i> Name</th>
                     <th><i class="bi bi-currency-rupee"></i> Discount Price</th>
-                    <th><i class="bi bi-box-seam"></i> Stock</th>
-                    <th><i class="bi bi-tag-fill"></i> On Sell</th>
+                    <th><i class="bi bi-box-seam"></i> Current_stock & Total_stock</th>
+                    <th><i class="bi bi-tag-fill"></i> On Sell Availability</th>
                     <th><i class="bi bi-grid"></i> Category</th>
                     <th><i class="bi bi-gear-fill"></i> Actions</th>
                     <th><i class="bi bi-eye-fill"></i> View</th>
@@ -80,10 +89,10 @@
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->productName }}</td>
                     <td>₹{{ $product->discountPrice }}</td>
-                    <td>{{ $product->stock }}</td>
+                    <td style="text-align:center">{{ $product->current_stock }} / {{ $product->total_stock }}</td>
                     <td>
-                        <span class="badge bg-{{ $product->on_sell ? 'success' : 'secondary' }}">
-                            {{ $product->on_sell ? 'Yes' : 'No' }}
+                        <span class="badge bg-{{ $product->availability ? 'success' : 'danger' }}">
+                          {{ $product->availability ? 'Available' : 'Unavailable' }}
                         </span>
                     </td>
                     <td>{{ $product->category }}</td>
@@ -115,9 +124,14 @@
                     <p><span class="details-label">Price:</span> ₹{{ $product->price }}</p>
                     <p><span class="details-label">Coupon Code:</span> {{ $product->coupon_code }}</p>
                     <p><span class="details-label">Shipping Fee:</span> ₹{{ $product->shipping_fee }}</p>
-                    <p><span class="details-label">Availability:</span> {{ $product->availability ? 'Available' : 'Unavailable' }}</p>
+                    <p><span class="details-label ">On Sell:</span>  <span class="bg-{{ $product->on_sell ? 'success' : 'danger' }} px-3 rounded-pill text-white"> {{ $product->on_sell ? 'Yes' : 'No' }}</span></p>
                     <p><span class="details-label">Created:</span> {{ $product->created_at }}</p>
-                    <p><span class="details-label">Size:</span> {{ $product->size ?? 'N/A' }}</p>
+                    <p><span class="details-label">Size:</span> @if(empty($product->size))
+                                    <span class="badge bg-secondary">Universal</span>
+                                @else
+                                    <span class="badge bg-primary">{{ $product->multiple_sizes }}</span>
+                                @endif
+                    </p>
                     <p><span class="details-label">Weight:</span> 
                         @if($product->multiple_weights)
                             @foreach(explode(',', $product->multiple_weights) as $weight)
@@ -156,5 +170,24 @@
         card.classList.toggle('show');
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--swan sweet message-->
+@if(Session::has('swal'))
+<script>
+    window.onload = function() {
+        const swalData = @json(Session::get('swal'));
+        Swal.fire({
+            position: 'center',
+            icon: swalData.icon,
+            title: swalData.title,
+            text: swalData.text,
+            showConfirmButton: swalData.showConfirmButton ?? true,
+            timer: swalData.timer ?? null,
+            timerProgressBar: true,
+        });
+    };
+</script>
+@endif
 
 @endsection

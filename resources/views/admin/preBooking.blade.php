@@ -41,7 +41,7 @@
                                 Deleted User
                             @endif
                         </td>
-                        <td>{{ $booking->user->email }} </td>
+                        <td>{{ $booking->user->email ?? null }}</td>
                         <td>{{ $booking->user->phone }} </td>
                         <td>{{ $booking->product->productName ?? 'Deleted Product' }}</td>
                         <td>{{ $booking->quantity }}</td>

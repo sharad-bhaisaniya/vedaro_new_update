@@ -14,9 +14,9 @@ protected $fillable = [
     'coupon_code',
     'category',
     'size',
-    'multiple_sizes', // ← Add this line
+    'multiple_sizes',
     'weight',
-    'multiple_weights',  
+    'multiple_weights',
     'productDescription1',
     'productDescription2',
     'price',
@@ -25,7 +25,9 @@ protected $fillable = [
     'image1',
     'image2',
     'image3',
-    'stock',
+    'current_stock',     // updated from 'stock'
+    'total_stock',       // new
+    'size_stock',        // new
     'shipping_fee',
     'availability',
     'on_sell',
@@ -35,18 +37,21 @@ protected $fillable = [
 
 
 
-    protected $casts = [
-        'availability' => 'boolean',
-        'on_sell' => 'boolean',
-        'add_timer' => 'boolean',
-        'timer_end_at' => 'datetime',
-          'multiple_weights' => 'array',
-    ];
+
+protected $casts = [
+    'availability' => 'boolean',
+    'on_sell' => 'boolean',
+    'add_timer' => 'boolean',
+    'timer_end_at' => 'datetime',
+    'multiple_weights' => 'array',
+    'size_stock' => 'array', // new
+];
+
 
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    
+
 }

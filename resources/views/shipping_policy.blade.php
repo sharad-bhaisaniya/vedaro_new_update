@@ -5,7 +5,7 @@
 
 <style>
     .content{
-        margin-top: 150px;
+        margin-top: 7%;
     }
 </style>
 

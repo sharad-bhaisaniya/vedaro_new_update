@@ -234,6 +234,15 @@
       }
     }
   </style>
+  
+  
+  <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  
 </head>
 <body>
   <nav id="sidebar">
@@ -350,6 +359,49 @@
       </li>
     </ul>
   </li>
+  <li>
+    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+      <i class="fas fa-ticket-alt"></i>
+      <span>Coupons</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <ul class="sub-menu">
+      <li>
+        <a href="{{ route('coupon.index') }}">
+         <i class="fas fa-plus-circle"></i> Generate Coupon
+        </a>
+      </li>
+      <li>
+        <a href="{{ route('coupon.show') }}">
+         <i class="fas fa-list"></i> Manage Coupons
+        </a>
+      </li>
+
+    </ul>
+  </li>
+   <li>
+    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+   
+        <i class="fas fa-calendar-check"></i>
+        <!--<i class="fas fa-calendar-week"></i>-->
+      <span>Events</span>
+      <i class="fas fa-chevron-down"></i>
+    </button>
+    <ul class="sub-menu">
+      
+      <li>
+        <a href="{{route('events.booking.show')}}">
+      
+             <i class="fas fa-hourglass-half"></i>
+             
+             Completed Event Booking
+        </a>
+      </li>
+     
+    </ul>
+  </li>
+
+
   
   <li class="nav-item">
     <a href="{{ route('limited-banners.index') }}" class="nav-link">
@@ -419,5 +471,20 @@
       button.querySelector('i:last-child').classList.toggle("fa-chevron-up");
     }
   </script>
+  <!-- SweetAlert Messages -->
+@if(session('swal'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: '{{ session('swal')['icon'] }}',
+            title: '{{ session('swal')['title'] }}',
+            text: '{{ session('swal')['text'] }}',
+            timer: {{ session('swal')['timer'] ?? 'null' }},
+            showConfirmButton: {{ session('swal')['showConfirmButton'] ?? 'true' }},
+            timerProgressBar: true
+        });
+    });
+</script>
+@endif
 </body>
 </html>

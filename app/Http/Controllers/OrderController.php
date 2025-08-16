@@ -156,8 +156,13 @@ public function completedOrders()
 
     public function pendingOrders()
     {
-        $orders = Order::with('items')->where('status', 'Paid')->get();
+        $orders = Order::with('items')
+    ->where('status', 'Paid')
+    ->orderBy('created_at', 'desc') // ascending by created_at
+    ->get();
+
         return view('admin.pending_orders', compact('orders'));
+
     }
     
     public function canceledOrders()

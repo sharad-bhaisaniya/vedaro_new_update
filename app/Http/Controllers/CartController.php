@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\UserAddress;
+use App\Models\Coupon;
 
 
 class CartController extends Controller
@@ -34,7 +35,6 @@ public function cart_view()
         // For guests, get cart items from the session
         $cartItems = Session::get('cart', []);
         foreach ($cartItems as &$item) {
-            // Get product data for each item from the database using product_id
             $product = Product::find($item['product_id']);
             if ($product) {
                 $item['product'] = $product; // Attach product details to each cart item
@@ -44,79 +44,262 @@ public function cart_view()
     }
 
     $total = $subtotal + $shippingCost;
+    $giftProduct = GiftProduct::where('is_active', true)->first();
 
     return view('cart', [
         'cartItems' => $cartItems,
         'subtotal' => $subtotal,
         'shippingCost' => $shippingCost,
         'total' => $total,
+          'giftProduct'=>$giftProduct
     ]);
 }
 
 // -----------------------------------------------------------------------------
+// public function addToCart(Request $request)
+// {
+//     $request->validate([
+//         'product_id' => 'required|integer',
+//         'product_qty' => 'required|integer|min:1',
+//     ]);
+
+//     $product_id = $request->input('product_id');
+//     $product_qty = $request->input('product_qty');
+//     $customer_id = Auth::id();
+
+//     if ($customer_id) {
+//         // For logged-in users, store in the database
+//         $existingCartItem = Cart::where('product_id', $product_id)
+//             ->where('customer_id', $customer_id)
+//             ->first();
+
+//         if ($existingCartItem) {
+//             $existingCartItem->product_qty += $product_qty;
+//             $existingCartItem->save();
+//         } else {
+//             Cart::create([
+//                 'product_id' => $product_id,
+//                 'product_qty' => $product_qty,
+//                 'customer_id' => $customer_id,
+//             ]);
+//         }
+
+//         // Check if there's a session cart (for guest users before login)
+//         $guestCart = Session::get('cart', []);
+//         if (!empty($guestCart)) {
+//             foreach ($guestCart as $item) {
+//                 // Migrate the session cart to the database
+//                 Cart::create([
+//                     'product_id' => $item['product_id'],
+//                     'product_qty' => $item['product_qty'],
+//                     'customer_id' => $customer_id,
+//                 ]);
+//             }
+
+//             // Clear the session cart
+//             Session::forget('cart');
+//         }
+
+//     } else {
+//         // For guest users, store in session
+//         $cart = Session::get('cart', []);
+
+//         // Check if product already exists in the cart
+//         $productFound = false;
+//         foreach ($cart as &$item) {
+//             if ($item['product_id'] == $product_id) {
+//                 $item['product_qty'] += $product_qty;
+//                 $productFound = true;
+//                 break;
+//             }
+//         }
+
+//         // If product not found, add it to the cart
+//         if (!$productFound) {
+//             $cart[] = [
+//                 'product_id' => $product_id,
+//                 'product_qty' => $product_qty,
+//             ];
+//         }
+
+//         Session::put('cart', $cart);
+//     }
+
+//     if ($request->ajax()) {
+//         return response()->json(['success' => true, 'message' => 'Product added to cart successfully!']);
+//     }
+
+//     return redirect()->back()->with('success', 'Product added to cart successfully!');
+// }
+
+// now comment
+// public function addToCart(Request $request)
+// {
+//     $request->validate([
+//         'product_id'   => 'required|integer',
+//         'product_qty'  => 'required|integer|min:1',
+//     ]);
+
+//     $product_id  = $request->input('product_id');
+//     $product_qty = $request->input('product_qty');
+//     $customer_id = Auth::id();
+
+//     // Get the product from DB so we can store its size and weight
+//     $product = Product::findOrFail($product_id);
+//     $size    = $product->size ?? null;
+//     $weight  = $product->weight ?? null;
+
+//     if ($customer_id) {
+//         // Logged-in users → store in DB
+//         $existingCartItem = Cart::where('product_id', $product_id)
+//             ->where('customer_id', $customer_id)
+//             ->where('size', $size)
+//             ->first();
+
+//         if ($existingCartItem) {
+//             // If same size & weight → update qty
+//             $existingCartItem->product_qty += $product_qty;
+//             $existingCartItem->save();
+//         } else {
+//             // Add as separate row
+//             Cart::create([
+//                 'product_id'   => $product_id,
+//                 'product_qty'  => $product_qty,
+//                 'customer_id'  => $customer_id,
+//                 'size'         => $size,
+//                 'weight'       => $weight,
+//             ]);
+//         }
+
+//         // Migrate guest cart to DB if exists
+//         $guestCart = Session::get('cart', []);
+//         if (!empty($guestCart)) {
+//             foreach ($guestCart as $item) {
+//                 Cart::create([
+//                     'product_id'   => $item['product_id'],
+//                     'product_qty'  => $item['product_qty'],
+//                     'customer_id'  => $customer_id,
+//                     'size'         => $item['size'] ?? null,
+//                     'weight'       => $item['weight'] ?? null,
+//                 ]);
+//             }
+//             Session::forget('cart');
+//         }
+
+//     } else {
+//         // Guest users → store in session
+//         $cart = Session::get('cart', []);
+//         $productFound = false;
+
+//         foreach ($cart as &$item) {
+//             if (
+//                 $item['product_id'] == $product_id &&
+//                 ($item['size'] ?? null) == $size &&
+//                 ($item['weight'] ?? null) == $weight
+//             ) {
+//                 $item['product_qty'] += $product_qty;
+//                 $productFound = true;
+//                 break;
+//             }
+//         }
+
+//         if (!$productFound) {
+//             $cart[] = [
+//                 'product_id'   => $product_id,
+//                 'product_qty'  => $product_qty,
+//                 'size'         => $size,
+//                 'weight'       => $weight,
+//             ];
+//         }
+
+//         Session::put('cart', $cart);
+//     }
+
+//     if ($request->ajax()) {
+//         return response()->json(['success' => true, 'message' => 'Product added to cart successfully!']);
+//     }
+
+//     return redirect()->back()->with('success', 'Product added to cart successfully!');
+// }
+
 public function addToCart(Request $request)
 {
     $request->validate([
-        'product_id' => 'required|integer',
-        'product_qty' => 'required|integer|min:1',
+        'product_id'   => 'required|integer',
+        'product_qty'  => 'required|integer|min:1',
     ]);
 
-    $product_id = $request->input('product_id');
+    $product_id  = $request->input('product_id');
     $product_qty = $request->input('product_qty');
     $customer_id = Auth::id();
 
+    // Get the product from DB
+    $product = Product::findOrFail($product_id);
+    
+    // Set size to "Universal" if empty/null
+    $size = !empty($product->size) ? $product->size : 'Universal';
+    $weight = $product->weight ?? null;
+
     if ($customer_id) {
-        // For logged-in users, store in the database
+        // Logged-in users → store in DB
         $existingCartItem = Cart::where('product_id', $product_id)
             ->where('customer_id', $customer_id)
+            ->where('size', $size)
             ->first();
 
         if ($existingCartItem) {
+            // If same product with same size → update qty
             $existingCartItem->product_qty += $product_qty;
             $existingCartItem->save();
         } else {
+            // Add as new cart item
             Cart::create([
-                'product_id' => $product_id,
-                'product_qty' => $product_qty,
-                'customer_id' => $customer_id,
+                'product_id'   => $product_id,
+                'product_qty'  => $product_qty,
+                'customer_id'  => $customer_id,
+                'size'         => $size, // Will be "Universal" if empty
+                'weight'       => $weight,
             ]);
         }
 
-        // Check if there's a session cart (for guest users before login)
+        // Migrate guest cart to DB if exists
         $guestCart = Session::get('cart', []);
         if (!empty($guestCart)) {
             foreach ($guestCart as $item) {
-                // Migrate the session cart to the database
                 Cart::create([
-                    'product_id' => $item['product_id'],
-                    'product_qty' => $item['product_qty'],
-                    'customer_id' => $customer_id,
+                    'product_id'   => $item['product_id'],
+                    'product_qty'  => $item['product_qty'],
+                    'customer_id'  => $customer_id,
+                    'size'         => !empty($item['size']) ? $item['size'] : 'Universal',
+                    'weight'       => $item['weight'] ?? null,
                 ]);
             }
-
-            // Clear the session cart
             Session::forget('cart');
         }
 
     } else {
-        // For guest users, store in session
+        // Guest users → store in session
         $cart = Session::get('cart', []);
-
-        // Check if product already exists in the cart
         $productFound = false;
+
         foreach ($cart as &$item) {
-            if ($item['product_id'] == $product_id) {
+            if (
+                $item['product_id'] == $product_id &&
+                ($item['size'] ?? 'Universal') == $size &&
+                ($item['weight'] ?? null) == $weight
+            ) {
                 $item['product_qty'] += $product_qty;
                 $productFound = true;
                 break;
             }
         }
 
-        // If product not found, add it to the cart
         if (!$productFound) {
             $cart[] = [
-                'product_id' => $product_id,
-                'product_qty' => $product_qty,
+                'product_id'   => $product_id,
+                'product_qty'  => $product_qty,
+                'size'         => $size, // Will be "Universal" if empty
+                'weight'       => $weight,
             ];
         }
 
@@ -129,6 +312,17 @@ public function addToCart(Request $request)
 
     return redirect()->back()->with('success', 'Product added to cart successfully!');
 }
+
+
+
+
+
+
+
+
+
+
+
 
 // -----------------------------------------------------------------------------
 public function updateCart(Request $request)
@@ -196,36 +390,132 @@ public function updateCart(Request $request)
         return response()->json(['success' => true]);
     }
     // -----------------------------------------------------------------------------
-   public function applyCoupon(Request $request)
+public function applyCoupon(Request $request)
 {
     $couponCode = $request->input('coupon_code');
-    $discount = 0;
-    $message = 'Invalid coupon code';
+    $customerId = Auth::id();
 
-    if ($couponCode == 'DISCOUNT10') {
-        $discount = 10; // 10% discount
-        $message = 'Coupon applied successfully!';
+    $cartItems = Cart::where('customer_id', $customerId)->with('product')->get();
+    $products = Product::all();
+
+    if ($cartItems->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Your cart is empty',
+        ]);
     }
 
-    $cartItems = Cart::where('customer_id', Auth::id())->with('product')->get();
+    // Calculate subtotal using discounted prices if available
     $subtotal = $cartItems->sum(function ($item) {
-        return $item->product_qty * $item->product->price;
+        $price = $item->product->discountPrice ?? $item->product->price;
+        return $item->product_qty * $price;
     });
 
-    $shippingCost = 18.00; // Flat shipping cost
-    $total = $subtotal + $shippingCost; // Total before applying discount
+    $coupon = Coupon::where('code', $couponCode)->first();
 
-    // Apply the discount
-    $discountAmount = ($subtotal * $discount) / 100;
-    $total -= $discountAmount;
+    if (!$coupon) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid coupon code',
+        ]);
+    }
 
-    return response()->json([
-        'success' => true,
-        'message' => $message,
-        'discount' => $discountAmount,
-        'total' => number_format($total, 2), // Send the new total with the discount
-    ]);
+    // Check coupon validity (date range)
+    if (!$coupon->isValid()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'This coupon has expired',
+        ]);
+    }
+
+    // 1. UNIVERSAL COUPON - applies to entire cart
+    if ($coupon->is_universal) {
+        $discountAmount = ($subtotal * $coupon->discount_percentage) / 100;
+        $message = 'Universal coupon applied successfully!';
+    }
+// 2. CATEGORY-SPECIFIC COUPON
+elseif ($coupon->category_id) {
+    // First ensure we have the category relationship loaded
+    if (!isset($cartItems->first()->product->category)) {
+        $cartItems->load('product.category');
+    }
+
+    $applicableItems = $cartItems->filter(function ($item) use ($coupon) {
+        // Check if product's category matches coupon's category_id
+        return $item->product->category == $coupon->category_id;
+    });
+
+    if ($applicableItems->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No products in your cart belong to the required category (ID: '.$coupon->category_id.')',
+        ]);
+    }
+
+    $applicableSubtotal = $applicableItems->sum(function ($item) {
+        $price = $item->product->discountPrice ?? $item->product->price;
+        return $item->product_qty * $price;
+    });
+
+    $discountAmount = ($applicableSubtotal * $coupon->discount_percentage) / 100;
+    $message = 'Category coupon ('.$coupon->category_id.') applied successfully to '.$applicableItems->count().' matching products!';
 }
+
+    // 3. PRODUCT-SPECIFIC COUPON - applies if cart contains any of the specified products
+            elseif ($coupon->product_ids) {  // Changed from product_id to product_ids
+                // Convert stored product IDs string to array
+                $couponProductIds = is_array($coupon->product_ids)
+                    ? $coupon->product_ids
+                    : json_decode($coupon->product_ids, true) ?? [];
+
+                // Find cart items that match any of the coupon's product_ids
+                $applicableItems = $cartItems->filter(function ($item) use ($couponProductIds) {
+                    return in_array($item->product_id, $couponProductIds);
+                });
+
+                if ($applicableItems->isEmpty()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'None of the required products for this coupon are in your cart',
+                    ]);
+                }
+
+                // Calculate discount for all matching products
+                $applicableSubtotal = $applicableItems->sum(function ($item) {
+                    $price = $item->product->discountPrice ?? $item->product->price;
+                    return $item->product_qty * $price;
+                });
+
+                $discountAmount = ($applicableSubtotal * $coupon->discount_percentage) / 100;
+                $message = 'Product-specific coupon applied to matching products!';
+            }
+            // No conditions matched
+            else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This coupon cannot be applied',
+                ]);
+            }
+        
+            $total = $subtotal - $discountAmount;
+        
+            // Store discount in session for checkout
+            session([
+                'cart_discount' => $discountAmount,
+                'cart_discount_percentage' => $coupon->discount_percentage,
+                'applied_coupon' => $coupon->code
+            ]);
+        
+                   return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'discount' => round($discountAmount, 2), // no number_format
+                    'total' => round($total, 2),
+                    'discount_percentage' => $coupon->discount_percentage,
+                ]);
+        
+        }
+
 
 // -----------------------------------------------------------------------------
     // Remove item from cart
@@ -280,59 +570,55 @@ public function removeFromCart(Request $request)
     }
 // -----------------------------------------------------------------------------
 
-
-public function checkout_view()
-{
-    if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'You need to log in first to access the checkout page.');
-    }
-
-    // This ensures the guest cart is merged with the user's cart when they log in
-    $this->transferGuestCartToDatabase(); // Merge the session cart
-
-    $user = auth()->user();
-
-    // Fetching cart items associated with the logged-in user
-    $cartItems = Cart::where('customer_id', $user->id)->with('product')->get();
-
-    // Fetch addresses from the user_addresses table (using UserAddress model)
-    $addresses = $user->userAddress; // Correct relationship name for UserAddress
-
-    // Return the data to the view
-    return view('checkout', compact('user', 'addresses', 'cartItems'));
-}
-
-
-
-public function singleCheckoutView($product_id)
-{
-    if (!auth()->check()) {
-        return redirect()->route('login')->with('error', 'Please log in to continue with checkout.');
-    }
-
-    $user = auth()->user();
-
-    $product = Product::find($product_id);
-    if (!$product) {
-        return redirect()->back()->with('error', 'Product not found.');
-    }
-
-    $quantity = 1;
-
-    $cartItems = [
-        (object)[
-            'product_id' => $product->id,
-            'product' => $product,
-            'product_qty' => $quantity,
-            'price' => $product->selling_price,
-            'total' => $product->selling_price * $quantity,
-        ]
-    ];
-
-    $addresses = $user->userAddress;
-
-    return view('checkout', compact('user', 'addresses', 'cartItems'));
-}
+            public function checkout_view()
+            {
+                if (!Auth::check()) {
+                    return redirect()->route('login')->with('error', 'You need to log in first to access the checkout page.');
+                }
+            
+                $this->transferGuestCartToDatabase();
+            
+                $user = auth()->user();
+                $cartItems = Cart::where('customer_id', $user->id)->with('product')->get();
+                $addresses = $user->userAddress;
+            
+            $totalAmount = $cartItems[0]->total; // take the total from the first item
+            
+            
+                return view('checkout', compact('user', 'addresses', 'cartItems', 'totalAmount'));
+            }
+            
+            public function singleCheckoutView($product_id)
+            {
+                if (!auth()->check()) {
+                    return redirect()->route('login')->with('error', 'Please log in to continue with checkout.');
+                }
+            
+                $user = auth()->user();
+                $product = Product::find($product_id);
+            
+                if (!$product) {
+                    return redirect()->back()->with('error', 'Product not found.');
+                }
+            
+                $quantity = 1;
+                $cartItems = [
+                    (object)[
+                        'product_id' => $product->id,
+                        'product' => $product,
+                        'product_qty' => $quantity,
+                        'price' => $product->discountPrice,
+                        'total' => $product->discountPrice * $quantity,
+                        // 'size' => $product->size,
+                        'size' => !empty($product->size) ? $product->size : 'Universal', 
+                    ]
+                ];
+            
+                $addresses = $user->userAddress;
+                $totalAmount = $cartItems[0]->total; // direct for single checkout
+            
+                return view('checkout', compact('user', 'addresses', 'cartItems', 'totalAmount'));
+            }
 
 
 // -----------------------------------------------------------------------------

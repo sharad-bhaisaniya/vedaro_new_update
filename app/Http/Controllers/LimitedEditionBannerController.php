@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
+
 
 
 class LimitedEditionBannerController extends Controller
 {
     public function index()
     {
+        
+           // First, clean up any expired products from all banners
+        $this->removeExpiredProductsFromBanners();
+        
         $banners = LimitedEditionBanner::latest()->get();
         $allProducts = Product::all();
     
@@ -25,6 +31,38 @@ class LimitedEditionBannerController extends Controller
     
         return view('limited_banners.index', compact('banners', 'unassignedProducts', 'allProducts'));
     }
+    
+    
+    
+     protected function removeExpiredProductsFromBanners()
+    {
+        $banners = LimitedEditionBanner::whereNotNull('product_ids')->get();
+        
+        foreach ($banners as $banner) {
+            $productIds = explode(',', $banner->product_ids);
+            $validProductIds = [];
+            
+            foreach ($productIds as $productId) {
+                $product = Product::find($productId);
+                
+                // Keep product if it exists and timer is still active
+                if ($product && $product->timer_end_at && Carbon::now()->lt($product->timer_end_at)) {
+                    $validProductIds[] = $productId;
+                }
+            }
+            
+            // Update banner if any products were removed
+            if (count($validProductIds) != count($productIds)) {
+                $banner->product_ids = implode(',', $validProductIds);
+                $banner->save();
+            }
+        }
+    }
+    
+    
+    
+    
+    
     
     public function assignProduct(Request $request, $id): JsonResponse
     {

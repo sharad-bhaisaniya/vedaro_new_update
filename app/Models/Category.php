@@ -12,6 +12,12 @@ class Category extends Model
         'name',
         'description',
         'image', 
-        'active'
+        'active',
+        'showOnHome', // ✅ added
     ];
+    
+    public function products()
+{
+    return $this->hasMany(Product::class, 'category');
+}
 }

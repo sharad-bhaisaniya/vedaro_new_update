@@ -21,5 +21,15 @@ class GiftProduct extends Model
         'product_image1',
         'product_image2',
         'product_image3',
+         'is_active',
+        'valid_from',
+        'valid_to',
+        'minimum_cart_amount'
     ];
+
+    protected $casts = [
+    'valid_from' => 'datetime',
+    'valid_to' => 'datetime',
+];
+
 }

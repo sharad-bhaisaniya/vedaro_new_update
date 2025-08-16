@@ -36,6 +36,10 @@
                             <label for="image">Category Image</label>
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
                         </div>
+                        <div class="form-group form-check mt-3">
+                            <input type="checkbox" class="form-check-input" id="showOnHome" name="showOnHome" value="1">
+                            <label class="form-check-label" for="showOnHome">Show on Home</label>
+                        </div>
                         <div>
                             <button type="submit" class="btn btn-primary btn-block">Add Category</button>
                         </div>

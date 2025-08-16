@@ -39,7 +39,6 @@
         }
         
         .mobile-input {
-            height: 3.5rem;
             font-size: 1.1rem;
             border-radius: 0.5rem;
             border: 1px solid #ced4da;
@@ -56,10 +55,11 @@
             background-color: #25D366;
             border-color: #25D366;
             color: white;
-            padding: 0.75rem;
+            /*padding: 0.75rem;*/
             border-radius: 0.5rem;
             font-weight: 600;
             transition: background-color 0.2s ease-in-out;
+            height: 40px;
         }
         
         .btn-whatsapp:hover {
@@ -166,11 +166,10 @@
                             <i class="bi bi-phone me-2"></i>WhatsApp Number
                         </label>
                         <input type="tel" class="form-control mobile-input" id="login_phone" name="phone" required
-                               placeholder="e.g. +911234567890" value="{{ old('phone') }}">
-                        <small class="text-muted">Enter with country code</small>
+                               placeholder="e.g. 8234567890" value="{{ old('phone') }}">
                     </div>
                     
-                    <div class="d-grid mt-4">
+                    <div class="d-grid mt-2">
                         <button type="submit" class="btn btn-whatsapp">
                             <i class="bi bi-send me-2"></i>Send OTP via WhatsApp
                         </button>
@@ -189,8 +188,7 @@
                             <i class="bi bi-phone me-2"></i>WhatsApp Number
                         </label>
                         <input type="tel" class="form-control mobile-input" id="register_phone" name="phone" required
-                               placeholder="e.g. +911234567890" value="{{ old('phone') }}">
-                        <small class="text-muted">Enter with country code</small>
+                               placeholder="e.g. 8234567890" value="{{ old('phone') }}">
                     </div>
                     
                     <div class="mb-3">
@@ -198,7 +196,7 @@
                             <i class="bi bi-person me-2"></i>First Name
                         </label>
                         <input type="text" class="form-control mobile-input" id="name" name="name" required
-                               placeholder="Your full name" value="{{ old('name') }}">
+                               placeholder="Your first name" value="{{ old('name') }}">
                     </div>
                     
                     <div class="mb-3">
@@ -206,18 +204,18 @@
                             <i class="bi bi-person me-2"></i>Last Name
                         </label>
                         <input type="text" class="form-control mobile-input" id="last_name" name="last_name" required
-                               placeholder="Your full name" value="{{ old('last_name') }}">
+                               placeholder="Your last name" value="{{ old('last_name') }}">
                     </div>
                     
                     <div class="mb-4">
                         <label for="email" class="form-label text-muted">
-                            <i class="bi bi-envelope me-2"></i>Email (Optional)
+                            <i class="bi bi-envelope me-2"></i>Email
                         </label>
-                        <input type="email" class="form-control mobile-input" id="email" name="email"
+                        <input type="email" class="form-control mobile-input" id="email" name="email" required
                                placeholder="your@email.com" value="{{ old('email') }}">
                     </div>
                     
-                    <div class="d-grid mt-4">
+                    <div class="d-grid mt-2">
                         <button type="submit" class="btn btn-whatsapp">
                             <i class="bi bi-send me-2"></i>Register & Send OTP
                         </button>
@@ -226,18 +224,18 @@
             </div>
         </div>
         
-        <div class="text-center mt-4">
-            <hr class="my-4">
-            <p class="text-muted">Or use traditional methods</p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="{{ route('login') }}" class="btn btn-outline-primary">
-                    <i class="bi bi-envelope me-2"></i>Email Login
-                </a>
-                <a href="{{ route('register') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-person-plus me-2"></i>Register
-                </a>
-            </div>
-        </div>
+        <!--<div class="text-center mt-4">-->
+        <!--    <hr class="my-4">-->
+        <!--    <p class="text-muted">Or use traditional methods</p>-->
+        <!--    <div class="d-flex justify-content-center gap-3">-->
+        <!--        <a href="{{ route('login') }}" class="btn btn-outline-primary">-->
+        <!--            <i class="bi bi-envelope me-2"></i>Email Login-->
+        <!--        </a>-->
+        <!--        <a href="{{ route('register') }}" class="btn btn-outline-secondary">-->
+        <!--            <i class="bi bi-person-plus me-2"></i>Register-->
+        <!--        </a>-->
+        <!--    </div>-->
+        <!--</div>-->
         
         <div class="text-center mt-4 pt-3 border-top">
             <p class="mb-0 footer-links">

@@ -8,8 +8,11 @@ class LimitedEditionBanner extends Model
 {
     protected $fillable = ['title', 'description', 'image'];
     
-    
-    
+  
+    public function products()
+{
+    return $this->belongsToMany(Product::class);
+}
 }
 
 

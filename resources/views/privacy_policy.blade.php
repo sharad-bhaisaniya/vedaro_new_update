@@ -217,7 +217,7 @@
     <main class="content">
 
     <!-- Privacy Policy Header -->
-    <section class="policy_section" style="margin-top:140px">
+    <section class="policy_section" style="margin-top:90px">
         <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Privacy Policy</h1>
        
         <p>Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>

@@ -32,12 +32,18 @@ public function ShowOnHome()
             ->where('timer_end_at', '>', Carbon::now())
             ->get();
     });
+      // ✅ Get only categories marked as "show on home" and eager load products
+  $homeCategories = Category::where('showOnHome', true)
+    ->with(['products' => fn($q) => $q->latest()])
+    ->get();
+
     return view('home', compact(
         'products',
         'categories',
         'banners',
         'featuredProducts',
-        'limitedEditionBanners'
+        'limitedEditionBanners',
+        'homeCategories' // pass to view
     ));
 }
     
@@ -60,7 +66,10 @@ public function ShowOnHome()
     
    public function ShowOnShop()
     {
-        $products = Product::all();  // Fetch all products
+        // $products = Product::all();  // Fetch all products
+        // Controller
+$products = Product::orderBy('id', 'desc')->get();
+
         $categories = Category::all();  // Fetch all categories
         return view('shop', compact('products', 'categories'));  // Pass products and categories to the view
     }
@@ -108,11 +117,7 @@ public function ShowOnHome()
     
     public function showProfile()
     {
-        
-        // Fetch the logged-in user's data
         $user = Auth::user();
-    
-        // Pass the user data to the view
         return view('user_profile', compact('user'));
     }
         

@@ -3,29 +3,74 @@
 @section('title', 'About')
 
 @section('content')
+
+<style>
+/* Base styles to prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Responsive styles for specific elements */
+@media (max-width: 500px) {
+    .hero-section {
+        background-image: url({{ asset('public/assets/images/about/about_banner_res.jpg') }}) !important;
+        /* Ensure background image is properly contained */
+        background-size: cover;
+        background-position: center;
+    }
+
+    .founder {
+        font-size: 28px !important;
+    }
+
+    .lead {
+        font-size: 14px !important;
+    }
+}
+
+/* Ensure all images and containers are responsive */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* A common cause of overflow is when container padding/margins are not handled correctly. */
+/* This ensures the outer container doesn't cause a scrollbar. */
+.container,
+.container-xl {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* If a specific column is causing the issue, add this to ensure it doesn't exceed its parent's width. */
+.col-12, .col-md-6, .col-lg-3 {
+    max-width: 100%;
+}
+</style>
     <!-- Hero Section -->
   <section 
   class="hero-section d-flex align-items-center justify-content-center text-center px-3" 
   style="
-    background-image: url('https://cdn.pixabay.com/photo/2015/05/31/15/04/plastic-792092_1280.jpg');
+    background-image: url({{ asset('public/assets/images/about/about.jpg') }});
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     position: relative;
     color: #fff;
+
   "
 >
   <!-- Optional: Dark overlay for better text readability -->
-  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.4); z-index:1;"></div>
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%;  z-index:1;"></div>
 
-  <div class="text-center px-3" style="z-index: 2; max-width: 700px;">
-    <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 2px;">About VEDARO</p>
-    <h2 class="display-5 fw-semibold lh-sm">
-      Scandinavian elegance<br>
-      <span style="color: #f2c5c5;">with a New York pulse</span>
-    </h2>
-  </div>
+  <!--<div class="text-center px-3" style="z-index: 2; max-width: 700px;">-->
+  <!--  <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 2px;">About VEDARO</p>-->
+  <!--  <h2 class="display-5 fw-semibold lh-sm">-->
+  <!--    Scandinavian elegance<br>-->
+  <!--    <span style="color: #f2c5c5;">with a New York pulse</span>-->
+  <!--  </h2>-->
+  <!--</div>-->
 </section>
 
 <!--------------------------------------------------------External Section----------------------------------------------------------------------------->
@@ -33,7 +78,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12 col-md-6 text-center  mb-4 mb-md-0">
-                <h2 class="h2 mb-3 " style="    font-size: 50px; font-family:Syne, sans-serif;">Meet our Founder,<br>Bhavya Garodia</h2>
+                <h2 class="founder h2 mb-3 " style="    font-size: 50px; font-family:Syne, sans-serif;">Meet our Founder,<br>Bhavya Garodia</h2>
                 <div class="lead" style="font-size:16px">
                     <p>Vedaro was founded by Bhavya Garodia, a young visionary from Rajasthan with an old soul and a deep reverence for timeless beauty.</p>
                     <p>
@@ -88,8 +133,8 @@
     <div class="container container-xl">
         <div class="row mb-5">
             <div class="col-12 text-center">
-                <p class="text-muted mb-2">Recent Entries From The</p>
-                <h2 class="display-4 fw-bold">Primavera Journal</h2>
+                <p class="text-muted mb-2">Silver Stories, Worn Boldly</p>
+                <h2 class="display-4 fw-bold">Minimal, elegant, and bold — just like you</h2>
             </div>
         </div>
 
@@ -151,7 +196,7 @@
 
         <div class="row mt-5">
             <div class="col-12 text-center">
-                <a href="#" class="btn  btn-lg text-white " style="background-color:#32304E; border-radius:0;">View All</a>
+                <a href="/limited_edition" class="btn  btn-lg text-white " style="background-color:#32304E; border-radius:0;">View All</a>
             </div>
         </div>
     </div>
@@ -177,49 +222,45 @@
 </section>
 
   <!-- ----------------------------------------------------team-------------------------------------------------------------- -->
-  <section class="bg-[#FDF1E7] py-5 px-3">
-      <div class="container mx-auto row g-4 text-center" style="max-width: 1140px">
-        <div class="col-12 col-md-4 d-flex flex-column align-items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l8.5 5.1L20 7M3 17l8.5-5.1L20 17M3 12l8.5 5.1L20 12"></path>
-          </svg>
-          <h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">
-            Free Shipping &amp; Returns
-          </h3>
-          <p class="text-muted">
-            We offer worldwide complimentary<br>shipping and returns on all
-            orders.
-          </p>
-        </div>
+<section class=" py-5 px-3" style="background-color: #FDF1E7;">
+	<div class="container mx-auto row g-4 text-center" style="max-width: 1140px">
+		<div class="col-12 col-md-4 d-flex flex-column align-items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l8.5 5.1L20 7M3 17l8.5-5.1L20 17M3 12l8.5 5.1L20 12"></path>
+			</svg>
+			<h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">
+				Handcrafted Quality
+			</h3>
+			<p class="text-muted">
+				Every piece is designed with care and handcrafted by skilled artisans using ethically sourced silver.
+			</p>
+		</div>
+		<div class="col-12 col-md-4 d-flex flex-column align-items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20"></path>
+			</svg>
+			<h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">
+			Responsible Craftsmanship
+			</h3>
+			<p class="text-muted">
+				We’re committed to climate action through sustainable practices and mindful material choices.
 
-        <div class="col-12 col-md-4 d-flex flex-column align-items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20"></path>
-          </svg>
-          <h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">
-            Committed to Climate Action
-          </h3>
-          <p class="text-muted">
-            We're committed to using sustainable<br>materials in a responsible
-            way.
-          </p>
-        </div>
-
-        <div class="col-12 col-md-4 d-flex flex-column align-items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6
-                           3.5 4 5.5 4c1.54 0 3.04.99 3.57 2.36h1.87C13.46 4.99
-                           14.96 4 16.5 4 18.5 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55
-                           11.54L12 21.35z"></path>
-          </svg>
-          <h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">Customer Love</h3>
-          <p class="text-muted">
-            Speak to one of our expert consultants<br>via email or text,
-            Monday through Sunday.
-          </p>
-        </div>
-      </div>
-    </section>
+			</p>
+		</div>
+		<div class="col-12 col-md-4 d-flex flex-column align-items-center">
+			<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#1E1E3F] mb-3" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+				<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6
+					3.5 4 5.5 4c1.54 0 3.04.99 3.57 2.36h1.87C13.46 4.99
+					14.96 4 16.5 4 18.5 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55
+					11.54L12 21.35z"></path>
+			</svg>
+			<h3 class="fs-5 fw-medium text-[#1E1E3F] mb-2">Timeless Design</h3>
+			<p class="text-muted">
+				Our jewelry blends traditional artistry with modern elegance, made to be worn every day or treasured for years.
+			</p>
+		</div>
+	</div>
+</section>
 
 
   <!-- ----------------------------------------footer------------------------------------------ -->

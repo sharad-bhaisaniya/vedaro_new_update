@@ -18,7 +18,7 @@
         border: none !important;
     }
     thead{
-        display: none !important;
+        /*display: none !important;*/
     }
     body{
         background: #FCFAF6;
@@ -62,6 +62,12 @@
     }
     .proceed:hover ,  .coupon:hover{
         background: #6B46C1;
+    }
+    .product-info img {
+        height: 120px;
+    }
+    thead{
+    color:#928e8e;
     }
 
 
@@ -131,7 +137,7 @@
     </div>
 @endif
 
-<div class="cart-page cart-page-one" style="    margin-top: 150px;">
+<div class="cart-page cart-page-one" style=" margin-top: 150px;">
 <h1 class="h1">Cart</h1>
 
     @if(Auth::check()) <!-- User is logged in -->
@@ -143,31 +149,19 @@
                 <table class="cart-table">
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Price</th>
+                            <th class="d-flex justify-content-around">
+                                <span>Image</span>
+                               <span>Name</span>
+                                <span>Price</span>
+                                </th>
                             <th>Quantity</th>
+                            <th>Size </th>
                             <th>Subtotal</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!--@foreach ($cartItems as $item)-->
-                        <!--    <tr>-->
-                        <!--        <td class="product-info">-->
-                        <!--            <img src="{{ asset('storage/products/' . $item->product->image1) }}" class="img-fluid" alt="{{ $item->product->productName }}">-->
-                        <!--            <p>{{ $item->product->productName }}</p>-->
-                        <!--            <p class="price">₹{{ number_format($item->product->discountPrice , 2) }}</p>-->
-                        <!--        </td>-->
-                                
-                        <!--        <td class="quantity">-->
-                        <!--            <input type="number" value="{{ $item->product_qty }}" min="1" data-id="{{ $item->id }}">-->
-                        <!--        </td>-->
-                        <!--        <td class="subtotal-amount" id="subtotal-{{ $item->id }}">₹{{ number_format($item->product->discountPrice  * $item->product_qty, 2) }}</td>-->
-                        <!--        <td class="remove">-->
-                        <!--            <button class="remove-item" data-id="{{ $item->id }}"><i class="fas fa-times"></i></button>-->
-                        <!--        </td>-->
-                        <!--    </tr>-->
-                        <!--@endforeach-->
+                       
                         @foreach ($cartItems as $item)
                         @php
                             $product = is_array($item) ? ($item['product'] ?? null) : ($item->product ?? null);
@@ -175,14 +169,18 @@
                         @endphp
                     
                         <tr>
-                            <td class="product-info">
+                            <td class="product-info d-flex justify-content-around">
                                 @if ($product)
                                     <img src="{{ asset('storage/products/' . $product->image1) }}" class="img-fluid" alt="{{ $product->productName }}">
                                     <p>{{ $product->productName }}</p>
                                     <p class="price">₹{{ number_format($product->discountPrice, 2) }}</p>
                                      <td class="quantity">
                                     <input type="number" value="{{ $item->product_qty }}" min="1" data-id="{{ $item->id }}">
+                                    
                                 </td>
+                                    <td>
+                                        {{ $item->size }}  
+                                    </td>
                                 <td class="subtotal-amount" id="subtotal-{{ $item->id }}">₹{{ number_format($item->product->discountPrice  * $item->product_qty, 2) }}</td>
                                 <td class="remove">
                                     <button class="remove-item" data-id="{{ $item->id }}"><i class="fas fa-times"></i></button>
@@ -229,7 +227,7 @@
                             @if ($product)
                                 <tr>
                                     <td class="product-info">
-                                        <img src="{{ asset('storage/products/' . $product->image1) }}" class="img-fluid" alt="{{ $product->productName }}">
+                                        <img src="{{ asset('storage/products/' . $product->image1) }}" style="margin-left:5px;" class="img-fluid" alt="{{ $product->productName }}">
                                         <div>
                                             <p>{{ $product->productName }}</p>
                                             <p class="price">₹{{ number_format($product->discountPrice , 2) }}</p>
@@ -289,190 +287,246 @@
 </div>
 
 
+
+@php
+    $giftProduct->product_image1 = asset('storage/products/' . $giftProduct->product_image1);
+@endphp
+
 	<!-- Success Message Div -->
 	<div id="success-message" style=""></div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
 <script>
     $(document).ready(function () {
-    const shippingCost = 0; // Update with dynamic shipping if needed
+        // Initialize variables
+        let currentDiscount = 0;
+        let currentDiscountPercentage = 0;
+        const shippingCost = 0; // Free shipping
+        let appliedCouponCode = '';
 
-    function updateCartTotals() {
-        let subtotal = 0;
+        // Main function to update all cart totals
+        function updateCartTotals() {
+            let subtotal = 0;
 
-        $(".cart-table tbody tr").each(function () {
-            const qty = parseFloat($(this).find(".quantity input").val()) || 0;
-            const price = parseFloat($(this).find(".price").text().replace(/[₹,]/g, "")) || 0;
-            const rowSubtotal = qty * price;
+            // Calculate subtotal from all products (excluding free gift)
+            $(".cart-table tbody tr").each(function () {
+                // Skip free gift row if it exists
+                if ($(this).attr('id') === 'free-gift-product') return;
 
-            $(this).find(".subtotal-amount").text(`₹${rowSubtotal.toFixed(2)}`);
-            subtotal += rowSubtotal;
-        });
+                const qty = parseFloat($(this).find(".quantity input").val()) || 0;
+                const price = parseFloat($(this).find(".price").text().replace(/[₹,]/g, "")) || 0;
+                const rowSubtotal = qty * price;
 
-        let total = subtotal + shippingCost;
+                $(this).find(".subtotal-amount").text(`₹${rowSubtotal.toFixed(2)}`);
+                subtotal += rowSubtotal;
+            });
 
-        if (total > 1000 && !$("#free-gift-product").length) {
-            addFreeGift();
-        } else if (total <= 1000 && $("#free-gift-product").length) {
-            removeFreeGift();
+            // Calculate total with shipping and discount
+            let totalBeforeDiscount = subtotal + shippingCost;
+            let total = totalBeforeDiscount - currentDiscount;
+
+            // Handle free gift logic
+            if (totalBeforeDiscount > 1000 && !$("#free-gift-product").length) {
+                addFreeGift();
+            } else if (totalBeforeDiscount <= 1000 && $("#free-gift-product").length) {
+                removeFreeGift();
+            }
+
+            // Update displayed totals
+            $("#subtotal-amount").text(`₹${subtotal.toFixed(2)}`);
+            $("#shipping-cost").text(`Flat Rate: ₹${shippingCost.toFixed(2)}`);
+            
+            // Update or create discount display
+            if (currentDiscount > 0) {
+                if ($(".discount-row").length === 0) {
+                    $(".cart-totals").prepend(`
+                        <div class="subtotal_l discount-row">
+                            <span>Discount (${appliedCouponCode})</span>
+                            <span id="discount-amount">-₹${currentDiscount.toFixed(2)}</span>
+                        </div>
+                    `);
+                } else {
+                    $(".discount-row span:first").text(`Discount (${appliedCouponCode})`);
+                    $("#discount-amount").text(`-₹${currentDiscount.toFixed(2)}`);
+                }
+            } else {
+                $(".discount-row").remove();
+            }
+            
+            $("#total-amount").text(`₹${total.toFixed(2)}`);
+
+            // Update total in database
+            $.ajax({
+                url: "/cart/update-total",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    total: total,
+                    discount: currentDiscount,
+                    coupon_code: appliedCouponCode
+                },
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Cart total updated successfully.");
+                    }
+                },
+            });
         }
 
-        $("#subtotal-amount").text(`₹${subtotal.toFixed(2)}`);
-        $("#shipping-cost").text(`Flat Rate: ₹${shippingCost.toFixed(2)}`);
-        $("#total-amount").text(`₹${total.toFixed(2)}`);
+        // Add free gift to cart
+        function addFreeGift() {
+            const giftProduct = @json($giftProduct);
+            const freeGiftHTML = `
+                <tr id="free-gift-product">
+                    <td class="product-info d-flex justify-content-around">
+                        <img src="${giftProduct.product_image1}" class="img-fluid" alt="${giftProduct.product_name}">
+                        <p class="">${giftProduct.product_name}</p>
+                        <p class="free_gift">Free Gift</p>
+                    </td>
+                    <td class="quantity">1</td>
+                    <td class="subtotal-amount">₹0.00</td>
+                    <td class="remove">
+                        <button class="remove-item" disabled><i class="fas fa-times"></i></button>
+                    </td>
+                </tr>
+            `;
+            $(".cart-table tbody").append(freeGiftHTML);
+            showSuccessMessage("Free gift has been added to your cart!");
+        }
 
-        $.ajax({
-            url: "/cart/update-total",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                total: total
-            },
-            success: function (response) {
-                if (response.success) {
-                    console.log("Cart total updated successfully in the database.");
-                }
-            },
-        });
-    }
+        // Remove free gift from cart
+        function removeFreeGift() {
+            $("#free-gift-product").fadeOut(300, function () {
+                $(this).remove();
+                showSuccessMessage("Free gift has been removed from your cart.");
+            });
+        }
 
-    function addFreeGift() {
-        const freeGiftHTML = `
-            <tr id="free-gift-product">
-                <td class="product-info">
-                    <img src="assets/images/Kuber_7.webp" class="img-fluid" alt="Free Gift">
-                    <p class="free_gift">Free Gift</p>
-                </td>
-                <td class="price">₹0.00</td>
-                <td class="quantity">1</td>
-                <td class="subtotal-amount">₹0.00</td>
-                <td class="remove">
-                    <button class="remove-item" disabled><i class="fas fa-times"></i></button>
-                </td>
-            </tr>
-        `;
-        $(".cart-table tbody").append(freeGiftHTML);
-        showSuccessMessage("Free gift has been added to your cart.");
-    }
+        // Show success/error messages
+        function showSuccessMessage(message) {
+            const successMessageDiv = $("#success-message");
+            successMessageDiv.text(message).fadeIn().delay(3000).fadeOut();
+        }
 
-    function removeFreeGift() {
-        $("#free-gift-product").fadeOut(300, function () {
-            $(this).remove();
-        });
-        showSuccessMessage("Free gift has been removed from your cart.");
-    }
+        // Quantity change handler
+        $(".quantity input").on("input", function () {
+            const id = $(this).data("id");
+            const quantity = parseFloat($(this).val()) || 0;
+            const price = parseFloat($(this).closest("tr").find(".price").text().replace(/[₹,]/g, "")) || 0;
+            const productSubtotal = price * quantity;
 
-    function showSuccessMessage(message) {
-        const successMessageDiv = $("#success-message");
-        successMessageDiv.text(message).fadeIn().delay(3000).fadeOut();
-    }
-
-    $(".quantity input").on("input", function () {
-        const id = $(this).data("id");
-        const quantity = parseFloat($(this).val()) || 0;
-        const price = parseFloat($(this).closest("tr").find(".price").text().replace('₹', '').replace(',', '')) || 0;
-        const productSubtotal = price * quantity;
-
-        $(`#subtotal-${id}`).text(`₹${productSubtotal.toFixed(2)}`);
-        updateCartTotals();
-
-        $.ajax({
-            url: "/cart/update",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: id,
-                quantity: quantity,
-                subtotal: productSubtotal
-            },
-            success: function (response) {
-                if (response.success) {
-                    console.log("Product quantity and subtotal updated successfully.");
-                } else {
-                    showSuccessMessage(response.message);
-                }
-            },
-        });
-    });
-
-    $(".apply-coupon").on("click", function () {
-        const couponCode = $("#coupon-code").val();
-
-        $.ajax({
-            url: "/cart/apply-coupon",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                coupon_code: couponCode
-            },
-            success: function (response) {
-                if (response.success) {
-                    showSuccessMessage("Coupon applied successfully!");
-
-                    let subtotal = 0;
-                    $(".quantity input").each(function () {
-                        const qty = parseFloat($(this).val()) || 0;
-                        const price = parseFloat($(this).closest("tr").find(".price").text().replace('₹', '').replace(',', '')) || 0;
-                        subtotal += qty * price;
-                    });
-
-                    const discount = response.discount || 0;
-                    const discountedTotal = subtotal - discount + shippingCost;
-
-                    $(".subtotal-amount").text(`₹${subtotal.toFixed(2)}`);
-                    $("#shipping-cost").text(`Flat Rate: ₹${shippingCost.toFixed(2)}`);
-                    $("#total-amount").text(`₹${discountedTotal.toFixed(2)}`);
-
-                    $.ajax({
-                        url: "/cart/update-total",
-                        method: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            total: discountedTotal
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                console.log("Total updated in the backend successfully");
-                            }
-                        }
-                    });
-                } else {
-                    showSuccessMessage(response.message);
-                }
-            },
-        });
-    });
-
-    $(".remove-item").on("click", function () {
-        const id = $(this).data("id");
-        const itemRow = $(this).closest("tr");
-
-        itemRow.fadeOut(300, function () {
-            itemRow.remove();
+            $(`#subtotal-${id}`).text(`₹${productSubtotal.toFixed(2)}`);
             updateCartTotals();
+
+            $.ajax({
+                url: "/cart/update",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    quantity: quantity,
+                    subtotal: productSubtotal
+                },
+                success: function (response) {
+                    if (!response.success) {
+                        showSuccessMessage(response.message);
+                    }
+                },
+            });
         });
 
-        $.ajax({
-            url: "/cart/remove",
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: id,
-            },
-            success: function (response) {
-                if (response.success) {
-                    showSuccessMessage("Item removed from cart!");
-                } else {
-                    showSuccessMessage(response.message);
+        // Coupon application handler
+        $(".apply-coupon").on("click", function() {
+            const couponCode = $("#coupon-code").val().trim();
+
+            if (!couponCode) {
+                showSuccessMessage("Please enter a coupon code");
+                return;
+            }
+
+            $.ajax({
+                url: "/cart/apply-coupon",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    coupon_code: couponCode
+                },
+                success: function(response) {
+                    if (response.success) {
+                      currentDiscount = parseFloat((response.discount + "").replace(/,/g, "")) || 0;
+                        currentDiscountPercentage = parseFloat((response.discount_percentage + "").replace(/,/g, "")) || 0;
+
+                        appliedCouponCode = couponCode;
+                        showSuccessMessage(response.message);
+                    } else {
+                        currentDiscount = 0;
+                        currentDiscountPercentage = 0;
+                        appliedCouponCode = '';
+                        showSuccessMessage(response.message);
+                    }
+                    updateCartTotals();
+                },
+                error: function() {
+                    currentDiscount = 0;
+                    currentDiscountPercentage = 0;
+                    appliedCouponCode = '';
+                    showSuccessMessage("Error applying coupon. Please try again.");
+                    updateCartTotals();
                 }
-            },
+            });
         });
+
+        // Remove item handler
+        $(".remove-item").on("click", function () {
+            const id = $(this).data("id");
+            const itemRow = $(this).closest("tr");
+
+            itemRow.fadeOut(300, function () {
+                $(this).remove();
+                updateCartTotals();
+            });
+
+            $.ajax({
+                url: "/cart/remove",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showSuccessMessage("Item removed from cart!");
+                    } else {
+                        showSuccessMessage(response.message);
+                    }
+                },
+            });
+        });
+
+        // Remove coupon handler
+        $(document).on("click", ".remove-coupon", function() {
+            currentDiscount = 0;
+            currentDiscountPercentage = 0;
+            appliedCouponCode = '';
+            $("#coupon-code").val('');
+            showSuccessMessage("Coupon removed successfully.");
+            updateCartTotals();
+            
+            $.ajax({
+                url: "/cart/remove-coupon",
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                }
+            });
+        });
+
+        // Initialize cart totals
+        updateCartTotals();
     });
-
-    updateCartTotals();
-});
-
 </script>
+
 
 
 @endsection

@@ -70,5 +70,23 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
     
-    
+    protected $commands = [
+        \App\Console\Commands\SendAbandonedCartReminders::class,
+    ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('cart:send-reminders')->everyMinute();
+    }
+
+    // protected function schedule(Schedule $schedule)
+    // {
+    //     $schedule->command('cart:send-reminders')->dailyAt('10:00');
+    // }
+
+    // protected function schedule(Schedule $schedule)
+    // {
+    //     $schedule->command('cart:reminders')->dailyAt('10:00'); // or everyFiveMinutes(), etc.
+    // }
+
 }

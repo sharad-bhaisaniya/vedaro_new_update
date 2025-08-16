@@ -34,29 +34,53 @@
                                 </div>
                             </div>
 
-                            <!-- Assigned Products -->
-                            @if($banner->product_ids)
-                                @php
-                                    $bannerProductIds = explode(',', $banner->product_ids);
-                                    $assignedProducts = $allProducts->whereIn('id', $bannerProductIds);
-                                @endphp
-                          
-                          <div class="position-absolute" style="top: 10px; right: 10px; display: flex;width: 100%;justify-content: flex-end;align-items: center;gap: 5px; flex-wrap: wrap;">
-                                @foreach($assignedProducts as $assigned)
-                                    <div class="card p-1" style="display:flex; flex-direction: row; gap: 5px;">
-                                        <img src="{{ asset('public/storage/products/' . $assigned->image1) }}" class="img-fluid"  style="width: 45px; height: 40px;"  alt="{{ $assigned->productName }}">
-                                        <small class="text-center d-block mt-2">{{ $assigned->productName }}</small>
-                                
-                                        <!-- Remove Button -->
-                                        <button class="btn btn-sm btn-danger position-absolute top-0 end-0" style="padding: 0px 3px; font-size: 9px;"
-                                                onclick="removeProductFromBanner('{{ $banner->id }}', '{{ $assigned->id }}')">
-                                            &times;
-                                        </button>
-                                    </div>
-                                @endforeach
-                        </div>
-                                
-                            @endif
+                       
+                        
+                        
+                        <!--Assigned Product -->
+                       @if(!empty($banner->product_ids))
+    @php
+        $bannerProductIds = explode(',', $banner->product_ids);
+        $assignedProducts = $allProducts->whereIn('id', $bannerProductIds);
+    @endphp
+
+    <div class="position-absolute" style="top: 10px; right: 10px; display: flex; width: 100%; justify-content: flex-end; align-items: center; gap: 5px; flex-wrap: wrap;">
+        @foreach($assignedProducts as $assigned)
+            @php
+                $timerValid = false;
+
+                // Ensure timer_end_at is not null or empty and is a valid date
+                if (!empty($assigned->timer_end_at)) {
+                    try {
+                        $timerValid = strtotime($assigned->timer_end_at) > time();
+                    } catch (\Exception $e) {
+                        $timerValid = false;
+                    }
+                }
+            @endphp
+
+            @if($timerValid)
+                <div class="card p-1" style="display:flex; flex-direction: row; gap: 5px;">
+                    <img src="{{ asset('public/storage/products/' . $assigned->image1) }}" class="img-fluid" style="width: 45px; height: 40px;" alt="{{ $assigned->productName }}">
+                    <small class="text-center d-block mt-2">{{ $assigned->productName }}</small>
+
+                    <!-- Remove Button -->
+                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0" style="padding: 0px 3px; font-size: 9px;"
+                        onclick="removeProductFromBanner('{{ $banner->id }}', '{{ $assigned->id }}')">
+                        &times;
+                    </button>
+                </div>
+            @endif
+        @endforeach
+    </div>
+@endif
+
+
+
+                            
+
+                        
+                        
 
                             <!-- Actions -->
                             <div class="banner-actions ">
@@ -86,7 +110,7 @@
         <!-- Products Section -->
         <div class="products-card card ">
             <div class="card-header bg-white">
-                <h5 class="mb-0">Featured Products</h5>
+                <h5 class="mb-0">Limited Edition Products</h5>
             </div>
             <div class="card-body">
                 <div class="products-grid flex-wrap">

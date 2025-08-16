@@ -92,17 +92,17 @@ class AuthController extends Controller
         return view('auth.verify_otp');
     }
     public function showLoginForm()
-{
-    if (Auth::check()) {
-        $user = Auth::user();
-        return view('profile', compact('user'));
-    } 
-    else if (!str_contains(url()->previous(), 'login')) {
-        \Illuminate\Support\Facades\Redirect::setIntendedUrl(url()->previous());
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            return view('profile', compact('user'));
+        } 
+        else if (!str_contains(url()->previous(), 'login-with-otp')) {
+            \Illuminate\Support\Facades\Redirect::setIntendedUrl(url()->previous());
+        }
+    
+        return view('auth.login-with-otp');
     }
-
-    return view('auth.login');
-}
 
 
 public function login(Request $request)

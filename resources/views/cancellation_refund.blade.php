@@ -5,18 +5,14 @@
 
 <style>
     .content{
-        margin-top: 150px;
+       margin-top: 7%;
     }
 </style>
 
     
     <main class="content">
             <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Cancellation & Refund Policy</h1>
-<style>
-    .content{
-        margin-top: 150px;
-    }
-</style>
+
       <section class="policy_section">
         <h2>Cancellation Policy</h2>
         <p>

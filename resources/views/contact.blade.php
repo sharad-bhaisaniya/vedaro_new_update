@@ -5,9 +5,28 @@
 @section('title', 'Contact Us')
 
 @section('content')
-<!--<div class="sect_head">-->
-<!--        <h3>Contact</h3>-->
-<!--    </div>-->
+<section class="hero-section d-none d-md-flex align-items-center justify-content-center text-center px-3" style="
+    background-image: url(https://vedaro.in/public/assets/images/contact/contact_page.jpg);
+    height: 80vh;
+    width:100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+
+  ">
+  <!-- Optional: Dark overlay for better text readability -->
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%;  z-index:1;"></div>
+
+  <!--<div class="text-center px-3" style="z-index: 2; max-width: 700px;">-->
+  <!--  <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 2px;">About VEDARO</p>-->
+  <!--  <h2 class="display-5 fw-semibold lh-sm">-->
+  <!--    Scandinavian elegance<br>-->
+  <!--    <span style="color: #f2c5c5;">with a New York pulse</span>-->
+  <!--  </h2>-->
+  <!--</div>-->
+</section>
 <div class="contact_section"style=" margin-top: 100px;">
     <div  class="center_wr">
   <div class="nature_sect_head">

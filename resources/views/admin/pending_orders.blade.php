@@ -183,6 +183,14 @@
 														<div>
 															<div class="fw-bold">{{ $item->product->productName ?? $item->name ?? 'N/A' }}</div>
 															<div class="text-muted small">Qty: {{ $item->product_qty ?? 'N/A' }}</div>
+															<div class="text-muted small">Size:@if (empty($item->size))
+                                                                {{-- Do something when size is empty --}}
+                                                                <span class="badge bg-secondary">Universal Size</span>
+                                                            @else
+                                                                {{-- Do something when size is present --}}
+                                                                <span class="badge bg-success">{{ $item->size }}</span>
+                                                            @endif</div>
+															<div class="text-muted small">Weight: {{ $item->weight ?? 'N/A' }}</div>
 														</div>
 														<span class="text-primary fw-bold ms-auto">₹{{ number_format($item->price ?? 0, 2) }}</span> {{-- Used ms-auto to push price to the right --}}
 													</li>

@@ -36,6 +36,18 @@
 			/>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 		<style>
+		    /* Hide scrollbar but keep scroll */
+                ::-webkit-scrollbar {
+                    display: none;
+                }
+                
+                html, body {
+                    scrollbar-width: none; /* Firefox */
+                    -ms-overflow-style: none; /* IE and Edge */
+                }
+
+		</style>
+		<style>
 
 			.limi_badge {
 			background-color: #dc3545;
@@ -513,7 +525,6 @@
 			<div>
 				Private Sale at |
 				<a href="/" class="text-white text-decoration-underline">VEDARO</a>
-				    <p>Last page: {{ session('redirect_after_login') }}</p>
 			</div>
 			<div class="small">IND / INR</div>
 		</div>
@@ -542,7 +553,7 @@
                                                 @endphp
 												@foreach($minCategories as $category)
 												<li>
-													<a href="{{ route('categories_page', ['category' => $category->id]) }}" 
+													<a href="{{ route('product.show', ['id' => $category->id]) }}" 
 														class="category-item" 
 														data-category-id="{{ $category->id }}">
 													{{ $category->name }}
@@ -550,7 +561,7 @@
 												</li>
 												@endforeach
 												<li>
-													<a href="{{route('shop')}}">
+													<a href="/limited_edition">
 													Shop All
 													</a>
 												</li>
@@ -766,7 +777,7 @@
 						<li>  <a href="{{ route('categories_page')}}" class="category-item" data-category-id="{{ $category->id }}">{{ $category->name }}</a>  </li>
 						@endforeach 
 						<li>
-							<a href="{{ route('categories_page')}}">Shop All</a>
+							<a href="/limited_edition">Shop All</a>
 						</li>
 					</ul>
 					<!--<ul>-->
@@ -914,7 +925,7 @@
 						<ul class="list-unstyled small">
 							<li><a href="/" class="footer-link text-white-50 text-decoration-none">HOME</a></li>
 							<li><a href="/about" class="footer-link text-white-50 text-decoration-none">ABOUT</a></li>
-							<li><a href="/shop" class="footer-link text-white-50 text-decoration-none">SHOP</a></li>
+							<li><a href="/limited_edition" class="footer-link text-white-50 text-decoration-none">SHOP</a></li>
 							<li><a href="/contact" class="footer-link text-white-50 text-decoration-none">CONTACT</a></li>
 							<li><a href="/limited_edition" class="footer-link text-white-50 text-decoration-none">LIMITED ADDITTION</a></li>
 						</ul>
@@ -1068,7 +1079,7 @@
 					<i class="fas fa-search fs-5"></i>
 					<small class="mt-1">Search</small>
 					</a>
-					<a href="/shop" class="bottom-nav-item text-white-50 text-decoration-none d-flex flex-column align-items-center flex-grow-1">
+					<a href="/limited_edition" class="bottom-nav-item text-white-50 text-decoration-none d-flex flex-column align-items-center flex-grow-1">
 					<i class="fas fa-shopping-bag fs-5"></i>
 					<small class="mt-1">Shop</small>
 					</a>

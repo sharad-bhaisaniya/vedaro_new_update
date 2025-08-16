@@ -30,6 +30,41 @@ use App\Http\Controllers\AdminAuthController;
 use App\Mail\WelcomeMail;
 use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\EventController;
+
+
+
+
+
+// Event Route
+Route::get('event',function(){
+    return view('events');
+});
+
+// Event Checkout route - requires login
+Route::get('/event-checkout', [EventController::class, 'index'])
+    ->name('event.checkout')
+    ->middleware('auth');
+
+// Store event checkout form data
+// Start payment (validate form + create Razorpay order)
+Route::post('/event-initiate-payment', [EventController::class, 'initiatePayment'])
+    ->name('event.initiate');
+
+// Verify payment & save event
+Route::post('/event-payment-verify', [EventController::class, 'verify'])
+    ->name('event.payment.verify');
+    // New booking routes
+Route::middleware(['auth'])->group(function () {
+    
+    Route::get('/events_bookings', [EventController::class, 'showBookings'])
+        ->name('events.booking.show');
+        
+    Route::delete('/bookings/{event}', [EventController::class, 'destroyBooking'])
+        ->name('events.booking.destroy');
+});
+
 
 Route::get('/test-aisensy', function () {
     $service = new \App\Services\AiSensyService();
@@ -168,10 +203,17 @@ Route::prefix('admin')->group(function () {
         Route::post('/update_category/{id}', [AdminController::class, 'updateCategory'])->name('admin.update_category');
         Route::delete('/manage-categories/{id}', [AdminController::class, 'deleteCategory'])->name('admin.delete_category');
         Route::post('/category/toggle-active/{id}', [AdminController::class, 'toggleActive'])->name('admin.toggle_category');
+        Route::post('/admin/category/{id}/toggle-home', [CategoryController::class, 'toggleShowOnHome'])
+        ->name('admin.toggle_show_on_home');
 
-        // Gift Products
+
+ 
+
+          // Gift Products
         Route::match(['get', 'post'], '/gift-product', [AdminController::class, 'add_gift_product'])->name('admin.gift-product');
         Route::get('/manage-gift-product', [AdminController::class, 'manage_gift_products'])->name('admin.manage_gift_product');
+        Route::post('/gifts/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle_gift_status');
+
 
         // Timers
         Route::get('/timers', [AdminController::class, 'timer_management'])->name('admin.timers');
@@ -180,24 +222,17 @@ Route::prefix('admin')->group(function () {
         Route::get('/add-product', [AdminController::class, 'categoriesName'])->name('admin.add_product');
         
          Route::get('/pre-bookings', [PreBookingController::class, 'index'])->name('admin.prebookings');
+            Route::post('/pre-bookings/{id}/send-whatsapp', [PreBookingController::class, 'sendWhatsAppReminder'])
+        ->name('prebookings.sendWhatsApp');
          
             Route::get('/completed_orders', [OrderController::class, 'completedOrders']);
             Route::get('/pending_orders', [OrderController::class, 'pendingOrders']);
             Route::get('/canceled_orders', [OrderController::class, 'canceledOrders']);
             
             Route::post('/ship_order', [OrderController::class, 'shipOrder'])->name('ship.order');
-
-         
-   
     });
 });
 
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    // Existing admin routes...
-    
-    Route::post('/pre-bookings/{id}/send-whatsapp', [PreBookingController::class, 'sendWhatsAppReminder'])
-        ->name('prebookings.sendWhatsApp');
-});
 Route::get('admin/', function () {
 })->name('index');
 
@@ -225,11 +260,11 @@ Route::post('/login', [AuthController::class, 'login']); // Handle login
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout'); // Logout route
 
 // Home route (Authenticated)
-Route::get('/home2', [HomeController::class, 'ShowOnHome'])->name('home');
+Route::get('/', [HomeController::class, 'ShowOnHome'])->name('home');
 
-Route::get('/', function () {
-    return view('comming_soon');
-});
+// Route::get('/', function () {
+//     return view('comming_soon');
+// });
 
 
 Route::get('/admin', function () {
@@ -433,3 +468,28 @@ Route::middleware(['auth'])->group(function () {
 
 // Routes for Global Search 
 Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global.search');
+
+
+// Coupon's route
+
+Route::get('/coupon', [CouponController::class, 'index'])->name('coupon.index');
+Route::post('/coupon', [CouponController::class, 'store'])->name('coupon.store');
+Route::get('/All_Coupons', [CouponController::class, 'show'])->name('coupon.show');
+Route::get('/coupon/{coupon}/edit', [CouponController::class, 'edit'])->name('coupon.edit');
+Route::put('/coupon/{coupon}', [CouponController::class, 'update'])->name('coupon.update');
+Route::delete('/coupon/{id}', [CouponController::class, 'delete'])->name('coupon.delete');
+// In web.php
+// Route::post('/apply-coupon', [CartController::class, 'applyCoupon'])->name('apply.coupon');
+
+Route::post('/cart/remove-coupon', [CartController::class, 'removeCoupon']);
+
+// Coupon application route (for both guests and authenticated users)
+Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply-coupon');
+
+
+
+
+
+
+
+

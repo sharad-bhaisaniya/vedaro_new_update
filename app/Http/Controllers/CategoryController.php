@@ -22,5 +22,26 @@ class CategoryController extends Controller
             $currentCategoryName = null;
         }
 
-        return view('show_categories', compact('categories', 'products', 'currentCategoryName'));    }
+        return view('show_categories', compact('categories', 'products', 'currentCategoryName')); 
+    }
+      public function toggleShowOnHome($id)
+    {
+        try {
+            $category = Category::findOrFail($id);
+            $category->showOnHome = !$category->showOnHome;
+            $category->save();
+    
+            return response()->json([
+                'success' => true,
+                'status' => $category->showOnHome
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }

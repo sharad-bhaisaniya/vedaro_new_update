@@ -22,11 +22,19 @@
             background-color: #f8f8f8;
         }
         
-        .banner {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), 
-                        url('https://trueso.in/wp-content/uploads/elementor/thumbs/diamond-banenr-1-o1a9yqmf7dmwos37d29et48hzupw5nxn4hyay2th3q.jpg');
+       .banner {
+          background-image: url("{{ asset('public/assets/images/limited_edition/limited_edition.jpg') }}") !important;
+          background-size: cover;
+          background-position: center;
+          margin-top:7%;
+        }
+        
+        @media (max-width: 768px) {
+          .banner {
+            background-image: url("{{ asset('public/assets/images/limited_edition/limited_edition_mobile.jpg') }}") !important;
             background-size: cover;
             background-position: center;
+          }
         }
         
         .grid-container {
@@ -186,7 +194,7 @@
             background-color: #e0f2f7; /* Light blue for "Available" */
             border: 1px solid #b2ebf2;
             color: #00838f; /* Darker blue for text */
-            padding: 0.75rem;
+         
             border-radius: 0.5rem;
             margin: 1rem 0;
             font-weight: 600;
@@ -282,11 +290,11 @@
     </style>
 
     <section class="banner bg-cover bg-center h-96 flex items-center justify-center text-white text-center">
-        <div class="banner-content p-6 max-w-3xl">
-            <h1 class="text-3xl font-extrabold mb-4 drop-shadow-lg">Exquisite Limited Edition Jewelry</h1>
-            <p class="text-sm mb-8 drop-shadow-md">Unveil unique pieces crafted with unparalleled artistry and rare gemstones. Each piece a timeless treasure.</p>
-            <a href="#collection" class="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Shop Now</a>
-        </div>
+        <!--<div class="banner-content p-6 max-w-3xl">-->
+        <!--    <h1 class="text-3xl font-extrabold mb-4 drop-shadow-lg">Exquisite Limited Edition Jewelry</h1>-->
+        <!--    <p class="text-sm mb-8 drop-shadow-md">Unveil unique pieces crafted with unparalleled artistry and rare gemstones. Each piece a timeless treasure.</p>-->
+        <!--    <a href="#collection" class="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-full text-lg font-semibold shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Shop Now</a>-->
+        <!--</div>-->
     </section>
 
     <section id="collection" class="mx-auto py-16">
@@ -347,12 +355,48 @@
                         </div>
 
                         {{-- "Available to Buy" message and Add to Cart button (initially hidden) --}}
-                        <div id="available-message-{{ $product->id }}" class="timer-expired-message hidden">
-                             Buy Now
-                        </div>
-                        <button class="add-to-cart" id="add-to-cart-{{ $product->id }}" data-product-id="{{ $product->id }}" style="display: none;">
-                            Add to Cart
-                        </button>
+        
+                        
+                        
+                        {{-- ✅ If product is in stock --}}
+                    @if($product->current_stock > 0)
+                        {{-- Timer logic: show Buy Now or Add to Cart based on timer --}}
+                        @if($product->add_timer && $product->timer_end_at)
+                            {{-- Show Buy Now form after timer expires --}}
+                            <form action="{{ route('checkout.single', $product->id) }}" method="GET" 
+                                  id="available-message-{{ $product->id }}" 
+                                  class="timer-expired-message hidden">
+                                <button type="submit" class="btn btn-success w-100" style="padding: 0.75rem;">
+                                    Buy Now
+                                </button>
+                            </form>
+                       
+                            {{-- Normal Add to Cart form --}}
+                            <form id="purchaseButtons-{{ $product->id }}" class="w-100 hidden">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="product_qty" value="1">
+                                <button type="submit" class="add-to-cart btn btn-primary w-100">
+                                    Add to Cart
+                                </button>
+                            </form>
+                             @else
+                        @endif
+                    
+                    @else
+                        {{-- ✅ If product is out of stock: show Prebook button --}}
+                       <form action="{{ url('/product_details/' . urlencode($product->productName)) }}" method="GET">
+                            <div class="d-flex flex-column gap-2">
+                                <span class="badge bg-danger position-relative ps-4 py-2 rounded-end">
+                                    Out Of Stock
+                                    <span class="position-absolute start-0 top-0 bottom-0 w-3 opacity-25 bg-danger rounded-start"></span>
+                                </span>
+                                <button type="submit" class="btn btn-warning w-100">
+                                    Prebook on WhatsApp
+                                </button>
+                            </div>
+                        </form>
+                    @endif
                     </div>
                 </a>
             @empty
@@ -366,6 +410,7 @@
             @endforelse
         </div>
     </section>
+  
 
     <section id="why-choose-us" class="bg-gray-50 py-16 mt-12">
         <div class="container mx-auto px-4 text-center">
@@ -377,8 +422,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L3 12l5.714-2.143L11 3z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Unrivaled Craftsmanship</h3>
-                    <p class="text-gray-600">Each piece is meticulously handcrafted by master artisans, ensuring exceptional quality and intricate detail.</p>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Unmatched Craftsmanship</h3>
+                    <p class="text-gray-600">
+                            Every Vedaro piece is carefully handcrafted by skilled artisans, reflecting precision, artistry, and timeless appeal.</p>
                 </div>
                 <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300 ease-in-out">
                     <div class="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
@@ -386,8 +432,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.592 1L19 18H5l1.408-6.092A9.956 9.956 0 0112 8z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Ethically Sourced</h3>
-                    <p class="text-gray-600">We are committed to responsible sourcing, ensuring all our gemstones are conflict-free and ethically obtained.</p>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Ethically Sourced Silver</h3>
+                    <p class="text-gray-600">We use responsibly sourced materials, ensuring our silver is both high-quality and conflict-free — beauty with integrity.
+</p>
                 </div>
                 <div class="bg-white p-8 rounded-xl shadow-lg transform hover:scale-[1.02] transition duration-300 ease-in-out">
                     <div class="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
@@ -395,8 +442,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c0 2.897.834 5.618 2.378 7.056L12 21.056l6.678-5.992A12.007 12.007 0 0021.056 12c0-2.897-.834-5.618-2.378-7.056z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Exclusive Designs</h3>
-                    <p class="text-gray-600">Our limited edition pieces are truly unique, often featuring rare cuts and innovative designs not found elsewhere.</p>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Distinctive Designs</h3>
+                    <p class="text-gray-600">Our limited-edition collections feature unique, statement-worthy pieces — rooted in tradition, styled for the modern wearer.</p>
                 </div>
             </div>
         </div>
@@ -440,7 +487,7 @@
             document.querySelectorAll('.timer-container').forEach(timerContainer => {
                 const productId = timerContainer.id.replace('timer-', '');
                 const endTimeAttribute = timerContainer.dataset.endTime;
-                const addToCartButton = document.getElementById(`add-to-cart-${productId}`);
+                const addToCartButton = document.getElementById(`purchaseButtons-${productId}`);
                 const availableMessage = document.getElementById(`available-message-${productId}`);
 
                 // If no end time is set, assume it's available for purchase immediately
@@ -483,13 +530,62 @@
         setInterval(updateCountdownTimers, 1000);
         
         // Add to cart functionality
-        $(document).on('click', '.add-to-cart', function() {
-            const productId = $(this).data('product-id');
-            // Implement your cart addition logic here
-            console.log('Adding product to cart:', productId);
-            alert('Product added to cart!');
-        });
+       
     </script>
+ <script>
+    // 🛡️ CSRF token setup for all AJAX
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // 🛒 Handle Add to Cart on all forms starting with purchaseButtons-
+    $(document).on('submit', 'form[id^="purchaseButtons-"]', function(e) {
+        e.preventDefault();
+
+        let form = $(this);
+        let formData = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('cart.add') }}", // Ensure this route accepts POST
+            data: formData,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added!',
+                    text: response.message ?? 'Product added to cart.',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                // 🔄 Update cart count if shown on page
+                updateCartCount();
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: xhr.responseJSON?.message ?? 'Something went wrong!',
+                });
+            }
+        });
+    });
+
+    // 🔁 Update the cart count
+    function updateCartCount() {
+        $.ajax({
+            url: "{{ route('cart.count') }}",
+            type: "GET",
+            success: function(data) {
+                $('#cart-count').text(data.count); // Update cart icon/count
+            }
+        });
+    }
+</script>
+
+
     
     
 @endsection

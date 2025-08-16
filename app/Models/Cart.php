@@ -13,7 +13,9 @@ class Cart extends Model
         'product_id',
         'product_qty',
         'customer_id', // Foreign key for User
-        'total', 
+        'total',
+        'size',     // new
+        'weight',   // new
     ];
 
     /**

@@ -9,14 +9,35 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function show($id)
-    {
-        // Fetch product details
-        $product = Product::findOrFail($id);
-        $categories = Category::all(); 
-        // Pass both product and reviews data to the view
-        return view('product_details', compact('product','categories'));  // Corrected compact
-    }
+    // public function show($id)
+    // {
+    //     // Fetch product details
+    //     $product = Product::findOrFail($id);
+    //     $categories = Category::all(); 
+        
+    //      // Fetch similar products (same category, excluding current product)
+    // $similarProducts = Product::where('category', $product->category)
+    //     ->where('id', '!=', $product->id)
+    //     ->get();
+        
+    //     // Pass both product and reviews data to the view
+    //     return view('product_details', compact('product','categories', 'similarProducts'));  // Corrected compact
+    // }
+    
+ public function show($id)
+{
+    // Fetch product details
+    $product = Product::findOrFail($id);
+    $categories = Category::all(); 
+
+    // Fetch other products (all categories) except the current product
+    $similarProducts = Product::where('id', '!=', $product->id)
+        ->get();
+
+    return view('product_details', compact('product', 'categories', 'similarProducts'));
+}
+
+
       
       public function updateWeight(Request $request, Product $product)
 {

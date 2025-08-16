@@ -110,7 +110,7 @@
 
     /* Improve checkout button styling */
     #rzp-button {
-       
+
         background-color: #2D3748;
         color: #fff;
         padding: 12px 25px;
@@ -251,8 +251,8 @@
     }
 
     #rzp-button {
-       
-    
+
+
         color: white;
         padding: 12px 25px;
         border: none;
@@ -269,7 +269,7 @@
     .banner-checkout{
          margin-top: 140px;
          color: #d88256;
-  
+
 
     }
 </style>
@@ -337,7 +337,7 @@
 <!--        @endforeach-->
 <!--    </select>-->
 <!--</div>-->
-  
+
 <!-- Autofill Address Inputs -->
 <div class="form-group mb-3">
     <label for="inputAddress">Address:</label>
@@ -384,26 +384,30 @@
 --}}
 
 
+                 @php
+            if (count($cartItems) === 1 && isset($cartItems[0]->total)) {
+                // Single checkout: just take the total from the single item
+                $totalAmount = $cartItems[0]->total;
+            } else {
+                // Multi-cart: sum up totals
+               $totalAmount = $cartItems[0]->total ?? $cartItems[0]->price ?? 0;
+            }
+            @endphp
 
 
-
-
-                @php $totalAmount = 0; @endphp
-                @foreach ($cartItems as $item)
-                    <input type="hidden" name="cartItems[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
-                    <input type="hidden" name="cartItems[{{ $loop->index }}][quantity]" value="{{ $item->product_qty }}">
-                    <input type="hidden" name="cartItems[{{ $loop->index }}][price]" value="{{ $item->product->price }}">
-                    @php $totalAmount += $item->product->discountPrice  * $item->product_qty; @endphp
-                @endforeach
-
-                <input type="hidden" name="amount" value="{{ $totalAmount }}">
-                <button type="button" id="rzp-button" class="update-cart" style=" color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-block: 20px;">
-                    Pay with Razorpay ₹{{ number_format($totalAmount, 2) }}
-                </button>
+                    @foreach ($cartItems as $item)
+                        <input type="hidden" name="cartItems[{{ $loop->index }}][product_id]" value="{{ $item->product_id }}">
+                        <input type="hidden" name="cartItems[{{ $loop->index }}][quantity]" value="{{ $item->product_qty ?? $item->quantity ?? 1 }}">
+                        <input type="hidden" name="cartItems[{{ $loop->index }}][price]" value="{{ $item->total ?? $item->price }}">
+                    @endforeach
                     
-                    
-                    
-                   
+                    <input type="hidden" name="amount" value="{{ $totalAmount }}">
+                    <button type="button" id="rzp-button" class="update-cart" style="color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-block: 20px;">
+                        Pay with Razorpay ₹{{ number_format($totalAmount, 2) }}
+                    </button>
+
+
+
 {{-- Table View of Addresses --}}
 <!--<div class="dropdown">-->
 <!--    <button class="btn btn-outline-primary dropdown-toggle mb-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">-->
@@ -535,15 +539,15 @@
 <!--        });-->
 <!--    });-->
 <!--</script>-->
- 
- 
+
+
  --}}
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
             </form>
         </div>
     </div>
@@ -555,11 +559,26 @@
                 @foreach ($cartItems as $item)
                     <div class="order_item">
                         <img src="{{ asset('storage/products/' . $item->product->image1) }}" alt="{{ $item->product->name }}" class="product_image">
-                        <div class="order_item_details">
+                       <div class="d-flex w-100 gap-3">
+                            <div class="order_item_details">
                             <p>{{ $item->product->name }}</p>
-                            <p>Qty: {{ $item->product_qty }}</p>
-                            <p>₹{{ number_format($item->product->discountPrice  * $item->product_qty, 2) }}</p>
+                            <div class="d-flex justify-content-between">
+                                <p>Qty: {{ $item->product_qty }}</p>
+                            <p>Size: {{ $item->size }}</p>
+                            </div>
+                            <p>₹{{ number_format($item->product->discountPrice * $item->product_qty ) }}</p>
                         </div>
+                       
+                       {{--
+                        <div class="" style="font-size:15px;display: flex;flex-direction: column; align-items: flex-end;justify-content: end;">
+                            total
+                            <div>
+                                ₹{{ number_format($item->product->discountPrice * $item->product_qty) }}
+                            </div>
+                        </div>
+                        --}}
+                        
+                       </div>
                     </div>
                 @endforeach
                 <div class="order_total">
