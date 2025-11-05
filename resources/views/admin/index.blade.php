@@ -7,9 +7,15 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        @font-face {
+					font-family: "MyCustomFont";
+					src: url("{{ asset('fonts/myfont.ttf') }}") format("truetype");
+					font-weight: normal;
+					font-style: normal;
+					}
         body {
             background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
+            font-family: "MyCustomFont", sans-serif;
         }
 
         .login-container {

@@ -79,7 +79,7 @@
                     <th><i class="bi bi-box-seam"></i> Current_stock & Total_stock</th>
                     <th><i class="bi bi-tag-fill"></i> On Sell Availability</th>
                     <th><i class="bi bi-grid"></i> Category</th>
-                    <th><i class="bi bi-gear-fill"></i> Actions</th>
+                    <!--<th><i class="bi bi-gear-fill"></i> Actions</th>-->
                     <th><i class="bi bi-eye-fill"></i> View</th>
                 </tr>
             </thead>
@@ -96,18 +96,18 @@
                         </span>
                     </td>
                     <td>{{ $product->category }}</td>
-                    <td class="action-icons">
-                        <a href="{{ route('admin.edit_product', $product->id) }}" class="btn btn-sm btn-warning">
-                            <i class="bi bi-pencil-fill"></i>
-                        </a>
-                        <form action="{{ route('admin.delete_product', $product->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                <i class="bi bi-trash-fill"></i>
-                            </button>
-                        </form>
-                    </td>
+                    <!--<td class="action-icons">-->
+                    <!--    <a href="{{ route('admin.edit_product', $product->id) }}" class="btn btn-sm btn-warning">-->
+                    <!--        <i class="bi bi-pencil-fill"></i>-->
+                    <!--    </a>-->
+                    <!--    <form action="{{ route('admin.delete_product', $product->id) }}" method="POST" style="display: inline;">-->
+                    <!--        @csrf-->
+                    <!--        @method('DELETE')-->
+                    <!--        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">-->
+                    <!--            <i class="bi bi-trash-fill"></i>-->
+                    <!--        </button>-->
+                    <!--    </form>-->
+                    <!--</td>-->
                     <td>
                         <button class="btn btn-sm btn-view" onclick="toggleDetails({{ $product->id }})">
                             <i class="bi bi-eye"></i>

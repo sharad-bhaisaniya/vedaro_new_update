@@ -172,130 +172,6 @@ return view('admin.add_product', compact('categories'))->with([
         return view('admin.edit_product', compact('product', 'categories'))->with('success', 'Product Updated successfully');
     }
 
-    // Update Product
-// public function update_product(Request $request, $id)
-// {
-//     $product = Product::findOrFail($id);
-
-//     $validated = $request->validate([
-//         "productName" => "required|string|max:255",
-//         "coupon_code" => "required|string|max:255",
-//         "productDescription1" => "required|string",
-//         "productDescription2" => "nullable|string",
-//         "price" => "required|numeric|min:0",
-//         "discountPercentage" => "required|numeric|min:0|max:100",
-//         "discountPrice" => "nullable|numeric|min:0",
-//         "productImage1" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
-//         "productImage2" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
-//         "productImage3" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
-//         "stock" => "required|integer|min:0",
-//         "shipping_fee" => "required|numeric|min:0",
-//         "availability" => "required|boolean",
-//         "on_sell" => "required|boolean",
-//         'weight' => 'nullable|string|max:255',
-//             'multiple_weights' => 'nullable|array',
-//             'multiple_weights.*' => 'nullable|string|max:255|distinct',
-//             'size' => 'nullable|string|max:255',
-//             'multiple_sizes' => 'nullable|array',
-//             'multiple_sizes.*' => 'nullable|string|max:255|distinct',
-//         "category" => "required|exists:categories,id",
-//     ]);
-
-//     try {
-//         // Handle image uploads
-//         $imagePaths = [
-//             'image1' => $product->image1,
-//             'image2' => $product->image2,
-//             'image3' => $product->image3
-//         ];
-
-//         if ($request->hasFile('productImage1')) {
-//             // Delete old image if exists
-//             if ($product->image1) {
-//                 Storage::disk('public')->delete($product->image1);
-//             }
-//             $imagePaths['image1'] = $request->file('productImage1')->store('products', 'public');
-//         }
-
-//         if ($request->hasFile('productImage2')) {
-//             if ($product->image2) {
-//                 Storage::disk('public')->delete($product->image2);
-//             }
-//             $imagePaths['image2'] = $request->file('productImage2')->store('products', 'public');
-//         }
-
-//         if ($request->hasFile('productImage3')) {
-//             if ($product->image3) {
-//                 Storage::disk('public')->delete($product->image3);
-//             }
-//             $imagePaths['image3'] = $request->file('productImage3')->store('products', 'public');
-//         }
-
-//         // Calculate timer end time if timer is enabled
-//         $endTime = null;
-//         $addTimer = $request->has('addTimer');
-        
-//         if ($addTimer) {
-//             $totalSeconds = ($request->timerDays * 86400) + 
-//                           ($request->timerHours * 3600) + 
-//                           ($request->timerMinutes * 60) + 
-//                           $request->timerSeconds;
-            
-//             if ($totalSeconds > 0) {
-//                 $endTime = now()->addSeconds($totalSeconds);
-//             }
-//         }
-
-//         // Update the product
-//         $product->update([
-//             'productName' => $request->productName,
-//             'coupon_code' => $request->coupon_code,
-//             'category_id' => $request->category,
-//                 // Safe fallback for optional fields
-//                 'size' => $request->filled('size') ? $request->size : '',
-//                 'multiple_sizes' => $request->has('multiple_sizes') ? json_encode($request->multiple_sizes) : json_encode([]),
-            
-//                 'weight' => $request->filled('weight') ? $request->weight : '',
-//                 'multiple_weights' => $request->has('multiple_weights') ? json_encode($request->multiple_weights) : json_encode([]),
-//             'productDescription1' => $request->productDescription1,
-//             'productDescription2' => $request->productDescription2,
-//             'price' => $request->price,
-//             'discountPercentage' => $request->discountPercentage,
-//             'discountPrice' => $request->discountPrice,
-//             'image1' => $imagePaths['image1'],
-//             'image2' => $imagePaths['image2'],
-//             'image3' => $imagePaths['image3'],
-//             'stock' => $request->stock,
-//             'shipping_fee' => $request->shipping_fee,
-//             'availability' => $request->availability,
-//             'on_sell' => $request->on_sell,
-//             'add_timer' => $addTimer,
-//             'timer_end_at' => $endTime,
-//             'timer_days' => $request->timerDays ?? 0,
-//             'timer_hours' => $request->timerHours ?? 0,
-//             'timer_minutes' => $request->timerMinutes ?? 0,
-//             'timer_seconds' => $request->timerSeconds ?? 0,
-//         ]);
-
-//         return redirect()
-//             ->route("admin.manage_product")
-//             ->with("success", "Product updated successfully!");
-
-//     } catch (\Exception $e) {
-//         // Delete any newly uploaded files if there was an error
-//         if (isset($imagePaths['image1']) && $imagePaths['image1'] !== $product->image1) {
-//             Storage::disk('public')->delete($imagePaths['image1']);
-//         }
-//         if (isset($imagePaths['image2']) && $imagePaths['image2'] !== $product->image2) {
-//             Storage::disk('public')->delete($imagePaths['image2']);
-//         }
-//         if (isset($imagePaths['image3']) && $imagePaths['image3'] !== $product->image3) {
-//             Storage::disk('public')->delete($imagePaths['image3']);
-//         }
-
-//         return back()->withInput()->with('error', 'Error updating product: ' . $e->getMessage());
-//     }
-// }
 
 
 
@@ -511,46 +387,71 @@ return view("admin.manage_product", compact("products"));
     }
     
 // ------------------------------------------------------
-    public function handleCategoryForm(Request $request)
+
+public function handleCategoryForm(Request $request)
     {
+        // --- GET Method: Show the form ---
         if ($request->isMethod("get")) {
-            return view("admin.categories");
+            // If you need to pass existing categories or data to the form view,
+            // you can fetch them here.
+            // $categories = Category::all();
+            return view("admin.categories"); // Assuming this view contains your form
         }
 
+        // --- POST Method: Handle form submission ---
         if ($request->isMethod("post")) {
             $validated = $request->validate([
                 "name" => "required|string|max:255",
                 "description" => "nullable|string",
-                "image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048", // Image validation
-                 "showOnHome" => "nullable|boolean", // ✅ added validation
+                // Keep other image validations if needed for different fields
+                "image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+                // Modified icon validation for SVG files
+                "icon" => "nullable|file|mimes:svg|max:2048", // Use 'file' and 'svg' mime type
+                "banner_image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+                "showOnHome" => "nullable|boolean",
             ]);
 
             try {
                 $imagePath = null;
                 if ($request->hasFile("image")) {
-                    $imagePath = $request
-                        ->file("image")
-                        ->store("products", "public"); // Save in 'storage/app/public/categories'
+                    $imagePath = $request->file("image")->store("categories/images", "public"); // Store in a subfolder
                 }
 
+                $iconPath = null;
+                if ($request->hasFile("icon")) {
+                    // Store SVG in a dedicated folder
+                    $iconPath = $request->file("icon")->store("categories/icons", "public");
+                }
+
+                $bannerImagePath = null;
+                if ($request->hasFile("banner_image")) {
+                    $bannerImagePath = $request->file("banner_image")->store("categories/banners", "public"); // Store in a subfolder
+                }
+
+                // --- Store New Category ---
+                // Assuming you are creating a new category here.
+                // If this method is also handling updates, you'll need to differentiate.
                 Category::create([
                     "name" => $validated["name"],
                     "description" => $validated["description"],
                     "image" => $imagePath,
-                     "showOnHome" => $request->has('showOnHome'), // ✅ true if checked
+                    "icon" => $iconPath, // This will store the path to the SVG file
+                    "banner_image" => $bannerImagePath,
+                    "showOnHome" => $request->has('showOnHome'),
                 ]);
 
-                return redirect()
-                    ->route("admin.categories")
-                    ->with("success", "Category added successfully!");
+                return redirect()->route("admin.categories")->with("success", "Category added successfully!");
+
             } catch (\Exception $e) {
                 Log::error("Category Creation Failed: " . $e->getMessage());
-                return redirect()
-                    ->route("admin.categories")
-                    ->withErrors("Failed to add category. Please try again.");
+                return redirect()->route("admin.categories")->withErrors("Failed to add category. Please try again.");
             }
         }
+
+        // If it's neither GET nor POST, or if there's an issue, you might want to return an error or redirect.
+        return redirect()->route("admin.categories")->withErrors("Invalid request method.");
     }
+
 // --------------------------------------------------------------------------------
 
     public function categoriesName()
@@ -573,34 +474,96 @@ return view("admin.manage_product", compact("products"));
         return view("admin.edit_category", compact("category"));
     }
 
-    public function updateCategory(Request $request, $id)
-    {
-        $validated = $request->validate([
-            "name" => "required|string|max:255",
-            "description" => "nullable|string",
-            "image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
-        ]);
 
-        $category = Category::findOrFail($id);
+ public function updateCategory(Request $request, $id)
+{
+    // Find the category to update
+    $category = Category::findOrFail($id);
 
-        if ($request->hasFile("image")) {
-            if ($category->image) {
-                \Storage::delete("public/" . $category->image);
-            }
-            $imagePath = $request->file("image")->store("categories", "public");
-            $category->image = $imagePath;
+    // Validate the request, adjusting validation for the icon field
+    $validated = $request->validate([
+        "name" => "required|string|max:255|unique:categories,name," . $category->id,
+        "description" => "nullable|string",
+        "image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+        "icon_file" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048", // Changed to icon_file
+        "icon_svg" => "nullable|string", // New validation for SVG string
+        "banner_image" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048",
+        "showOnHome" => "nullable|boolean",
+        "remove_image" => "nullable|boolean",
+        "remove_icon" => "nullable|boolean",
+        "remove_banner_image" => "nullable|boolean",
+    ]);
+
+    // Initialize paths
+    $imagePath = $category->image;
+    $iconPath = $category->icon;
+    $bannerImagePath = $category->banner_image;
+
+    // Handle Category Image
+    if ($request->hasFile("image")) {
+        // Delete old image
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
         }
-
-        $category->update([
-            "name" => $validated["name"],
-            "description" => $validated["description"],
-            "image" => $category->image,
-        ]);
-
-        return redirect()
-            ->route("admin.manage_categories")
-            ->with("success", "Category updated successfully!");
+        // Store new image
+        $imagePath = $request->file("image")->store("categories", "public");
+    } elseif ($request->has('remove_image')) {
+        // Remove existing image
+        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        $imagePath = null;
     }
+
+    // Handle Category Icon (Modified for file or SVG string)
+    if ($request->hasFile("icon_file")) {
+        // If a new icon file is uploaded, delete any existing icon (file or SVG)
+        if ($iconPath && Storage::disk('public')->exists($iconPath)) {
+            Storage::disk('public')->delete($iconPath);
+        }
+        $iconPath = $request->file("icon_file")->store("categories", "public");
+    } elseif ($request->filled('icon_svg')) {
+        // If an SVG string is provided, use it and clear any existing icon file
+        if ($iconPath && Storage::disk('public')->exists($iconPath)) {
+            Storage::disk('public')->delete($iconPath);
+        }
+        $iconPath = $request->input('icon_svg');
+    } elseif ($request->has('remove_icon')) {
+        // If the remove icon checkbox is checked, clear the icon field
+        if ($iconPath && Storage::disk('public')->exists($iconPath)) {
+            Storage::disk('public')->delete($iconPath);
+        }
+        $iconPath = null;
+    }
+
+    // Handle Category Banner Image
+    if ($request->hasFile("banner_image")) {
+        // Delete old banner image
+        if ($bannerImagePath && Storage::disk('public')->exists($bannerImagePath)) {
+            Storage::disk('public')->delete($bannerImagePath);
+        }
+        // Store new banner image
+        $bannerImagePath = $request->file("banner_image")->store("categories", "public");
+    } elseif ($request->has('remove_banner_image')) {
+        // Remove existing banner image
+        if ($bannerImagePath && Storage::disk('public')->exists($bannerImagePath)) {
+            Storage::disk('public')->delete($bannerImagePath);
+        }
+        $bannerImagePath = null;
+    }
+
+    // Update the category with the new values
+    $category->update([
+        "name" => $validated["name"],
+        "description" => $validated["description"],
+        "image" => $imagePath,
+        "icon" => $iconPath,
+        "banner_image" => $bannerImagePath,
+        "showOnHome" => $request->has('showOnHome'),
+    ]);
+
+    return redirect()->route("admin.manage_categories")->with("success", "Category updated successfully!");
+}
     
     public function deleteCategory($id)
     {

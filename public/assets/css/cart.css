@@ -1,0 +1,169 @@
+      .color-dark-green{
+                    color: #161e16;
+                }
+                .row1 {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                flex-wrap: wrap;
+                }
+
+                /* Left side */
+                .left-side {
+                flex: 1 1 65%; /* Adjusted for better layout */
+                min-width: 300px;
+                }
+
+                /* Right side */
+                .right-side {
+                flex: 1 1 30%;
+                min-width: 280px;
+                }
+
+                /* Product image */
+                .product-img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                }
+
+                .recommend-section .row {
+                    display: grid;
+                    grid-template-columns: repeat(8, 1fr);
+                    gap: 12px;
+                }
+
+                .box-item{
+                    width:100%;
+                }
+
+                .cardItem {
+                border: 2px solid #ccc;   
+                border-radius: 8px;      
+                background-color:transparent;  
+                padding:20px;
+                margin: 20px 0;
+                }
+
+                /* New Styles for coupon and total sections */
+                .coupon-section {
+                    display: flex;
+                    margin-top: 15px;
+                }
+
+                .coupon-section input {
+                    flex-grow: 1;
+                    border-radius: 4px 0 0 4px;
+                }
+
+                .coupon-section button {
+                    border-radius: 0 4px 4px 0;
+                    background-color: #1a3c2d;
+                    color: white;
+                    border: 1px solid #1a3c2d;
+                }
+
+                .summary-details {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                }
+
+                .summary-details.total {
+                    font-weight: bold;
+                    font-size: 1.1em;
+                }
+
+                .quantity-control {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .quantity-control button {
+                    width: 30px;
+                    height: 30px;
+                    background-color: transparent;
+                    border: 1px solid #ccc;
+                    font-size: 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                }
+
+                .quantity-control input {
+                    width: 40px;
+                    text-align: center;
+                    border: 1px solid #ccc;
+                    height: 30px;
+                }
+
+                .quantity-control button.plus {
+                    background-color: #1a3c2d;
+                    color: white;
+                }
+
+                .product-info-new {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                }
+
+                .remove-item-new {
+                    border: none;
+                    background-color: transparent;
+                    color: #ff0000;
+                    cursor: pointer;
+                }
+
+
+                /* Mobile responsive */
+                @media (max-width: 992px) {
+                .row1 {
+                    flex-direction: column;
+                }
+                .left-side,
+                .right-side {
+                    flex: 1 1 100%;
+                }
+                }
+
+
+                @media (max-width: 1000px) {
+                    .recommend-section .row {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+                }
+                @media (max-width: 768px) {
+                    .recommend-section .row {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                }
+
+
+                @media (max-width: 500px) {
+                    .recommend-section .row {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+
+                .free_gift {
+                    font-size: 1em;
+                    color: #ff6600;
+                    font-weight: bold;
+                    animation: congrats-animation 2s ease-in-out infinite, bounce 1.5s ease-in-out infinite;
+                }
+
+                @keyframes congrats-animation {
+                    0% { transform: translateY(0); color: #ff6600; }
+                    25% { transform: translateY(-5px); color: #ff3366; }
+                    50% { transform: translateY(0); color: #33cc33; }
+                    75% { transform: translateY(-5px); color: #ff3366; }
+                    100% { transform: translateY(0); color: #ff6600; }
+                }
+
+                @keyframes bounce {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-5px); }
+                }

@@ -19,19 +19,12 @@
   <!-- Optional: Dark overlay for better text readability -->
   <div style="position:absolute; top:0; left:0; width:100%; height:100%;  z-index:1;"></div>
 
-  <!--<div class="text-center px-3" style="z-index: 2; max-width: 700px;">-->
-  <!--  <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 2px;">About VEDARO</p>-->
-  <!--  <h2 class="display-5 fw-semibold lh-sm">-->
-  <!--    Scandinavian elegance<br>-->
-  <!--    <span style="color: #f2c5c5;">with a New York pulse</span>-->
-  <!--  </h2>-->
-  <!--</div>-->
 </section>
 <div class="contact_section"style=" margin-top: 100px;">
     <div  class="center_wr">
   <div class="nature_sect_head">
     <h5>Keep Connected</h5>
-    <h2>Get in Touch <i class="bi bi-chat-dots-fill"></i></h2>
+    <h1>Get in Touch <i class="bi bi-chat-dots-fill"></i></h1>
 </div>
         <div class="contact_banner">
             <div class="contact-form-container">

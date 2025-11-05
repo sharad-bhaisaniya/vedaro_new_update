@@ -1,0 +1,76 @@
+@font-face {
+    font-family: "MyCustomFont";
+    		src: url("/assets/fonts/myfont.ttf") format("truetype"); 
+
+
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.collection-section {
+    font-family: "MyCustomFont";
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.collection-header h2 {
+    font-family: "MyCustomFont";
+    font-size: 2rem;
+    font-weight: bold;
+    color: #123123;
+}
+
+.collection-header p {
+    color: #555;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+.collection-banner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.collection-banner img {
+    width: 100%;
+    height: 326px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.collection-item img {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 15px;
+    transition: transform 0.3s;
+}
+
+.collection-item img:hover {
+    transform: scale(1.02);
+}
+
+
+@media (max-width: 992px) {
+    .collection-banner img {
+        height: 220px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .collection-banner img {
+        height: 120px;
+    }
+}

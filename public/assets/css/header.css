@@ -1,0 +1,346 @@
+/* #0f2a1d -dark ...... #f2ecdd - light */
+@font-face {
+	font-family: "MyCustomFont";
+		src: url("/assets/fonts/myfont.ttf") format("truetype"); 
+
+	font-weight: normal;
+	font-style: normal;
+    font-display: swap;
+}
+
+:root {
+	--green: #0f2a1d;
+	--accent: #f4c542;
+	--muted: #cfcfcf;
+	--beige: #f6efe2;
+}
+
+.headerContainer {
+	background-color: var(--green);
+	color: #fff;
+}
+
+.main-header {
+	padding: 12px 80px;
+	background: var(--green);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.navbar-brand {
+	display: flex;
+	justify-content: center;
+	margin-right: 0 !important;
+}
+
+/* small helpers for nav layout */
+.container-fluid {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.w-100 {
+	width: 100%
+}
+
+.d-flex {
+	display: flex
+}
+
+.align-items-center {
+	align-items: center
+}
+
+.justify-content-between {
+	justify-content: space-between
+}
+
+.gap-3 {
+	gap: 12px
+}
+
+.m-0 {
+	margin: 0
+}
+
+/* LOGO */
+.logo {
+	display: flex;
+	align-items: center;
+	color: var(--accent);
+	font-weight: 700;
+	letter-spacing: 1px;
+	font-size: 20px;
+}
+
+.logo img {
+	width: 210px;
+	height: auto;
+	display: block;
+}
+
+/* ---------------- Top bar layout ---------------- */
+.navbar-desktop {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	justify-content: space-between;
+	gap: 18px;
+}
+
+.navbar-mobile {
+	display: none;
+	align-items: center;
+	width: 100%;
+	gap: 12px;
+}
+
+/* SEARCH BAR (desktop) */
+.search-bar {
+	flex: 1;
+	max-width: 455px;
+	position: relative;
+}
+
+.search-bar input {
+	width: 100%;
+	padding: 10px 14px 10px 44px;
+	/* left space for icon */
+	border-radius: 14px;
+	border: 2px solid #f2ecdd;
+	background: transparent;
+	color: #f2ecdd;
+	outline: none;
+	font-size: 18px;
+	box-sizing: border-box;
+}
+
+.search-bar input::placeholder {
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 14px;
+}
+
+.search-bar .search-icon {
+	position: absolute;
+	left: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* ICONS on right */
+.header-icons {
+	display: flex;
+	align-items: center;
+	color: #f4f4f4;
+}
+
+.header-icons i {
+	font-size: 24px;
+	cursor: pointer;
+	color: #f2ecdd;
+	margin: 0 10px;
+}
+
+/* CATEGORIES (desktop) */
+.categories {
+	display: flex;
+	justify-content: space-between;
+	padding: 12px 0px;
+	font-size: 1.1rem;
+}
+
+.categories a {
+	text-decoration: none;
+	color: #f2ecdd;
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	padding: 4px 4px;
+	transition: color .18s ease;
+	font-weight: 500;
+}
+
+.categories a i {
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.65)
+}
+
+.categories a:hover {
+	color: var(--accent);
+}
+
+/* ---------------- Sidebar (mobile only) ---------------- */
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 300px;
+	/* width tuned to match screenshot */
+	max-width: 80%;
+	box-sizing: border-box;
+	padding: 20px 18px;
+	background: var(--green);
+	color: #fff;
+	transform: translateX(-110%);
+	/* fully hidden off-canvas */
+	transition: transform .32s cubic-bezier(.2, .9, .3, 1);
+	z-index: 1201;
+	display: none;
+	/* enabled only on small screens via media query */
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.sidebar.active {
+	transform: translateX(0);
+}
+
+.sidebar h4 {
+	margin: 0 0 18px 0;
+	font-size: 20px;
+	font-weight: 700;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sidebar .close-btn {
+	font-size: 20px;
+	cursor: pointer;
+	color: #fff;
+	background: transparent;
+	border: none;
+	line-height: 1;
+	padding: 4px 6px;
+}
+
+.sidebar a {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	text-decoration: none;
+	color: #cfcfcf;
+	padding: 12px 6px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+	font-size: 15px;
+}
+
+.sidebar a i {
+	font-size: 16px;
+	width: 18px;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.65)
+}
+
+.sidebar a:hover {
+	color: var(--accent);
+}
+
+/* overlay to catch clicks on right area when sidebar open */
+.sidebar-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 1200;
+	display: none;
+	background: rgba(0, 0, 0, 0.18);
+	-webkit-backdrop-filter: blur(0px);
+	backdrop-filter: blur(0px);
+}
+
+.sidebar-overlay.active {
+	display: block;
+}
+
+/* small tweak to match screenshot: make site appear with beige outside area */
+/* lock body scroll when sidebar open */
+body.no-scroll {
+	overflow: hidden;
+}
+
+/* -------------- Mobile layout tweaks -------------- */
+.mobile-search-row {
+	display: none;
+	padding: 10px 14px 14px;
+	box-sizing: border-box;
+	border-top: 1px solid rgba(255, 255, 255, 0.02);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* -------------- Responsive rules -------------- */
+@media (max-width: 992px) {
+
+	/* show mobile navbar, hide desktop one */
+	.navbar-desktop {
+		display: none !important;
+	}
+
+	.navbar-mobile {
+		display: flex !important;
+	}
+
+	.categories {
+		display: none !important;
+	}
+
+	/* enable sidebar on mobile */
+	.sidebar {
+		display: block;
+	}
+
+	/* show mobile search row under top bar */
+	.mobile-search-row {
+		display: block;
+	}
+
+	/* adjustments to header icons and sizes */
+	.header-icons i {
+		font-size: 17px;
+	}
+
+	.logo {
+		font-size: 18px;
+	}
+}
+
+@media (min-width: 993px) {
+	.navbar-mobile {
+		display: none !important;
+	}
+
+	.navbar-desktop {
+		display: flex !important;
+	}
+
+
+
+}
+
+@media (max-width: 993px) {
+	.search-bar input {
+		padding: 2px 4px 2px 34px;
+		font-size: 14px;
+	}
+
+	.header__heading {
+		display: flex;
+		justify-content: space-between;
+
+	}
+
+	.main-header {
+		padding: 0px 30px;
+		justify-content: space-evenly;
+	}
+
+	.carousel-slide img {
+		height: 144px;
+	}
+}

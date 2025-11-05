@@ -1,0 +1,82 @@
+.vedaro-hero {
+    max-width: 1200px;
+    margin: 70px auto;
+    text-align: center;
+}
+
+/* Top text */
+.vedaro-overlay {
+    margin-bottom: 30px;
+}
+
+.vedaro-logo {
+    font-size: 38px;
+    font-weight: 600;
+    color: #0f2a1d;
+    margin-bottom: 10px;
+}
+
+.vedaro-heading {
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #0f2a1d;
+}
+
+/* Image box */
+.vedaro-img-container {
+    position: relative;
+    background: #d9bfa6;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0 20px;
+}
+
+.vedaro-bg {
+    width: 100%;
+    max-height: 402px;
+    display: block;
+    object-fit: cover;
+}
+
+/* Shop button on image */
+.vedaro-btn {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3a2c2c;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.vedaro-btn:hover {
+    background: #241a1a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .vedaro-logo {
+        font-size: 22px;
+    }
+
+    .vedaro-heading {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .vedaro-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+        bottom: 15px;
+    }
+
+    .vedaro-bg {
+        height: 200px;
+    }
+}

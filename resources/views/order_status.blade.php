@@ -6,8 +6,14 @@
     <title>Track Your Order</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+					font-family: "MyCustomFont";
+					src: url("{{ asset('fonts/myfont.ttf') }}") format("truetype");
+					font-weight: normal;
+					font-style: normal;
+					}
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: "MyCustomFont", sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;

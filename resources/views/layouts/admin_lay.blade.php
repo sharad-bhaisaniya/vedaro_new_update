@@ -31,6 +31,12 @@
       --accent-clr: #5e63ff;
       --secondary-text-clr: #b0b3c1;
     }
+    @font-face {
+					font-family: "MyCustomFont";
+					src: url("{{ asset('fonts/myfont.ttf') }}") format("truetype");
+					font-weight: normal;
+					font-style: normal;
+					}
 
     * {
       margin: 0;
@@ -38,7 +44,7 @@
     }
 
     html {
-      font-family: Poppins, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "MyCustomFont", sans-serif;
       line-height: 1.5rem;
     }
 
@@ -245,209 +251,306 @@
   
 </head>
 <body>
-  <nav id="sidebar">
-<ul>
-  <li>
-    <span class="logo">Sidebar Menu</span>
-    <button onclick="toggleSidebar()" id="toggle-btn">
-      <i class="fas fa-bars" style="color: white;"></i>
-    </button>
-  </li>
-
-
-
-  <li>
-    <a href="/admin/dashboard">
-      <i class="fas fa-tachometer-alt"></i>
-      <span>Dashboard</span>
-    </a>
-  </li>
-
-  <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-      <i class="fas fa-box"></i>
-      <span>Orders</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      <li>
-        <a href="/admin/pending_orders">
-          
-             <i class="fas fa-times-circle"></i> Pending Orders
-        </a>
-      </li>
-      <li>
-        <a href="/admin/completed_orders">
-      
-             <i class="fas fa-hourglass-half"></i>Completed Orders
-        </a>
-      </li>
-      <li>
-        <a href="/admin/canceled_orders">
-              <i class="fas fa-check-circle"></i> Canceled Orders
-        </a>
-      </li>
-    </ul>
-  </li>
-
-  <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-      <i class="fas fa-tags"></i>
-      <span>Products</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      <li>
-        <a href="/admin/add-product">
-          <i class="fas fa-plus-square"></i> Add Product
-        </a>
-      </li>
-      <li>
-        <a href="/admin/manage-products">
-          <i class="bi bi-box-seam-fill  me-2"></i>Manage Products
-        </a>
-      </li>
-      <li>
-        <a href="/admin/gift-product">
-          <i class="fas fa-gift"></i> Add Gift Products
-        </a>
-      </li>
-      <li>
-        <a href="/admin/manage-gift-product">
-          <i class="fas fa-tasks"></i> Manage Gift Products
-        </a>
-      </li>
-    </ul>
-  </li>
-
-  <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-      <i class="fas fa-th-large"></i>
-      <span>Categories</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      <li>
-        <a href="/admin/categories">
-          <i class="fas fa-plus-square"></i> Add Categories
-        </a>
-      </li>
-      <li>
-        <a href="/admin/manage-categories">
-          <i class="fas fa-cogs"></i> Manage Categories
-        </a>
-      </li>
-    </ul>
-  </li>
-  <!-- Add banner links-->
-  <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-      <i class="fas fa-bullhorn"></i>
-      <span>Banners</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      <li>
-        <a href="{{route('banners.create')}}">
-          <i class="fas fa-plus-square"></i> Add Banners
-        </a>
-      </li>
-      <li>
-        <a href="{{route('banners.index')}}">
-          <i class="fas fa-cogs"></i> Manage Banners
-        </a>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-      <i class="fas fa-ticket-alt"></i>
-      <span>Coupons</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      <li>
-        <a href="{{ route('coupon.index') }}">
-         <i class="fas fa-plus-circle"></i> Generate Coupon
-        </a>
-      </li>
-      <li>
-        <a href="{{ route('coupon.show') }}">
-         <i class="fas fa-list"></i> Manage Coupons
-        </a>
-      </li>
-
-    </ul>
-  </li>
-   <li>
-    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-   
-        <i class="fas fa-calendar-check"></i>
-        <!--<i class="fas fa-calendar-week"></i>-->
-      <span>Events</span>
-      <i class="fas fa-chevron-down"></i>
-    </button>
-    <ul class="sub-menu">
-      
-      <li>
-        <a href="{{route('events.booking.show')}}">
-      
-             <i class="fas fa-hourglass-half"></i>
-             
-             Completed Event Booking
-        </a>
-      </li>
-     
-    </ul>
-  </li>
-
-
-  
-  <li class="nav-item">
-    <a href="{{ route('limited-banners.index') }}" class="nav-link">
-        <i class="fas fa-fire text-danger"></i> <!-- Icon -->
-        <span class="ms-2">Limited Edition</span>
-    </a>
-  </li>
-  
-  <li>
-    <a href="/admin/pre-bookings">
-      <i class="fas fa-users"></i>
-      <span>Pre-Booking</span>
-    </a>
-  </li>
-
-  <li>
-    <a href="{{route('admin.inquiries.index')}}">
-      <i class="fas fa-users"></i>
-      <span>Users Inquiry</span>
-    </a>
-  </li>
-  
-  <li>
-    <a href="/admin/registered-users">
-      <i class="fas fa-users"></i>
-      <span>Users</span>
-    </a>
-  </li>
-  
-  <li>
-    <a href="#">
-      <i class="fas fa-user-circle"></i>
-      <span>Profile</span>
-    </a>
-  </li>
-  
+   <nav id="sidebar">
+  <ul>
     <li>
-    <a href="#">
-    <form action="{{ route('admin.logout') }}" method="POST">
-    @csrf
-    <button type="submit" class="dropdown-item">
-        <i class="fas fa-sign-out-alt me-2"></i> Logout
-    </button>
-        </a>
-  </li>
-</form>
+      <span class="logo">Sidebar Menu</span>
+      <button onclick="toggleSidebar()" id="toggle-btn">
+        <i class="fas fa-bars" style="color: white;"></i>
+      </button>
+    </li>
+
+
+
+    <li>
+      <a href="/admin/dashboard">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-box"></i>
+        <span>Orders</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+        <li>
+          <a href="/admin/pending_orders">
+
+              <i class="fas fa-times-circle"></i> Pending Orders
+          </a>
+        </li>
+        <li>
+          <a href="/admin/completed_orders">
+
+              <i class="fas fa-hourglass-half"></i>Completed Orders
+          </a>
+        </li>
+        <li>
+          <a href="/admin/canceled_orders">
+                <i class="fas fa-check-circle"></i> Canceled Orders
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-tags"></i>
+        <span>Products</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+         <li>
+          <a href="/admin/manage-product-identifiers">
+            <i class="fas fa-plus-square"></i> Manage OR & RFID 
+          </a>
+        </li>
+         <li>
+          <a href="/admin/scan-qr-result">
+            <i class="fas fa-plus-square"></i> Scan QR Results 
+          </a>
+        </li>
+        <li>
+          <a href="/admin/manage-products">
+            <i class="bi bi-box-seam-fill  me-2"></i>Manage Products
+          </a>
+        </li>
+        <li>
+          <a href="/admin/gift-product">
+            <i class="fas fa-gift"></i> Add Gift Products
+          </a>
+        </li>
+        <li>
+          <a href="/admin/manage-gift-product">
+            <i class="fas fa-tasks"></i> Manage Gift Products
+          </a>
+        </li>
+      </ul>
+    </li>
+      <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-th-large"></i>
+        <span>Tax</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+        <li>
+          <a href="{{ route('taxes.create') }}">
+            <i class="fas fa-plus-square"></i> Add Tax
+          </a>
+        </li>
+        <li>
+          <a href="{{ route('taxes.index') }}">
+            <i class="fas fa-cogs"></i> Manage Tax
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+      <i class="fas fa-receipt"></i>
+        <span>Performa invoices</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+          
+          <li>
+          <a href="{{ route('performa_invoices.index') }}">
+          <i class="bi bi-cash-stack"></i>
+          Performa Invoice
+          </a>
+        </li>
+        
+
+
+      </ul>
+    </li>
+    
+    
+    
+    
+    
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+      <i class="fas fa-receipt"></i>
+        <span>Invoices</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+          <li>
+          <a href="{{ route('vendor.index') }}">
+          <i class="fas fa-shop"></i>
+          Vendors
+          </a>
+        </li>
+          <li>
+          <a href="{{ route('purchase-product-names.index') }}">
+            <i class="bi bi-cart-plus"></i>           
+            Purchase Products
+          </a>
+        </li>
+          <li>
+          <a href="{{ route('hsn.index') }}">
+          <i class="bi bi-upc-scan"></i>
+          HSN Codes
+          </a>
+        </li>
+          <li>
+          <a href="{{ route('brands.index') }}">
+          <i class="bi bi-tags"></i>
+          Brands
+          </a>
+        </li>
+          <li>
+          <a href="{{ route('purchase.index') }}">
+          <i class="bi bi-cash-stack"></i>
+          Purchase
+          </a>
+        </li>
+          <li>
+          <a href="{{ route('invoices.index') }}">
+          <i class="bi bi-cash-stack"></i>
+          Invoice
+          </a>
+        </li>
+        
+
+
+      </ul>
+    </li>
+    
+
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-th-large"></i>
+        <span>Categories</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+        <li>
+          <a href="/admin/categories">
+            <i class="fas fa-plus-square"></i> Add Categories
+          </a>
+        </li>
+        <li>
+          <a href="/admin/manage-categories">
+            <i class="fas fa-cogs"></i> Manage Categories
+          </a>
+        </li>
+      </ul>
+    </li>
+    <!-- Add banner links-->
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-bullhorn"></i>
+        <span>Banners</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+        <li>
+          <a href="{{route('banners.create')}}">
+            <i class="fas fa-plus-square"></i> Add Banners
+          </a>
+        </li>
+        <li>
+          <a href="{{route('banners.index')}}">
+            <i class="fas fa-cogs"></i> Manage Banners
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+        <i class="fas fa-ticket-alt"></i>
+        <span>Coupons</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+        <li>
+          <a href="{{ route('coupon.index') }}">
+          <i class="fas fa-plus-circle"></i> Generate Coupon
+          </a>
+        </li>
+        <li>
+          <a href="{{ route('coupon.show') }}">
+          <i class="fas fa-list"></i> Manage Coupons
+          </a>
+        </li>
+
+      </ul>
+    </li>
+    <li>
+      <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+
+          <i class="fas fa-calendar-check"></i>
+          <!--<i class="fas fa-calendar-week"></i>-->
+        <span>Events</span>
+        <i class="fas fa-chevron-down"></i>
+      </button>
+      <ul class="sub-menu">
+
+        <li>
+          <a href="{{route('events.booking.show')}}">
+
+              <i class="fas fa-hourglass-half"></i>
+
+              Completed Event Booking
+          </a>
+        </li>
+
+      </ul>
+    </li>
+
+
+
+    <li class="nav-item">
+      <a href="{{ route('limited-banners.index') }}" class="nav-link">
+          <i class="fas fa-fire text-danger"></i> <!-- Icon -->
+          <span class="ms-2">Limited Edition</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/admin/pre-bookings">
+        <i class="fas fa-users"></i>
+        <span>Pre-Booking</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="{{route('admin.inquiries.index')}}">
+        <i class="fas fa-users"></i>
+        <span>Users Inquiry</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/admin/registered-users">
+        <i class="fas fa-users"></i>
+        <span>Users</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="#">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+    </li>
+
+      <li>
+      <a href="#">
+      <form action="{{ route('admin.logout') }}" method="POST">
+      @csrf
+      <button type="submit" class="dropdown-item">
+          <i class="fas fa-sign-out-alt me-2"></i> Logout
+      </button>
+          </a>
+    </li>
+  </form>
 </ul>
   </nav>
 
@@ -486,5 +589,7 @@
     });
 </script>
 @endif
+@stack('scripts')
+
 </body>
 </html>

@@ -436,12 +436,14 @@
         				<div class="badge-wrapper">
         					@if($product->add_timer == 1)
         					<span class="product-badge limited-badge">
-        					Limited Edition
-        					</span>
+               <i class="fas fa-star me-1"></i>
+               Limited Edition
+               </span>
         					@endif
-        					<span class="product-badge {{ $product->stock ? 'in-stock-badge' : 'out-stock-badge' }}">
-        					{{ $product->stock ? 'In Stock' : 'Out of Stock' }}
-        					</span>
+        				<span class="product-badge {{ $product->current_stock ? 'in-stock-badge' : 'out-stock-badge' }}">
+               <i class="fas {{ $product->current_stock ? 'fa-check-circle' : 'fa-times-circle' }} me-1"></i>
+               {{ $product->current_stock ? 'In Stock' : 'Out of Stock' }}
+               </span>
         				</div>
         				<div class="product-img-wrapper">
         					<img src="{{ asset('storage/products/' . $product->image1) }}" class="img-front" alt="{{ $product->productName }}">
@@ -450,9 +452,12 @@
         					@else
         					<img src="{{ asset('storage/products/' . $product->image1) }}" class="img-back" alt="{{ $product->productName }} Hover">
         					@endif
-        					<!--<div class="lock-icon add-to-cart-btn" id="add-to-cart-{{ $product->id }}" data-product-id="{{ $product->id }}" style="{{ ($product->add_timer && $product->timer_end_at) ? 'display: none;' : '' }}">-->
-        					<!--	<i class="fa-solid fa-lock text-white small"></i>-->
-        					<!--</div>-->
+        				
+        									 @if($product->current_stock > 0)
+               <div class="lock-icon add-to-cart-btn" id="add-to-cart-{{ $product->id }}" data-product-id="{{ $product->id }}" style="{{ ($product->add_timer && $product->timer_end_at) ? 'display: none;' : '' }}">
+                  <i class="fa-solid fa-lock text-white small"></i>
+               </div>
+               @endif
         				</div>
         				<div class="card-body px-2 py-3">
         					<h6 class="product_name">{{ $product->productName }}</h6>
@@ -462,6 +467,7 @@
         							@if ($product->discountPercentage != 0)
         							<s class="text-muted text-dark small ms-2">₹{{ $product->price }}</s>
         							@endif
+        			
         						</div>
         					</div>
         					@if($product->colors)
@@ -472,7 +478,7 @@
         					</div>
         					@endif
         				</div>
-                    				@if($product->stock)
+                    				@if($product->current_stock)
                     				@if($product->add_timer && $product->timer_end_at)
                     				<div class="timer-container" id="timer-{{ $product->id }}"
                     					data-end-time="{{ \Carbon\Carbon::parse($product->timer_end_at)->timestamp }}">
@@ -602,64 +608,64 @@
 	});
 	});
 </script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-	$(document).ready(function () {
-	$('.add-to-cart-btn').on('click', function (e) {
-	   e.preventDefault();
-	
-	   var productId = $(this).data('product-id');
-	
-	   $.ajax({
-	       url: '{{ route("cart.add") }}',
-	       type: 'POST',
-	       data: {
-	           product_id: productId,
-	           product_qty: 1, // default quantity
-	           _token: '{{ csrf_token() }}'
-	       },
-	       success: function (response) {
-	           if (response.success) {
-	               Swal.fire({
-	                   icon: 'success',
-	                   title: 'Added!',
-	                   text: response.message,
-	                   timer: 1500,
-	                   showConfirmButton: false
-	               });
-	                  // 🔁 Update cart count after success
-	                   updateCartCount();
-	           }
-	       },
-	       error: function (xhr) {
-	           let errorMessage = "Something went wrong!";
-	           if (xhr.responseJSON && xhr.responseJSON.message) {
-	               errorMessage = xhr.responseJSON.message;
-	           }
-	
-	           Swal.fire({
-	               icon: 'error',
-	               title: 'Error',
-	               text: errorMessage,
-	           });
-	       }
-	   });
-	});
-	});
-	
-	  function updateCartCount() {
-	   $.ajax({
-	       url: '/cart/count',
-	       method: 'GET',
-	       dataType: 'json',
-	       success: function (response) {
-	           if (response.cartCount !== undefined) {
-	               $('#cart-count').text(response.cartCount);
-	           }
-	       },
-	       error: function () {
-	           console.error('Failed to update cart count.');
-	       }
-	   });
-	}
+   $(document).ready(function () {
+   $('.add-to-cart-btn').on('click', function (e) {
+      e.preventDefault();
+   
+      var productId = $(this).data('product-id');
+   
+      $.ajax({
+          url: '{{ route("cart.add") }}',
+          type: 'POST',
+          data: {
+              product_id: productId,
+              product_qty: 1, // default quantity
+              _token: '{{ csrf_token() }}'
+          },
+          success: function (response) {
+              if (response.success) {
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Added!',
+                      text: response.message,
+                      timer: 1500,
+                      showConfirmButton: false
+                  });
+                     // 🔁 Update cart count after success
+                      updateCartCount();
+              }
+          },
+          error: function (xhr) {
+              let errorMessage = "Something went wrong!";
+              if (xhr.responseJSON && xhr.responseJSON.message) {
+                  errorMessage = xhr.responseJSON.message;
+              }
+   
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: errorMessage,
+              });
+          }
+      });
+   });
+   });
+   
+     function updateCartCount() {
+      $.ajax({
+          url: '/cart/count',
+          method: 'GET',
+          dataType: 'json',
+          success: function (response) {
+              if (response.cartCount !== undefined) {
+                  $('#cart-count').text(response.cartCount);
+              }
+          },
+          error: function () {
+              console.error('Failed to update cart count.');
+          }
+      });
+   }
 </script>

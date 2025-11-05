@@ -1,4 +1,7 @@
 @extends('layouts.main')
+
+@section('title', 'My Account – Vedaro | Manage Profile, Orders & Addresses')
+@section('meta_description', 'Access your Vedaro account to manage your profile, view orders, update shipping addresses, and securely change your password. Stay connected with Vedaro jewelry.')
 @section('content')
 
 <div class="container py-5" style="margin-top:110px;">
@@ -14,7 +17,7 @@
 		</ul>
 	</div>
 	@endif
-	<h2 class="mb-4 text-center">My Account</h2>
+	<h1 class="mb-4 text-center">My Account</h1>
 	<div class="row mb-5">
 		<!-- Sidebar -->
 		<div class="col-md-3 bg-white shadow-sm rounded py-3">
@@ -23,10 +26,11 @@
 				<h6 class="mt-2">{{ $user->first_name .' '.$user->last_name ?? 'User' }}</h6>
 			</div>
 			<button class="sidebar-button active" onclick="showSection('profile', this)">Personal Information</button>
-			<button class="sidebar-button bg-light"> <a  href="/fetch-shiprocket-orders" class="text-dark text-decoration-none">My Order's</a></botton>
+			<div class="sidebar-button bg-light"> <a  href="/fetch-shiprocket-orders" class="text-dark text-decoration-none">My Order's</a></div>
+			<!--<a href="/fetch-shiprocket-orders" class="sidebar-button bg-light text-dark text-decoration-none">My Orders</a>-->
+
 			<button class="sidebar-button bg-light" onclick="showSection('address', this)">Manage Address</button>
-			<!--<button class="sidebar-button bg-light">Payment Method</button>-->
-			<!--<button class="sidebar-button bg-light" onclick="showSection('address', this)">Address Management</button>-->
+	
 			<button class="sidebar-button bg-light" onclick="showSection('password', this)">Password Manager</button>
 			<button class="sidebar-button bg-light">
 				<a  href="{{route('logout')}}" class=" text-danger text-decoration-none">Logout</a></botton>

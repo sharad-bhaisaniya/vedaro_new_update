@@ -10,13 +10,15 @@
 
         /* CSS Variables for easy theme management */
         :root {
-            --font-primary: "Playfair Display", serif;
-            --font-secondary: "Poppins", sans-serif;
+            --font-primary: "MyCustomFont", sans-serif;
+            --font-secondary: "MyCustomFont", sans-serif;
             --color-gold: #D4AF37; /* A classic, rich gold */
             --color-text: #F5F5F5; /* A softer white */
             --color-dark: #121212;
             --color-dark-accent: #1a1a1a;
-        }
+
+        }    
+
 
         /* Base & Reset Styles */
         * {

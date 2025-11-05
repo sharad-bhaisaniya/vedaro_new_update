@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class User extends Authenticatable
 {
@@ -68,9 +70,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class);
     }
-public function userAddresses()
+        public function userAddresses()
+        {
+            return $this->hasMany(UserAddress::class); // Assuming UserAddress is your address model
+        }
+    
+    public function wishlistItems(): HasMany
 {
-    return $this->hasMany(UserAddress::class); // Assuming UserAddress is your address model
+    return $this->hasMany(WishlistItem::class);
 }
-
 }

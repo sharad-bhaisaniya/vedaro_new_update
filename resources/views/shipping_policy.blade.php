@@ -1,13 +1,10 @@
 @extends('layouts.main')
 @section('title', 'Shipping Policy')
 @section('content')
+<link rel="stylesheet" href="{{ asset('assets/css/shipping_policy.css') }}">
 
 
-<style>
-    .content{
-        margin-top: 7%;
-    }
-</style>
+
 
 <main class="content">
         <h1 class="text-center" style="    border-bottom: 2px solid #f0f0f0;padding-bottom: 10px;">Shipping Policy</h1>
@@ -116,89 +113,5 @@
         </p>
     </section>
 </main>
-
-<style>
-
-.shipping_policy {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Main Content */
-.content {
-  flex: 1;
-  padding: 20px;
-}
-
-.policy_section {
-  margin-bottom: 30px;
-}
-
-.policy_section h2 {
-  font-size: 1.5rem;
-  color: #3c3b6e;
-  margin-bottom: 10px;
-}
-
-.policy_section p, .policy_section ul {
-  font-size: 1rem;
-  color: #555;
-  margin: 10px 0;
-}
-
-.policy_section ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-.policy_section a {
-  color: #3c3b6e;
-  text-decoration: none;
-}
-
-.policy_section a:hover {
-  text-decoration: underline;
-}
-
-/* Side by Side Section */
-.policy_images {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.policy_images .policy_text {
-  flex: 1;
-}
-
-.policy_images .policy_image {
-  flex: 1;
-  text-align: center;
-}
-
-.policy_images .policy_image img {
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-
-  .policy_section h2 {
-    font-size: 1.2rem;
-  }
-
-  .policy_section p, .policy_section ul {
-    font-size: 0.9rem;
-  }
-
-  .policy_images {
-    flex-direction: column;
-  }
-}
-
-</style>
 
 @endsection

@@ -92,4 +92,49 @@ public function updateProfile(Request $request)
 
         return back()->with('success', 'Address updated successfully.');
     }
+    
+    public function check($pincode)
+{
+    try {
+        // Call Shiprocket open API properly with query string
+        $url = 'https://apiv2.shiprocket.in/v1/external/open/postcode/details?postcode=' . $pincode;
+
+        $response = \Illuminate\Support\Facades\Http::get($url);
+
+        if ($response->failed()) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Error fetching data from Shiprocket API.',
+            ]);
+        }
+
+        $data = $response->json();
+
+        // Check response structure
+        if (
+            isset($data['delivery_postcode_details']) &&
+            isset($data['delivery_postcode_details']['postcode']) &&
+            isset($data['delivery_postcode_details']['city'])
+        ) {
+            return response()->json([
+                'available' => true,
+                'message' => 'Delivery available for this pincode.',
+                'details' => $data['delivery_postcode_details'],
+            ]);
+        }
+
+        return response()->json([
+            'available' => false,
+            'message' => 'Delivery not available for this pincode.',
+            'details' => $data,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'available' => false,
+            'message' => 'Server error: ' . $e->getMessage(),
+        ]);
+    }
+}
+
 }

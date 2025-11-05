@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Product;
+use App\Models\ProductIdentifier;
+
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +35,70 @@ use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\TaxController;
+use App\Http\Controllers\TaxGroupController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\ProductIdentifierController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\PerformaInvoiceController;
+use App\Http\Controllers\GiftController;
+use App\Http\Controllers\HsnCodeController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\PurchaseProductNameController;
+use App\Http\Controllers\ReportController;
+
+Route::get('/reports', [ReportController::class, 'index'])
+    ->name('reports.index');
+
+
+Route::resource('purchase-product-names', PurchaseProductNameController::class);
+
+Route::resource('hsn', HsnCodeController::class);
+Route::resource('brands', BrandController::class);
 
 
 
 
+
+
+
+
+Route::get('/gift', [GiftController::class, 'index']);
+
+
+
+
+// Pincode checking routes
+Route::get('/check-pincode/{pincode}', [UserController::class, 'check']);
+
+
+// Performa Invoice 
+
+
+// Performa Invoice 
+Route::get('/performa-invoices', [PerformaInvoiceController::class, 'index'])->name('performa_invoices.index');
+Route::get('/performa-invoices/create', [PerformaInvoiceController::class, 'create'])->name('performa_invoices.create');
+Route::post('/performa-invoices', [PerformaInvoiceController::class, 'store'])->name('performa_invoices.store');
+Route::get('/performa-invoices/{id}', [PerformaInvoiceController::class, 'show'])->name('performa_invoices.show');
+
+Route::get('/performa-invoices/{performaInvoice}/edit', [PerformaInvoiceController::class, 'edit'])->name('performa_invoices.edit');
+Route::put('/performa-invoices/{performaInvoice}', [PerformaInvoiceController::class, 'update'])->name('performa_invoices.update');
+Route::delete('/performa-invoices/{performaInvoice}', [PerformaInvoiceController::class, 'destroy'])->name('performa_invoices.destroy');
+
+// Barcode scanning and variants routes
+Route::get('/admin/products/find-by-barcode/{barcode}', [ProductController::class, 'findByBarcode'])->name('products.find-by-barcode');
+Route::get('/admin/products/{product}/variants', [ProductController::class, 'getVariants'])->name('products.variants');
+
+
+
+
+
+
+Route::get('newEvent',function(){
+    return view('eventNew');
+});
 
 // Event Route
 Route::get('event',function(){
@@ -487,9 +550,160 @@ Route::post('/cart/remove-coupon', [CartController::class, 'removeCoupon']);
 Route::post('/apply-coupon', [CouponController::class, 'applyCoupon'])->name('apply-coupon');
 
 
+// Invoice Route
+Route::get('invoice/',[InvoiceController::class,'index'])->name('invoices.index');
+Route::get('invoice/create/',[InvoiceController::class,'create'])->name('invoices.create');
+Route::post('invoice/store/',[InvoiceController::class,'store'])->name('invoices.store');
+Route::get('invoice/bill/{id}',[InvoiceController::class,'show_bill'])->name('invoices.bill');
+Route::get('/invoices/{id}/download', [InvoiceController::class, 'download'])->name('invoices.download');
+// Use PUT method for update and include invoice parameter
+Route::put('/invoice/update/{invoice}', [InvoiceController::class, 'update'])->name('invoice.update');
+Route::get('/invoice/edit/{invoice}', [InvoiceController::class, 'edit'])->name('invoice.edit');
+Route::post('/admin/invoices/generate/{orderId}', [InvoiceController::class, 'generateInvoice'])->name('admin.invoices.generate');
+Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoice.destroy');
+
+// Route::get('/bills',function(){
+//     return view('admin.invoices.bills.create');
+// })->name('bills.create');
+
+// Purchase Routes
+Route::prefix('purchases')->group(function () {
+    Route::get('/create', [PurchaseController::class, 'create'])->name('purchase.create');
+    Route::post('/store', [PurchaseController::class, 'store'])->name('purchases.store');
+    Route::get('/', [PurchaseController::class, 'index'])->name('purchase.index');
+    Route::get('/{purchase}', [PurchaseController::class, 'show'])->name('purchases.show');
+    Route::get('/{purchase}/edit', [PurchaseController::class, 'edit'])->name('purchase.edit');
+    Route::post('/{purchase}', [PurchaseController::class, 'update'])->name('purchase.update');
+    Route::delete('/{purchase}', [PurchaseController::class, 'destroy'])->name('purchase.destroy');
+    // Route::get('/',[PurchaseController::class, 'index'])->name('purchase.index');
+});
+
+// Taxes Route
+
+// ✅ Admin Protected Routes
+Route::middleware(['auth:admin']) // ✅ use the 'admin' guard for authentication
+    ->group(function () {
+
+Route::get('taxes', [TaxController::class, 'index'])->name('taxes.index');
+Route::get('taxes/create', [TaxController::class, 'create'])->name('taxes.create');
+Route::post('taxes', [TaxController::class, 'store'])->name('taxes.store');
+// Edit / Update
+Route::get('/{tax}/edit', [TaxController::class, 'edit'])->name('taxes.edit');
+Route::put('/{tax}', [TaxController::class, 'update'])->name('taxes.update');
+// Delete
+Route::delete('/{tax}', [TaxController::class, 'destroy'])->name('taxes.destroy');
+Route::post('takes/group',[TaxGroupController::class,'store'])->name('taxgroup.store');
+
+    });
+    
+
+// Vendors Route
+Route::get('/vendor',[VendorController::class, 'index'])->name('vendor.index');
+Route::get('/vendor/create',[VendorController::class, 'create'])->name('vendor.create');
+Route::post('/vendor/store',[VendorController::class, 'store'])->name('vendor.store');
+Route::get('/vendor/{vendor}/edit', [VendorController::class, 'edit'])->name('vendor.edit');
+Route::put('/vendor/{vendor}', [VendorController::class, 'update'])->name('vendor.update');
+Route::delete('/vendor/{vendor}', [VendorController::class, 'destroy'])->name('vendor.destroy');
+Route::get('/vendors/search', [VendorController::class, 'search'])->name('vendor.search');
 
 
 
 
+Route::post('/user/update-profile', [ProfileController::class, 'updateProfile'])->name('user.updateProfile');
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+      Route::get('/manage-product-identifiers', [ProductIdentifierController::class, 'index'])->name('manage_qr_mapping');
+    Route::get('/map-product-qr/{id}', [ProductIdentifierController::class, 'showMappingPage'])->name('map_product_qr');
+    Route::post('/store-identifier/{id}', [ProductIdentifierController::class, 'storeIdentifier'])->name('store_identifier');
+    Route::get('/scan-qr-result', [ProductIdentifierController::class, 'showScanResultPage'])->name('scan_qr_result');
+    Route::post('/lookup-identifier', [ProductIdentifierController::class, 'lookupIdentifier'])->name('lookup_identifier');
+});
+
+
+Route::post('/products/{id}/generate-qr', [ProductIdentifierController::class, 'generateQr'])
+    ->name('generate_qr');
+
+// Show QR codes for a specific product
+Route::get('/products/{id}/qrcodes', [ProductIdentifierController::class, 'showQRCodes'])->name('products.qrcodes');
+
+Route::post('/generate-qr-image', [ProductIdentifierController::class, 'generateQrCode'])->name('generate_view');
+
+
+
+
+// Routes for the Invoice Barcode Scan with Variants Prouduct and All
+// This route finds a product by matching the barcode in the product_identifiers table
+Route::get('/admin/products/{productId}/variants', function ($productId) {
+    $variants = \App\Models\ProductVariant::where('product_id', $productId)->get();
+    
+    return response()->json([
+        'success' => true,
+        'data' => $variants
+    ]);
+});
+
+Route::get('/admin/products/by-barcode/{barcode}', function ($barcode) {
+    // Search the product_identifiers table for a matching qr_code or rfid
+    $identifier = ProductIdentifier::where('qr_code', $barcode)
+                                   ->orWhere('rfid', $barcode)
+                                   ->first();
+
+    // If a product identifier is found...
+    if ($identifier) {
+        // Find the corresponding product using the product_id from the identifier
+        $product = Product::with('category')
+                 ->where('id', $identifier->product_id)
+                 ->first();
+
+        // If the product is found...
+        if ($product) {
+            // Check if product is a variant and fetch all variants
+            if ($product->product_type === 'variant') {
+                // Fetch all variants for this product
+                $productVariants = \App\Models\ProductVariant::where('product_id', $product->id)
+                                    ->get();
+                
+                if ($productVariants->count() > 0) {
+                    return response()->json([
+                        'success' => true,
+                        'product' => $product,
+                        'product_variants' => $productVariants,
+                        'is_variant' => true
+                    ]);
+                }
+            }
+
+            // If not a variant or variants not found, return regular product
+            return response()->json([
+                'success' => true,
+                'product' => $product,
+                'is_variant' => false
+            ]);
+        }
+    }
+
+    // If no product or identifier is found, return a not found response
+    return response()->json([
+        'success' => false,
+        'message' => 'Product not found'
+    ], 404);
+})->name('products.by-barcode');
+
+
+
+
+// route for wishlists
+// Grouped routes that require authentication
+    // Show the user's wishlist
+    Route::get('/favorite', [WishlistController::class, 'index'])->name('wishlist.index');
+
+    // Add an item to the wishlist
+    Route::post('/favorite', [WishlistController::class, 'store'])->name('wishlist.store');
+
+Route::delete('/favorite/{productId}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
 

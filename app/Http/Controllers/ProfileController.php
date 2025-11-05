@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Cart;
+use App\Models\GiftProduct;
 use App\Models\Address;
+use App\Models\WishlistItem;
+use App\Models\Product;
 
 class ProfileController extends Controller
 {
@@ -54,9 +58,80 @@ public function update(Request $request)
     }
 }
 
-public function show(){
-    $addresses = Address::where('user_id', Auth::id())->get();
-        return view('profile', compact('addresses')); //
+// public function show(){
+//     $user = Auth::user();
+//     $addresses = Address::where('user_id', Auth::id())->get();
+//         return view('account', compact('addresses','user')); //
+// }
+
+public function show()
+{
+    $user = Auth::user();
+    $addresses = Address::where('user_id', $user->id)->get();
+
+    // --- Cart logic ---
+    $cartItems = [];
+    $subtotal = 0;
+    $shippingCost = 18.00; // Example shipping
+
+    if (Auth::check()) {
+        $customer_id = Auth::id();
+        $cartItems = Cart::with('product')
+            ->where('customer_id', $customer_id)
+            ->get();
+
+        $subtotal = $cartItems->sum(function ($item) {
+            return $item->product ? ($item->product->discountPrice ?? $item->product->price) * $item->product_qty : 0;
+        });
+    } else {
+        $cartItems = Session::get('cart', []);
+        foreach ($cartItems as &$item) {
+            $product = Product::find($item['product_id']);
+            if ($product) {
+                $item['product'] = $product;
+                $subtotal += ($product->discountPrice ?? $product->price) * $item['product_qty'];
+            }
+        }
+    }
+
+    $total = $subtotal + $shippingCost;
+    $giftProduct = GiftProduct::where('is_active', true)->first();
+
+    // --- Wishlist logic ---
+    $wishlist = WishlistItem::where('user_id', $user->id)->get();
+    $productIds = $wishlist->pluck('product_id');
+    $wishlistItems = Product::whereIn('id', $productIds)->get();
+
+    // ✅ Return data properly
+    return view('account', [
+        'user'          => $user,
+        'addresses'     => $addresses,
+        'cartItems'     => $cartItems,
+        'subtotal'      => $subtotal,
+        'shippingCost'  => $shippingCost,
+        'total'         => $total,
+        'giftProduct'   => $giftProduct,
+        'wishlistItems' => $wishlistItems, // ✅ Fixed key name
+    ]);
 }
+
+
+
+ public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:50',
+            'last_name'  => 'nullable|string|max:50',
+            'email'      => 'required|email|unique:users,email,' . $user->id,
+            'phone'      => 'nullable|string|max:15',
+            'gender'     => 'nullable|in:Male,Female,Other',
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
 
 }

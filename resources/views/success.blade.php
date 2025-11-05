@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Success</title>
     <style>
+        @font-face {
+					font-family: "MyCustomFont";
+					src: url("{{ asset('fonts/myfont.ttf') }}") format("truetype");
+					font-weight: normal;
+					font-style: normal;
+					}
         body {
-            font-family: Arial, sans-serif;
+            font-family: "MyCustomFont", sans-serif;
             text-align: center;
             padding: 20px;
         }

@@ -12,6 +12,8 @@ class Category extends Model
         'name',
         'description',
         'image', 
+          'icon',
+        'banner_image',
         'active',
         'showOnHome', // ✅ added
     ];

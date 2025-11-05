@@ -12,7 +12,8 @@
         "laravel/socialite": "^5.17",
         "laravel/tinker": "^2.9",
         "phpmailer/phpmailer": "^6.9",
-        "razorpay/razorpay": "^2.9"
+        "razorpay/razorpay": "^2.9",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

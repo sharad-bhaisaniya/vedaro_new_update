@@ -6,7 +6,7 @@
     <title>Payment Failed</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+                font-family: "MyCustomFont", sans-serif;
             text-align: center;
             padding: 20px;
         }

@@ -17,7 +17,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: "MyCustomFont", sans-serif;
             margin: 0;
             padding: 20px;
             background-color: #3B2441;

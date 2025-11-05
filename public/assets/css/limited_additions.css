@@ -1,5 +1,14 @@
-        body {
-            font-family: 'Inter', sans-serif;
+       @font-face {
+           font-family: "MyCustomFont";
+           	src: url("/assets/fonts/myfont.ttf") format("truetype"); 
+
+           font-weight: normal;
+           font-style: normal;
+           font-display: swap;
+
+       }
+       
+       body {
             background-color: #f8f8f8; /* Light background */
             color: #333;
         }
@@ -74,3 +83,286 @@
         #backToTop:hover {
             background-color: #555; /* Add a darker background on hover */
         }
+        
+        
+        
+        
+        /*add newly*/
+        
+        
+              :root {
+            --primary-color: #6b46c1;
+            --secondary-color: #f6ad55;
+            --dark-color: #2d3748;
+            --light-color: #f8fafc;
+        }
+        .container{
+            width: 100% !important;
+        }
+        body {
+            background-color: #f8f8f8;
+        }
+        
+   
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .grid-item-large {
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            
+            .grid-item-medium-h {
+                grid-column: span 2;
+            }
+            
+            .grid-item-medium-v {
+                grid-row: span 1;
+            }
+        }
+        
+        .limi-product-card {
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .limi-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .grid-item-large .product-image {
+            height: 100%;
+        }
+        
+        .grid-item-medium-h .product-image {
+            height: 100%;
+        }
+        
+        .grid-item-medium-v .product-image {
+            height: 100%;
+        }
+        
+        .limi-product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .product-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .grid-item-large .product-title {
+            font-size: 1.5rem;
+        }
+        
+        .product-description {
+            color: #4a5568;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .original-price {
+            text-decoration: line-through;
+            color: #a0aec0;
+            margin-left: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .discount-badge {
+            background-color: #f56565;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .timer-container {
+            background-color: #fffaf0;
+            border: 1px solid #fed7aa;
+            color: #9c4221;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            display: grid; /* Changed from flex to grid for better alignment */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .timer-expired-message {
+            background-color: #e0f2f7; /* Light blue for "Available" */
+            border: 1px solid #b2ebf2;
+            color: #00838f; /* Darker blue for text */
+         
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .timer-part {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .timer-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .timer-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #b7791f;
+            letter-spacing: 0.05em;
+        }
+        
+        .add-to-cart {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .add-to-cart:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 99;
+            background-color: var(--primary-color);
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #backToTop:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-3px);
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem;
+            color: #4a5568;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

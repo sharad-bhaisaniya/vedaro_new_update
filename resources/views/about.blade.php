@@ -1,8 +1,11 @@
 @extends('layouts.main')
 
-@section('title', 'About')
 
+@section('title', 'About Vedaro | Handcrafted Jewelry – Rings, Necklaces & Earrings')
+
+@section('meta_description', 'Learn more about Vedaro, our passion for handcrafted jewelry, and the story behind our timeless rings, necklaces & earrings.')
 @section('content')
+<link rel="stylesheet" href="{{ asset('public/assets/css/about.css') }}">
 
 <style>
 /* Base styles to prevent horizontal overflow */
@@ -78,7 +81,7 @@ img {
     <div class="container">
         <div class="row align-items-center">
             <div class="col-12 col-md-6 text-center  mb-4 mb-md-0">
-                <h2 class="founder h2 mb-3 " style="    font-size: 50px; font-family:Syne, sans-serif;">Meet our Founder,<br>Bhavya Garodia</h2>
+                <h2 class="founder h2 mb-3 " style="    font-size: 50px;">Meet our Founder,<br>Bhavya Garodia</h2>
                 <div class="lead" style="font-size:16px">
                     <p>Vedaro was founded by Bhavya Garodia, a young visionary from Rajasthan with an old soul and a deep reverence for timeless beauty.</p>
                     <p>
@@ -144,16 +147,7 @@ img {
                     <a href="/blogs/news/ava-gutierrez-primavera-the-future-of-jewelry-powered-by-ai">
                         <img src="{{ asset('public/assets/images/about/ab1.jpeg') }}" class="card-img-top" alt="A woman in a white pantsuit exits a car.">
                     </a>
-                    <!--<div class="card-body d-flex flex-column">-->
-                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
-                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
-                    <!--        <span class="text-dark">|</span>-->
-                    <!--        <a href="#" class="text-decoration-none text-muted">Tech</a>-->
-                    <!--    </div>-->
-                    <!--    <h5 class="card-title h5">-->
-                    <!--        <a href="/blogs/news/ava-gutierrez-primavera-the-future-of-jewelry-powered-by-ai" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Eva Gutierrez Lindahl &amp; Primavera: The Future of Jewelry</a>-->
-                    <!--    </h5>-->
-                    <!--</div>-->
+                 
                 </div>
             </div>
 
@@ -162,16 +156,7 @@ img {
                     <a href="/blogs/news/behind-the-collection-small-beautiful-things">
                         <img src="{{ asset('public/assets/images/about/ab2.jpeg') }}" class="card-img-top" alt="An asymmetric gold ring with a break in the middle encrusted in diamonds.">
                     </a>
-                    <!--<div class="card-body d-flex flex-column">-->
-                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
-                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
-                    <!--        <span class="text-dark">|</span>-->
-                    <!--        <a href="/blogs/news/tagged/stories" class="text-decoration-none text-muted">Stories</a>-->
-                    <!--    </div>-->
-                    <!--    <h5 class="card-title h5">-->
-                    <!--        <a href="/blogs/news/behind-the-collection-small-beautiful-things" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Behind the collection: Small, beautiful things</a>-->
-                    <!--    </h5>-->
-                    <!--</div>-->
+                  
                 </div>
             </div>
 
@@ -180,16 +165,7 @@ img {
                     <a href="/blogs/news/lina-walker-smith-shines-in-primavera-while-filming-in-new-york">
                         <img src="{{ asset('public/assets/images/about/ab4.jpeg') }}" class="card-img-top" alt="A blonde celebrity in a matching white-gold tennis necklace and bracelet set.">
                     </a>
-                    <!--<div class="card-body d-flex flex-column">-->
-                    <!--    <div class="d-flex flex-wrap gap-2 mb-2 small text-muted">-->
-                    <!--        <a href="/blogs/news/tagged/hollywood" class="text-decoration-none text-muted">Hollywood</a>-->
-                    <!--        <span class="text-dark">|</span>-->
-                    <!--        <a href="/blogs/news/tagged/news" class="text-decoration-none text-muted">News</a>-->
-                    <!--    </div>-->
-                    <!--    <h5 class="card-title h5">-->
-                    <!--        <a href="/blogs/news/lina-walker-smith-shines-in-primavera-while-filming-in-new-york" class="text-dark text-decoration-none stretched-link"style="font-size:30px">Lina Walker-Smith Shines in Primavera While Filming in New York</a>-->
-                    <!--    </h5>-->
-                    <!--</div>-->
+                  
                 </div>
             </div>
         </div>

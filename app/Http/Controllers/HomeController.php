@@ -21,7 +21,8 @@ public function ShowOnHome()
     $products = Product::orderBy('created_at', 'desc')->get();
 
     $featuredProducts = Product::where('availability', 1)->limit(1)->get();
-    $categories = Category::all();
+   $categories = Category::where('showOnHome', true)->get();
+
     $banners = Banner::all();
     $limitedEditionBanners = LimitedEditionBanner::latest()->get();
     // Get limited edition banners with their associated products
