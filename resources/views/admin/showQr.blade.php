@@ -322,79 +322,126 @@
 </script>
 
 {{-- script for print QR Code --}}
+{{-- // script for print QR Code --}}
 <script>
-    document.getElementById('printbtn').addEventListener('click', function() {
-        // Get the QR code content
-        const qrCodeContent = document.getElementById('qrCodeContainer').innerHTML;
-        const qrCodeText = document.getElementById('qrCodeText').textContent;
-        
-        // Create a new window for printing
-        const printWindow = window.open('', '_blank');
-        
-        // Write the printable content to the new window
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>QR Code - ${qrCodeText}</title>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100vh;
-                        margin: 0;
-                        background: white;
-                    }
-                    .qr-container {
-                        text-align: center;
-                        padding: 20px;
-                    }
-                    .qr-title {
-                        font-size: 18px;
-                        font-weight: bold;
-                        margin-bottom: 15px;
-                    }
-                    .qr-code {
-                        margin: 0 auto;
-                    }
-                       
-                    @media print {
-                        body {
-                            height: auto;
-                        }
-                        .qr-container {
-                            page-break-inside: avoid;
-                        }
-                            .qr-code{
-                            height:500px;
-                            width:500px;
-                            }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="qr-container">
-                    <div class="qr-title">${qrCodeText}</div>
-                    <div class="qr-code">${qrCodeContent}</div>
+document.getElementById('printbtn').addEventListener('click', function () {
+    const qrCodeContent = document.getElementById('qrCodeContainer').innerHTML;
+    const qrCodeText = document.getElementById('qrCodeText').textContent;
+        const productName = @json($product->productName);
+
+
+    const printWindow = window.open('', '_blank');
+
+    const printHTML = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>QR ${qrCodeText}</title>
+        <style>
+            @page {
+                size: 85mm 85mm;
+                margin: 0;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                width: 85mm;
+                height: 85mm;
+                position: relative; /* ✅ allows absolute positioning inside */
+                background: #fff;
+                font-family: Arial, sans-serif;
+            }
+
+            .label {
+                width: 85mm;
+                height: 15mm;
+                position: relative;
+              /*  border: 1px solid #000;  optional for testing */
+                box-sizing: border-box;
+            }
+                .text{
+                    position: absolute;
+                    left: 12mm;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 8px;
+                }
+
+            /* ✅ Place QR exactly at the right end */
+            .qr {
+                position: absolute;
+                right: 25mm;  /* adjust to 0mm if you want it touching the edge */
+                top: 50%;
+                transform: translateY(-30%);
+                width: 14mm;
+                height: 14mm;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .vedaro{
+                position: absolute;
+                right:3mm;
+                bottom: 12mm;
+                font-size: 8px;
+                font-weight: bold;
+            }
+              
+                .qr-image{
+                margin-right:2mm;
+                
+                }
+                
+
+            .qr svg {
+                width: 7mm !important;
+                height: 7mm !important;
+            }
+
+            @media print {
+                body {
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+            }
+        </style>
+        </head>
+        <body>
+            <div class="label">
+               <div class="qr">
+                <div class="qr-image">${qrCodeContent}</div>
+                <div>
+
+                <div class="vedaro">VEDARO</div>
+                <div class="text">${productName}</div>
+
+
                 </div>
-                <script>
-                    window.onload = function() {
-                        window.print();
-                        setTimeout(function() {
-                            window.close();
-                        }, 100);
-                    }
-                <\/script>
-            </body>
-            </html>
-        `);
-        
-        printWindow.document.close();
-    });
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+
+    printWindow.document.write(printHTML);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        setTimeout(() => {
+            printWindow.print();
+            setTimeout(() => printWindow.close(), 500);
+        }, 200);
+    };
+});
 </script>
+
+
 @endpush
+
+                    {{--  <div class="text">${qrCodeText}</div>
+                <div class="qr">${qrCodeContent}</div> --}}
 
 
 

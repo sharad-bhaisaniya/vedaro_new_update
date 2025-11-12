@@ -203,13 +203,26 @@ class ProductIdentifierController extends Controller
 
 
 // show Qr Code 
-        public function showQRCodes($id)
-        {
-            $product = Product::findOrFail($id);
-            $qrCodes = ProductIdentifier::where('product_id', $id)->get();
+        // public function showQRCodes($id)
+        // {
+        //     $product = Product::findOrFail($id);
+        //     $qrCodes = ProductIdentifier::where('product_id', $id)->get();
             
-            return view('admin.showQr', compact('product', 'qrCodes'));
-        }
+        //     return view('admin.showQr', compact('product', 'qrCodes'));
+        // }
+// Show QR Codes
+public function showQRCodes($id)
+{
+    // Get the product with its name and related identifiers
+    $product = Product::findOrFail($id);
+
+    // Get all QR codes for this product (with relationship for safety)
+    $qrCodes = ProductIdentifier::with('product')
+        ->where('product_id', $id)
+        ->get();
+
+    return view('admin.showQr', compact('product', 'qrCodes'));
+}
 
 
 

@@ -106,21 +106,7 @@ class Product extends Model
     }
 
  
-// public static function findByBarcode($barcode)
-// {
-//     // Search in product_identifiers table using qr_code field
-//     $identifier = ProductIdentifier::where('qr_code', $barcode)
-//                                   ->orWhere('rfid', $barcode)
-//                                   ->first();
-    
-//     if ($identifier && $identifier->product) {
-//         return $identifier->product;
-//     }
-    
-//     return null;
-// }
 
- 
 
     /**
  * Format product for barcode response with variant support
@@ -185,4 +171,7 @@ class Product extends Model
     {
         return $this->discountPrice ?? $this->price;
     }
+
+
+    
 }

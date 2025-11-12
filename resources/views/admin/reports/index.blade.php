@@ -31,7 +31,7 @@
             transition: var(--transition);
         }
 
-        .header {
+        .reports-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -201,7 +201,7 @@
     </style>
 
     <div class="main-content">
-        <div class="header">
+        <div class="reports-header">
             <h1>Comprehensive Reports Dashboard</h1>
         </div>
 
@@ -448,6 +448,9 @@
                     <i class="fas fa-box-open fa-fw me-2"></i> Purchase / Receipts
                 </h3>
                 <div>
+                     <a href="{{ route('reports.purchases.export') }}" class="btn btn-success">
+                        <i class="bi bi-download"></i> Download CSV
+                    </a>
                     <button id="btnPurchaseFilter" class="btn btn-sm btn-outline-info">Filter</button>
                     <button id="btnPurchaseClear" class="btn btn-sm btn-outline-secondary">Clear</button>
                 </div>
@@ -495,42 +498,109 @@
 
 
 
-        {{-- Current Inventory Stock Table --}}
-        <div class="chart-container">
-            <h2 style="font-size: 1.5rem; margin-bottom: 20px;">Current Low Inventory Stock (Below 5 Units)</h2>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Current Stock</th>
-                            <th>Total Stock</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse (\App\Models\Product::orderBy('current_stock', 'asc')->take(10)->get() as $product)
+     {{-- ================== LOW INVENTORY STOCK SECTION ================== --}}
+    <div class="chart-container mt-4">
+        <h2 style="font-size: 1.4rem; font-weight:600; margin-bottom: 20px;">
+            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+            Current Low Inventory Stock (Below 5 Units)
+        </h2>
+    
+        @php
+            use App\Models\Product;
+            use App\Models\ProductVariant;
+    
+            // Use paginate instead of get()
+            $products = Product::orderBy('current_stock', 'asc')->paginate(10);
+            $lowStockFound = false;
+        @endphp
+    
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-danger">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Type</th>
+                        <th>Variant Size / ID</th>
+                        <th>Current Stock</th>
+                        <th>Total Stock</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($products as $product)
+                        @if ($product->product_type === 'variant')
                             @php
-                                $status = $product->current_stock > 5 ? 'Good' : ($product->current_stock > 0 ? 'Low' : 'Out of Stock');
-                                $statusColor = $product->current_stock > 5 ? 'green' : ($product->current_stock > 0 ? 'orange' : 'red');
+                                $variants = ProductVariant::where('product_id', $product->id)->get();
                             @endphp
-                            <tr>
-                                <td>{{ $product->productName }}</td>
-                                <td>{{ $product->current_stock }}</td>
-                                <td>{{ $product->total_stock }}</td>
-                                <td>₹{{ number_format($product->price, 2) }}</td>
-                                <td style="color: {{ $statusColor }}; font-weight: 600;">{{ $status }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5">No products found in the inventory.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+    
+                            @foreach ($variants as $variant)
+                                @if ($variant->stock < 5)
+                                    @php
+                                        $lowStockFound = true;
+                                        $status = $variant->stock > 5
+                                            ? 'Good'
+                                            : ($variant->stock > 0 ? 'Low' : 'Out of Stock');
+                                        $statusColor = $variant->stock > 5
+                                            ? 'green'
+                                            : ($variant->stock > 0 ? 'orange' : 'red');
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $product->productName }}</td>
+                                        <td><span class="badge bg-info">Variant</span></td>
+                                        <td>
+                                            Size: <strong>{{ $variant->size ?? 'N/A' }}</strong><br>
+                                            <!--ID: <small class="text-muted">{{ $variant->id }}</small>-->
+                                        </td>
+                                        <td>{{ $variant->stock }}</td>
+                                        <td>{{ $product->total_stock ?? '—' }}</td>
+                                        <td>₹{{ number_format($variant->discount_price ?? $variant->price, 2) }}</td>
+                                        <td style="color: {{ $statusColor }}; font-weight: 600;">{{ $status }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @else
+                            @if ($product->current_stock < 5)
+                                @php
+                                    $lowStockFound = true;
+                                    $status = $product->current_stock > 5
+                                        ? 'Good'
+                                        : ($product->current_stock > 0 ? 'Low' : 'Out of Stock');
+                                    $statusColor = $product->current_stock > 5
+                                        ? 'green'
+                                        : ($product->current_stock > 0 ? 'orange' : 'red');
+                                @endphp
+                                <tr>
+                                    <td>{{ $product->productName }}</td>
+                                    <td><span class="badge bg-secondary">Simple</span></td>
+                                    <td>—</td>
+                                    <td>{{ $product->current_stock }}</td>
+                                    <td>{{ $product->total_stock }}</td>
+                                    <td>₹{{ number_format($product->price, 2) }}</td>
+                                    <td style="color: {{ $statusColor }}; font-weight: 600;">{{ $status }}</td>
+                                </tr>
+                            @endif
+                        @endif
+                    @endforeach
+    
+                    @if(!$lowStockFound)
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">
+                                No low-stock products or variants found.
+                            </td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
         </div>
+    
+        {{-- ✅ Pagination Links --}}
+        <div class="d-flex justify-content-center mt-3">
+            {{ $products->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+{{-- ================== END LOW INVENTORY STOCK SECTION ================== --}}
+
         
     </div>
 

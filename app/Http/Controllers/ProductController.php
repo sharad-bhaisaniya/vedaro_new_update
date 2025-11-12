@@ -49,56 +49,6 @@ class ProductController extends Controller
         return response()->json(['success' => true]);
     }
 
-/**
- * Find product by barcode - Search in ProductIdentifier using qr_code
- */
-// public function findByBarcode($barcode)
-// {
-//     try {
-//         Log::info('=== BARCODE SCAN STARTED ===');
-//         Log::info('Searching for barcode: ' . $barcode);
-        
-//         // Search in product_identifiers table
-//         Log::info('Step 1: Searching in ProductIdentifier table');
-//         $identifier = ProductIdentifier::where('qr_code', $barcode)->first();
-        
-//         if ($identifier) {
-//             Log::info('✅ ProductIdentifier FOUND', [
-//                 'id' => $identifier->id,
-//                 'product_id' => $identifier->product_id,
-//                 'qr_code' => $identifier->qr_code
-//             ]);
-            
-//             // Get the product
-//             Log::info('Step 2: Fetching product with ID: ' . $identifier->product_id);
-//             $product = Product::with(['variants', 'category'])->find($identifier->product_id);
-            
-//             if ($product) {
-//                 Log::info('✅ PRODUCT FOUND', [
-//                     'product_id' => $product->id,
-//                     'product_name' => $product->productName,
-//                     'product_type' => $product->product_type,
-//                     'variants_count' => $product->variants->count()
-//                 ]);
-                
-//                 $response = $product->getFormattedForBarcodeResponse();
-//                 Log::info('✅ Sending response to frontend');
-//                 return response()->json($response);
-//             } else {
-//                 Log::warning('❌ Product not found for ProductIdentifier product_id: ' . $identifier->product_id);
-//                 return response()->json(['error' => 'Product not found for this barcode'], 404);
-//             }
-//         }
-        
-//         Log::warning('❌ Barcode not found in ProductIdentifier: ' . $barcode);
-//         return response()->json(['error' => 'Barcode not found in database'], 404);
-        
-//     } catch (\Exception $e) {
-//         Log::error('💥 ERROR in findByBarcode: ' . $e->getMessage());
-//         Log::error('Stack trace: ' . $e->getTraceAsString());
-//         return response()->json(['error' => 'Server error: ' . $e->getMessage()], 500);
-//     }
-// }
 
 public function findByBarcode($barcode)
 {

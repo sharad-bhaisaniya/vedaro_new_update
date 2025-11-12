@@ -22,8 +22,10 @@ class AdminAuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.add_product'));
+            // return redirect()->intended(route('admin.'));
+            return redirect()->route('admin.dashboard');
         }
+        
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

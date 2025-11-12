@@ -8,6 +8,8 @@ use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 
 class ReportController extends Controller
 {
@@ -166,5 +168,49 @@ class ReportController extends Controller
             'isProfit' => $isProfit,
 
         ]);
+    }
+
+    
+    public function exportPurchasesCsv()
+    {
+        $fileName = 'purchase_report_' . now()->format('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () {
+            $handle = fopen('php://output', 'w');
+
+            // CSV Header
+            fputcsv($handle, [
+                'Invoice No',
+                'Vendor Name',
+                'Invoice Date',
+                'Product Name',
+                'Quantity',
+                'Total Price',
+            ]);
+
+            // Fetch purchases with related items
+            $purchases = Purchase::with(['vendor', 'items.product'])->get();
+
+            foreach ($purchases as $purchase) {
+                foreach ($purchase->items as $item) {
+                    fputcsv($handle, [
+                        $purchase->invoice_number ?? '',
+                        $purchase->vendor->display_name ?? '',
+                        $purchase->invoice_date ?? '',
+                        $item->product->productName ?? '',
+                        $item->quantity ?? 0,
+                        $item->total_incl_tax ?? 0,
+                    ]);
+                }
+            }
+
+            fclose($handle);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 }

@@ -373,12 +373,17 @@ public function update_product(Request $request, $id)
     }
 
 // --------------------------------------------------------------------------------
-    public function show_products()
-    {
-    $products = Product::orderBy('created_at', 'desc')->get();
-return view("admin.manage_product", compact("products"));
+   // ... within your Controller class
 
-    }
+public function show_products()
+{
+    // Eager load 'category' and 'variants' for efficient access in the view
+    $products = Product::with(['category', 'variants']) 
+                       ->orderBy('created_at', 'desc')
+                       ->paginate(10); // 10 products per page
+
+    return view("admin.manage_product", compact("products"));
+}
     
 // --------------------------------------------------------------------------------
     public function timer_management()

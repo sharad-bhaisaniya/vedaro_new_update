@@ -66,7 +66,9 @@
       top: 0;
       align-self: start;
       transition: 300ms ease-in-out;
-      overflow: hidden;
+      overflow: scroll;
+        scrollbar-width: none; /* Firefox */
+
     }
 
     #sidebar.close {
@@ -295,6 +297,31 @@
         </li>
       </ul>
     </li>
+    
+    
+ <li>
+  <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+    <i class="fas fa-chart-line"></i> <!-- 📊 Reports Icon -->
+    <span>Reports</span>
+    <i class="fas fa-chevron-down"></i>
+  </button>
+
+  <ul class="sub-menu">
+    <li>
+      <a href="{{ route('expenses.index') }}">
+        <i class="fas fa-receipt"></i> <!-- 💰 Expense Icon -->
+        Expenses
+      </a>
+    </li>
+    <li>
+      <a href="{{ route('reports.index') }}">
+        <i class="fas fa-file-alt"></i> <!-- 📄 Report Page Icon -->
+        All Reports
+      </a>
+    </li>
+  </ul>
+</li>
+
 
     <li>
       <button onclick="toggleSubMenu(this)" class="dropdown-btn">
@@ -542,13 +569,13 @@
     </li>
 
       <li>
-      <a href="#">
+      <!--<a href="#">-->
       <form action="{{ route('admin.logout') }}" method="POST">
       @csrf
-      <button type="submit" class="dropdown-item">
+      <a type="submit" class="dropdown-item">
           <i class="fas fa-sign-out-alt me-2"></i> Logout
-      </button>
-          </a>
+      </a>
+          <!--</a>-->
     </li>
   </form>
 </ul>

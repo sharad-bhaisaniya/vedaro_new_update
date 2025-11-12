@@ -4,611 +4,683 @@
 <!-- Add CSRF token meta tag -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<div class="row justify-content-center p-4">
-    <div class="col-12 col-xl-12">
-        <h4 class="mb-3 text-secondary">Update Purchase</h4>
-        <form id="invoiceInventoryForm" action="{{ route('purchase.update', $purchase->id) }}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
-            @csrf
-            <!-- Add this hidden section in your main form for file inputs -->
-<div id="itemFileInputs" style="display: none;">
-    <!-- This will be populated dynamically with file inputs for each item -->
-</div>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+                .validation-popup {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    max-width: 400px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    border-radius: 8px;
+                    display: none;
+                }
+                .validation-popup.show {
+                    display: block;
+                    animation: slideIn 0.3s ease-out;
+                }
+                .validation-popup.hide {
+                    animation: slideOut 0.3s ease-in;
+                }
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+                .validation-popup .alert {
+                    margin-bottom: 0;
+                    border-radius: 8px;
+                }
+                .validation-popup .alert ul {
+                    margin-bottom: 0;
+                    padding-left: 20px;
+                }
+                .validation-popup .alert li {
+                    margin-bottom: 5px;
+                }
+                .is-invalid {
+                    border-color: #dc3545 !important;
+                }
+                .border-danger {
+                    border-width: 2px !important;
+                }
+                .invalid-feedback {
+                    display: block;
+                    width: 100%;
+                    margin-top: 0.25rem;
+                    font-size: 0.875em;
+                    color: #dc3545;
+                }
+                .section-highlight {
+                    transition: all 0.3s ease;
+                }
+                .section-highlight.invalid {
+                    border-left: 4px solid #dc3545;
+                    padding-left: 10px;
+                    background-color: rgba(220, 53, 69, 0.05);
+                }
+                #btn-close-validation{
+                        position: absolute;
+                            top: 12;
+                            right: 12px;
+                }
+                /* <!-- Custom CSS --> */
 
-            <!-- Vendor Details Section -->
-            <div class="p-3 mb-4 border-bottom">
-                <h6 class="h6 mb-2 text-uppercase text-secondary">Vendor Details</h6>
-                <div class="row row-cols-md-2 g-2">
-                    <div class="col">
-                        <label for="invoiceNumber" class="form-label form-label-sm">Invoice Number (bill number) *</label>
-                        <input type="text" class="form-control form-control-sm" id="invoiceNumber" name="invoiceNumber" value="{{ $purchase->invoice_number }}" required>
-                        <div class="invalid-feedback">Please provide an invoice number.</div>
+                /* Your existing CSS styles remain the same */
+                .form-control,
+                .form-select,
+                .btn {
+                    font-size: 0.8rem !important;
+                    padding: 0.3rem 0.6rem !important;
+                    border-radius: 0 !important;
+                }
+
+                .form-control, .form-select {
+                    border: 1px solid #dee2e6;
+                    box-shadow: none !important;
+                }
+
+                .form-label,
+                .table th,
+                .table td {
+                    font-size: 0.8rem !important;
+                    font-weight: 500;
+                    margin-bottom: 0.25rem !important;
+                }
+
+                .table th, .table td {
+                    padding: 0.5rem !important;
+                    border: none;
+                }
+
+                .table-borderless th,
+                .table-borderless td {
+                    border: none !important;
+                }
+
+                .section-header {
+                    border-bottom: 1px solid #e0e6ed;
+                    padding-bottom: 1rem;
+                    margin-bottom: 1rem;
+                }
+
+                .btn {
+                    font-size: 0.8rem !important;
+                    padding: 0.3rem 0.75rem !important;
+                    border-radius: 0 !important;
+                }
+
+                .btn-outline-primary {
+                    border: 1px solid #0d6efd;
+                    color: #0d6efd;
+                }
+
+                .modal-content {
+                    border-radius: 0;
+                    border: none;
+                }
+                .modal-dialog.modal-xl {
+                    max-width: calc(100% - 250px) !important;
+                    margin-left: 250px;
+                }
+                .modal-header, .modal-footer {
+                    border-color: #e0e6ed;
+                }
+                .modal-footer {
+                    padding-top: 1rem;
+                }
+                .size-stock-row{
+                    width: 490px;
+                }
+                .inventory-section{
+                    width: 100%;
+                }
+
+                /* Custom CSS for Purchase Update Form */
+                    .form-control,
+                    .form-select,
+                    .btn {
+                        font-size: 0.8rem !important;
+                        padding: 0.3rem 0.6rem !important;
+                        border-radius: 0 !important;
+                    }
+
+                    .form-control, .form-select {
+                        border: 1px solid #dee2e6;
+                        box-shadow: none !important;
+                    }
+
+                    .form-label,
+                    .table th,
+                    .table td {
+                        font-size: 0.8rem !important;
+                        font-weight: 500;
+                        margin-bottom: 0.25rem !important;
+                    }
+
+                    .table th, .table td {
+                        padding: 0.5rem !important;
+                        border: none;
+                    }
+
+                    .table-borderless th,
+                    .table-borderless td {
+                        border: none !important;
+                    }
+
+                    .section-header {
+                        border-bottom: 1px solid #e0e6ed;
+                        padding-bottom: 1rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    .btn {
+                        font-size: 0.8rem !important;
+                        padding: 0.3rem 0.75rem !important;
+                        border-radius: 0 !important;
+                    }
+
+                    .btn-outline-primary {
+                        border: 1px solid #0d6efd;
+                        color: #0d6efd;
+                    }
+
+                    .modal-content {
+                        border-radius: 0;
+                        border: none;
+                    }
+
+                    .modal-dialog.modal-xl {
+                        max-width: calc(100% - 250px) !important;
+                        margin-left: 250px;
+                    }
+
+                    .modal-header, .modal-footer {
+                        border-color: #e0e6ed;
+                    }
+
+                    .modal-footer {
+                        padding-top: 1rem;
+                    }
+
+                    .size-stock-row{
+                        width: 490px;
+                    }
+
+                    .inventory-section{
+                        width: 100%;
+                    }
+
+                    /* Variant table styling */
+                    #variantsTable th {
+                        background-color: #f8f9fa;
+                    }
+
+                    #variantsTable td {
+                        vertical-align: middle;
+                    }
+
+                    .variant-input {
+                        font-size: 0.75rem !important;
+                    }
+
+                    .remove-variant-btn {
+                        font-size: 0.7rem !important;
+                        padding: 0.15rem 0.4rem !important;
+                    }
+        </style>
+
+        <div class="row justify-content-center p-4">
+            <div class="col-12 col-xl-12">
+                <h4 class="mb-3 text-secondary">Update Purchase</h4>
+                <form id="invoiceInventoryForm" action="{{ route('purchase.update', $purchase->id) }}" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+                    @csrf
+                    <!-- Add this hidden section in your main form for file inputs -->
+                    <div id="itemFileInputs" style="display: none;">
+                        <!-- This will be populated dynamically with file inputs for each item -->
                     </div>
-                
-                    <div class="col">
-                    <label for="invoiceDate" class="form-label form-label-sm">Invoice Date *</label>
 
-                    <input 
-                    type="date" 
-                    class="form-control form-control-sm" 
-                    id="invoiceDate" 
-                    name="invoiceDate" 
-                    value="{{ old('invoiceDate', \Carbon\Carbon::parse($purchase->invoice_date ?? now())->format('Y-m-d')) }}" 
-                    required
-                >
-                </div>
+                    <!-- Vendor Details Section -->
+                    <div class="p-3 mb-4 border-bottom">
+                        <h6 class="h6 mb-2 text-uppercase text-secondary">Vendor Details</h6>
+                        <div class="row row-cols-md-2 g-2">
+                            <div class="col">
+                                <label for="invoiceNumber" class="form-label form-label-sm">Invoice Number (bill number) *</label>
+                                <input type="text" class="form-control form-control-sm" id="invoiceNumber" name="invoiceNumber" value="{{ $purchase->invoice_number }}" required>
+                                <div class="invalid-feedback">Please provide an invoice number.</div>
+                            </div>
+                        
+                            <div class="col">
+                            <label for="invoiceDate" class="form-label form-label-sm">Invoice Date *</label>
 
-                </div>
-                <div class="row row-cols-md-2 g-2 mt-2">
-                    <div class="col">
-                        <label for="vendorSelect" class="form-label form-label-sm">Vendor Name *</label>
-                        <select class="form-select form-select-sm" id="vendorSelect" name="vendorName" required>
-                            <option value="">-- Select Vendor --</option>
-                            @foreach ($vendors as $vendor)
-                                <option value="{{ $vendor->id }}"
-                                        data-gstin="{{ $vendor->gst_no }}"
-                                        data-address="{{ $vendor->address }}"
-                                        {{ $vendor->id == $purchase->vendor_id ? 'selected' : '' }}>
-                                    {{ $vendor->display_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <div class="invalid-feedback">Please select a vendor.</div>
-                    </div>
-                    <div class="col">
-                        <label for="vendorGSTIN" class="form-label form-label-sm">Vendor GSTIN/UIN</label>
-                        <input type="text" class="form-control form-control-sm bg-light" id="vendorGSTIN" name="vendorGSTIN" readonly value="{{ $purchase->vendor->gst_no ?? '' }}">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Items Section -->
-            <div class="p-3 mb-4 border-bottom">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="h6 mb-0 text-uppercase text-secondary">Product Items</h6>
-                    <button type="button" id="addItemBtn" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-plus me-1"></i>Add New Item
-                    </button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-sm table-borderless table-hover align-middle" id="items-table">
-                        <thead>
-                            <tr class="text-uppercase fw-normal">
-                                <th scope="col" class="text-start">#</th>
-                                <th scope="col" class="text-start">Product Name</th>
-                                <th scope="col" class="text-start">Qty</th>
-                                <th scope="col" class="text-start">Price</th>
-                                <th scope="col" class="text-start">Total (Incl. Tax)</th>
-                                <th scope="col" class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="itemTableBody">
-                            @if($purchase->items->count() > 0)
-                                @foreach($purchase->items as $index => $item)
-                                <tr data-index="{{ $index }}">
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->product_name }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>₹{{ number_format($item->unit_price, 2) }}</td>
-                                    <td>₹{{ number_format($item->total_incl_tax, 2) }}</td>
-                                    <td class="text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-primary edit-item" data-index="{{ $index }}">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger remove-item" data-index="{{ $index }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            @else
-                                <tr class="placeholder-row">
-                                    <td colspan="6" class="text-center py-5 text-muted">No items found. Click "Add New Item" to begin.</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                        <tfoot>
-                            <tr class="fw-bold">
-                                <td colspan="5" class="text-end">Grand Total (Incl. Tax):</td>
-                                <td id="grandTotalDisplay" class="text-primary fs-5">₹{{ number_format($purchase->grand_total, 2) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-end pt-4 border-top">
-                <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="fas fa-save me-1"></i>Update Purchase & Update Inventory
-                </button>
-            </div>
-            <div id="messageBox" class="alert d-none mt-4 text-center" role="alert"></div>
-        </form>
-    </div>
-</div>
-
-<!-- Item Details Modal -->
-<div class="modal fade" id="itemDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="itemDetailsModalLabel">Edit Product Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="itemDetailsForm" enctype="multipart/form-data">
-                    <input type="hidden" id="modalItemId">
-                    <input type="hidden" id="modalProductId">
-                    
-                    <!-- Purchase Section -->
-                    <h6 class="h6 mb-3 text-uppercase text-secondary">Purchase Section</h6>
-                    <div class="row row-cols-md-5 g-2 mb-3">
-                 
-                        @php
-                            use App\Models\PurchaseProductName;
-                            $productNames = PurchaseProductName::orderBy('name')->get();
-                        @endphp
-
-                        <div class="col">
-                            <label for="modalProductName" class="form-label form-label-sm">Purchase Product Name *</label>
-                            <select class="form-select form-select-sm" id="modalProductName" name="productName" required>
-                                <option value="">-- Select Product Name --</option>
-                                @foreach($productNames as $product)
-                                    <option 
-                                        value="{{ $product->name }}"
-                                        {{ old('productName', $purchase->product_name ?? '') == $product->name ? 'selected' : '' }}>
-                                        {{ $product->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <input 
+                            type="date" 
+                            class="form-control form-control-sm" 
+                            id="invoiceDate" 
+                            name="invoiceDate" 
+                            value="{{ old('invoiceDate', \Carbon\Carbon::parse($purchase->invoice_date ?? now())->format('Y-m-d')) }}" 
+                            required
+                        >
                         </div>
 
-                        <div class="col">
-                            <label for="modalItemCode" class="form-label form-label-sm">Purchase Item Code</label>
-                            <input type="text" class="form-control form-control-sm" id="modalItemCode" name="itemCode">
                         </div>
-                        <div class="col">
-                            <label for="modalQuantity" class="form-label form-label-sm">Quantity *</label>
-                            <input type="number" class="form-control form-control-sm calculate-field" id="modalQuantity" name="quantity" value="1" min="1" required>
-                        </div>
-                        <div class="col">
-                            <label for="modalUnitPrice" class="form-label form-label-sm">Purchase Price *</label>
-                            <input type="number" class="form-control form-control-sm calculate-field" id="modalUnitPrice" name="unitPrice" step="0.01" required>
-                        </div>
-                        <div class="col">
-                            <label for="modalDiscount" class="form-label form-label-sm">Discount %</label>
-                            <input type="number" class="form-control form-control-sm calculate-field" id="modalDiscount" name="discountPercentage" step="0.01">
-                        </div>
-                        <div class="col">
-                            <label for="modalTaxGroup" class="form-label form-label-sm">Tax Group*</label>
-                            <select class="form-select form-select-sm calculate-field" id="modalTaxGroup" name="tax_group_id" required>
-                                <option value="" disabled selected>-- Select Tax Group --</option>
-                                @foreach ($tax_groups as $group)
-                                    @if ($group->taxes->isNotEmpty())
-                                        <option value="{{ $group->id }}"
-                                            data-rates="{{ $group->taxes->pluck('rate')->implode(',') }}">
-                                            {{ $group->name }}
+                        <div class="row row-cols-md-2 g-2 mt-2">
+                            <div class="col">
+                                <label for="vendorSelect" class="form-label form-label-sm">Vendor Name *</label>
+                                <select class="form-select form-select-sm" id="vendorSelect" name="vendorName" required>
+                                    <option value="">-- Select Vendor --</option>
+                                    @foreach ($vendors as $vendor)
+                                        <option value="{{ $vendor->id }}"
+                                                data-gstin="{{ $vendor->gst_no }}"
+                                                data-address="{{ $vendor->address }}"
+                                                {{ $vendor->id == $purchase->vendor_id ? 'selected' : '' }}>
+                                            {{ $vendor->display_name }}
                                         </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label for="modalNetPrice" class="form-label form-label-sm">Net Purchase Price (after discount)</label>
-                            <input type="number" class="form-control form-control-sm bg-light" id="modalNetPrice" name="netPrice" step="0.01" readonly>
-                        </div>
-                        <div class="col">
-                            <label for="modalTaxAmount" class="form-label form-label-sm">Tax Amount</label>
-                            <input type="number" class="form-control form-control-sm bg-light" id="modalTaxAmount" name="lineTaxAmount" step="0.01" readonly>
-                        </div>
-                        <div class="col">
-                            <label for="modalTotalInclTax" class="form-label form-label-sm">Line Total (Incl. Tax)</label>
-                            <input type="number" class="form-control form-control-sm bg-light" id="modalTotalInclTax" name="lineTotalInclTax" step="0.01" readonly>
-                        </div>
-                    </div>
-                    
-                    <hr>
-                    
-                    <!-- Selling Section -->
-                    <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Selling Section</h6>
-                    <div class="row row-cols-md-5 g-2 mb-3">
-                        <div class="col">
-                            <label for="modalSellName" class="form-label form-label-sm">Product Name (sell) *</label>
-                            <input type="text" class="form-control form-control-sm" id="modalSellName" name="sellName">
-                        </div>
-                        <div class="col">
-                            <label for="modalCategory" class="form-label form-label-sm">Category *</label>
-                            <select id="modalCategory" name="category" class="form-select form-select-sm" required>
-                                <option value="" disabled selected>Select a category</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->name }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                     
-                        @php
-                            use App\Models\Brand;
-                            use App\Models\HsnCode;
-
-                            $brands = Brand::orderBy('name')->get();
-                            $hsnCodes = HsnCode::orderBy('code')->get();
-                        @endphp
-                                                
-                        {{-- Brand / Manufacturer --}}
-                        <div class="col">
-                            <label for="modalBrand" class="form-label form-label-sm">Brand / Manufacturer</label>
-                            <select class="form-select form-select-sm" id="modalBrand" name="brand">
-                                <option value="">-- Select Brand --</option>
-                                @foreach($brands as $brand)
-                                    <option 
-                                        value="{{ $brand->name }}" 
-                                        {{ old('brand', $purchase->brand ?? '') == $brand->name ? 'selected' : '' }}>
-                                        {{ $brand->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col" hidden>
-                            <label for="modalBarcode" class="form-label form-label-sm">Barcode</label>
-                            <input type="text" class="form-control form-control-sm" id="modalBarcode" name="barcode">
-                        </div>
-                        <div class="col" hidden>
-                            <label for="modalTotalStock" class="form-label form-label-sm">RFID</label>
-                            <input type="number" class="form-control form-control-sm" id="modalTotalStock" name="stock">
-                        </div>
-                        {{-- <div class="col">
-                            <label for="modalHSN" class="form-label form-label-sm">HSN Code</label>
-                            <input type="text" class="form-control form-control-sm" id="modalHSN" name="hsnCode">
-                        </div> --}}
-                        {{-- HSN Code --}}
-                        <div class="col">
-                            <label for="modalHSN" class="form-label form-label-sm">HSN Code</label>
-                            <select class="form-select form-select-sm" id="modalHSN" name="hsnCode">
-                                <option value="">-- Select HSN --</option>
-                                @foreach($hsnCodes as $hsn)
-                                    <option 
-                                        value="{{ $hsn->code }}"
-                                        {{ old('hsnCode', $purchase->hsn_code ?? '') == $hsn->code ? 'selected' : '' }}>
-                                        {{ $hsn->code }} - {{ $hsn->description }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Inventory Management Section -->
-                    <div class="inventory-section">
-                        <hr>
-                        <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Inventory Management</h6>
-                        
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="toggleVariantsCheckbox" name="useVariants" value="1">
-                            <label class="form-check-label form-label-sm" for="toggleVariantsCheckbox">
-                                Use Product Variants (Size,Weight, etc.)
-                            </label>
-                        </div>
-                        
-                        <!-- Product Variants Section -->
-                        <div id="productVariantsSection" style="display: none;">
-                            <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Variants</h6>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <p class="text-muted small mb-0">Define variations (e.g., size, weight) and their specific stock/price.</p>
-                                        <button type="button" id="addVariantBtn" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-plus me-1"></i> Add Variant Row
-                                        </button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-bordered align-middle" id="variantsTable">
-                                            <thead>
-                                                <tr class="table-light">
-                                                    <th style="width: 25%;">Name (e.g., Size/Weight)</th>
-                                                    <th style="width: 15%;">Weight (gram)</th>
-                                                    <th style="width: 20%;">Price</th>
-                                                    <th style="width: 20%;">Discount Price</th>
-                                                    <th style="width: 10%;">Stock Qty</th>
-                                                    <th style="width: 10%;">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="variantsTableBody">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Base Price and Sell Price Fields -->
-                        <div class="row row-cols-md-5 g-2 mb-3">
-                            <div class="col" id="basePrice">
-                                <label for="modalMRP" class="form-label form-label-sm">Base Price (per item)</label>
-                                <input type="number" class="form-control form-control-sm" id="modalMRP" name="mrpPerUnit" step="0.01">
-                            </div>
-                            <div class="col">
-                                <label for="modalSellDiscount" class="form-label form-label-sm">Sell Discount %</label>
-                                <input type="number" class="form-control form-control-sm" value="0" id="modalSellDiscount" name="sellDiscountPercentage">
-                            </div>
-                            <div class="col">
-                                <label for="modalSellTaxGroup" class="form-label form-label-sm">Selling Tax Group*</label>
-                                <select class="form-select form-select-sm calculate-field" id="modalSellTaxGroup" name="sell_tax_group_id" required>
-                                    <option value="" disabled selected>-- Select Tax Group --</option>
-                                    @foreach ($tax_groups as $group)
-                                        @if ($group->taxes->isNotEmpty())
-                                            <option value="{{ $group->id }}"
-                                                data-rates="{{ $group->taxes->pluck('rate')->implode(',') }}">
-                                                {{ $group->name }}
-                                            </option>
-                                        @endif
                                     @endforeach
                                 </select>
-                                
-                            </div>
-                            <div class="col" id="sellPrice">
-                                <label for="modalSellPrice" class="form-label form-label-sm">Sell Price</label>
-                                <input type="number" class="form-control form-control-sm" id="modalSellPrice" name="sellPrice" step="0.01" readonly>
+                                <div class="invalid-feedback">Please select a vendor.</div>
                             </div>
                             <div class="col">
-                                <label for="modalShippingFee" class="form-label form-label-sm">Shipping Fee *</label>
-                                <input type="number" class="form-control form-control-sm" id="modalShippingFee" name="shippingFee">
-                            </div>
-                            <div class="col" id="weightFieldContainer">
-                                <label for="modalWeight" class="form-label form-label-sm">Weight *</label>
-                                <input type="number" class="form-control form-control-sm" id="modalWeight" name="weight">
+                                <label for="vendorGSTIN" class="form-label form-label-sm">Vendor GSTIN/UIN</label>
+                                <input type="text" class="form-control form-control-sm bg-light" id="vendorGSTIN" name="vendorGSTIN" readonly value="{{ $purchase->vendor->gst_no ?? '' }}">
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Product Images Section -->
-                    <hr>
-                    <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Images</h6>
-                  
 
-                    <div class="row row-cols-md-3 g-2 mb-3">
-                        <div class="col">
-                            <label for="modalImage1" class="form-label form-label-sm">Image 1</label>
-                            <input type="file" class="form-control form-control-sm" id="modalImage1" name="image1" accept="image/*">
-                            <div id="currentImage1Preview" class="mt-2"></div>
+                    <!-- Product Items Section -->
+                    <div class="p-3 mb-4 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="h6 mb-0 text-uppercase text-secondary">Product Items</h6>
+                            <button type="button" id="addItemBtn" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus me-1"></i>Add New Item
+                            </button>
                         </div>
-                        <div class="col">
-                            <label for="modalImage2" class="form-label form-label-sm">Image 2</label>
-                            <input type="file" class="form-control form-control-sm" id="modalImage2" name="image2" accept="image/*">
-                            <div id="currentImage2Preview" class="mt-2"></div>
-                        </div>
-                        <div class="col">
-                            <label for="modalImage3" class="form-label form-label-sm">Image 3</label>
-                            <input type="file" class="form-control form-control-sm" id="modalImage3" name="image3" accept="image/*">
-                            <div id="currentImage3Preview" class="mt-2"></div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless table-hover align-middle" id="items-table">
+                                <thead>
+                                    <tr class="text-uppercase fw-normal">
+                                        <th scope="col" class="text-start">#</th>
+                                        <th scope="col" class="text-start">Product Name</th>
+                                        <th scope="col" class="text-start">Qty</th>
+                                        <th scope="col" class="text-start">Price</th>
+                                        <th scope="col" class="text-start">Total (Incl. Tax)</th>
+                                        <th scope="col" class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemTableBody">
+                                    @if($purchase->items->count() > 0)
+                                        @foreach($purchase->items as $index => $item)
+                                        <tr data-index="{{ $index }}">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $item->product_name }}</td>
+                                            <td>{{ $item->quantity }}</td>
+                                            <td>₹{{ number_format($item->unit_price, 2) }}</td>
+                                            <td>₹{{ number_format($item->total_incl_tax, 2) }}</td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-primary edit-item" data-index="{{ $index }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-item" data-index="{{ $index }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr class="placeholder-row">
+                                            <td colspan="6" class="text-center py-5 text-muted">No items found. Click "Add New Item" to begin.</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                                <tfoot>
+                                    <tr class="fw-bold">
+                                        <td colspan="5" class="text-end">Grand Total (Incl. Tax):</td>
+                                        <td id="grandTotalDisplay" class="text-primary fs-5">₹{{ number_format($purchase->grand_total, 2) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
 
-                    
-                    <!-- Descriptions Section -->
-                    <hr>
-                    <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Descriptions</h6>
-                    <div class="row row-cols-md-2 g-2 mb-3">
-                        <div class="col">
-                            <label for="modalDesc1" class="form-label form-label-sm">Description 1 *</label>
-                            <textarea class="form-control form-control-sm" id="modalDesc1" name="productDescription1" rows="3"></textarea>
-                        </div>
-                        <div class="col">
-                            <label for="modalDesc2" class="form-label form-label-sm">Description 2</label>
-                            <textarea class="form-control form-control-sm" id="modalDesc2" name="productDescription2" rows="3"></textarea>
-                        </div>
+                    <!-- Submit Button -->
+                    <div class="text-end pt-4 border-top">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-save me-1"></i>Update Purchase & Update Inventory
+                        </button>
                     </div>
-                    
-                    <!-- Product Settings Section -->
-                    <hr>
-                    <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Setting Section</h6>
-               
-                      
-
-                        <div class="col">
-                        <div class="form-check pt-4">
-                            <input class="form-check-input" type="checkbox" id="addTimer" name="addTimer" value="1">
-                            <label class="form-check-label form-label-sm" for="addTimer">Enable Sale Timer</label>
-                        </div>
-                        <div class="form-group mt-3" id="timerDurationFields" style="display: none;">
-                            <label for="timerDatetime" class="form-label form-label-sm">Sale End Date and Time</label>
-                            <input type="datetime-local" class="form-control form-control-sm" id="timerDatetime" name="timerDatetime">
-                            <input type="hidden" id="timerDays" name="timerDays">
-                            <input type="hidden" id="timerHours" name="timerHours">
-                            <input type="hidden" id="timerMinutes" name="timerMinutes">
-                            <input type="hidden" id="timerSeconds" name="timerSeconds">
-                        </div>
-                    </div>  
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" id="saveModalChangesBtn">Save changes</button>
-                    </div>
+                    <div id="messageBox" class="alert d-none mt-4 text-center" role="alert"></div>
                 </form>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- JavaScript Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-
-<!-- Custom CSS -->
-<style>
-    /* Your existing CSS styles remain the same */
-    .form-control,
-    .form-select,
-    .btn {
-        font-size: 0.8rem !important;
-        padding: 0.3rem 0.6rem !important;
-        border-radius: 0 !important;
-    }
-
-    .form-control, .form-select {
-        border: 1px solid #dee2e6;
-        box-shadow: none !important;
-    }
-
-    .form-label,
-    .table th,
-    .table td {
-        font-size: 0.8rem !important;
-        font-weight: 500;
-        margin-bottom: 0.25rem !important;
-    }
-
-    .table th, .table td {
-        padding: 0.5rem !important;
-        border: none;
-    }
-
-    .table-borderless th,
-    .table-borderless td {
-        border: none !important;
-    }
-
-    .section-header {
-        border-bottom: 1px solid #e0e6ed;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .btn {
-        font-size: 0.8rem !important;
-        padding: 0.3rem 0.75rem !important;
-        border-radius: 0 !important;
-    }
-
-    .btn-outline-primary {
-        border: 1px solid #0d6efd;
-        color: #0d6efd;
-    }
-
-    .modal-content {
-        border-radius: 0;
-        border: none;
-    }
-    .modal-dialog.modal-xl {
-        max-width: calc(100% - 250px) !important;
-        margin-left: 250px;
-    }
-    .modal-header, .modal-footer {
-        border-color: #e0e6ed;
-    }
-    .modal-footer {
-        padding-top: 1rem;
-    }
-    .size-stock-row{
-        width: 490px;
-    }
-    .inventory-section{
-        width: 100%;
-    }
-</style>
 
 
+        <!-- Validation Popup -->
+        <div id="validationPopup" class="validation-popup">
+            <div class="alert alert-danger d-flex align-items-center justify-content-between">
+                <div>
+                    <h6 class="alert-heading mb-2">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Validation Errors
+                    </h6>
+                    <ul id="validationErrorsList" class="mb-0">
+                        <!-- Errors will be listed here -->
+                    </ul>
+                </div>
+                <button type="button" class="btn-close" id="btn-close-validation" onclick="hideValidationPopup()"></button>
+            </div>
+        </div>
+        <!-- Item Details Modal -->
+        <div class="modal fade" id="itemDetailsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="itemDetailsModalLabel">Edit Product Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="itemDetailsForm" enctype="multipart/form-data">
+                            <input type="hidden" id="modalItemId">
+                            <input type="hidden" id="modalProductId">
+                            
+                            <!-- Purchase Section -->
+                            <h6 class="h6 mb-3 text-uppercase text-secondary">Purchase Section</h6>
+                            <div class="row row-cols-md-5 g-2 mb-3">
+                        
+                                @php
+                                    use App\Models\PurchaseProductName;
+                                    $productNames = PurchaseProductName::orderBy('name')->get();
+                                @endphp
+
+                                <div class="col">
+                                    <label for="modalProductName" class="form-label form-label-sm">Purchase Product Name *</label>
+                                    <select class="form-select form-select-sm" id="modalProductName" name="productName" required>
+                                        <option value="">-- Select Product Name --</option>
+                                        @foreach($productNames as $product)
+                                            <option 
+                                                value="{{ $product->name }}"
+                                                {{ old('productName', $purchase->product_name ?? '') == $product->name ? 'selected' : '' }}>
+                                                {{ $product->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col">
+                                    <label for="modalItemCode" class="form-label form-label-sm">Purchase Item Code</label>
+                                    <input type="text" class="form-control form-control-sm" id="modalItemCode" name="itemCode">
+                                </div>
+                                <div class="col">
+                                    <label for="modalQuantity" class="form-label form-label-sm">Quantity *</label>
+                                    <input type="number" class="form-control form-control-sm calculate-field" id="modalQuantity" name="quantity" value="1" min="1" required>
+                                </div>
+                                <div class="col">
+                                    <label for="modalUnitPrice" class="form-label form-label-sm">Purchase Price *</label>
+                                    <input type="number" class="form-control form-control-sm calculate-field" id="modalUnitPrice" name="unitPrice" step="0.01" required>
+                                </div>
+                                <div class="col">
+                                    <label for="modalDiscount" class="form-label form-label-sm">Discount %</label>
+                                    <input type="number" class="form-control form-control-sm calculate-field" id="modalDiscount" name="discountPercentage" step="0.01">
+                                </div>
+                                <div class="col">
+                                    <label for="modalTaxGroup" class="form-label form-label-sm">Tax Group*</label>
+                                    <select class="form-select form-select-sm calculate-field" id="modalTaxGroup" name="tax_group_id" required>
+                                        <option value="" disabled selected>-- Select Tax Group --</option>
+                                        @foreach ($tax_groups as $group)
+                                            @if ($group->taxes->isNotEmpty())
+                                                <option value="{{ $group->id }}"
+                                                    data-rates="{{ $group->taxes->pluck('rate')->implode(',') }}">
+                                                    {{ $group->name }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="modalNetPrice" class="form-label form-label-sm">Net Purchase Price (after discount)</label>
+                                    <input type="number" class="form-control form-control-sm bg-light" id="modalNetPrice" name="netPrice" step="0.01" readonly>
+                                </div>
+                                <div class="col">
+                                    <label for="modalTaxAmount" class="form-label form-label-sm">Tax Amount</label>
+                                    <input type="number" class="form-control form-control-sm bg-light" id="modalTaxAmount" name="lineTaxAmount" step="0.01" readonly>
+                                </div>
+                                <div class="col">
+                                    <label for="modalTotalInclTax" class="form-label form-label-sm">Line Total (Incl. Tax)</label>
+                                    <input type="number" class="form-control form-control-sm bg-light" id="modalTotalInclTax" name="lineTotalInclTax" step="0.01" readonly>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <!-- Selling Section -->
+                            <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Selling Section</h6>
+                            <div class="row row-cols-md-5 g-2 mb-3">
+                                <div class="col">
+                                    <label for="modalSellName" class="form-label form-label-sm">Product Name (sell) *</label>
+                                    <input type="text" class="form-control form-control-sm" id="modalSellName" name="sellName">
+                                </div>
+                                <div class="col">
+                                    <label for="modalCategory" class="form-label form-label-sm">Category *</label>
+                                    <select id="modalCategory" name="category" class="form-select form-select-sm" required>
+                                        <option value="" disabled selected>Select a category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            
+                                @php
+                                    use App\Models\Brand;
+                                    use App\Models\HsnCode;
+
+                                    $brands = Brand::orderBy('name')->get();
+                                    $hsnCodes = HsnCode::orderBy('code')->get();
+                                @endphp
+                                                        
+                                {{-- Brand / Manufacturer --}}
+                                <div class="col">
+                                    <label for="modalBrand" class="form-label form-label-sm">Brand / Manufacturer</label>
+                                    <select class="form-select form-select-sm" id="modalBrand" name="brand">
+                                        <option value="">-- Select Brand --</option>
+                                        @foreach($brands as $brand)
+                                            <option 
+                                                value="{{ $brand->name }}" 
+                                                {{ old('brand', $purchase->brand ?? '') == $brand->name ? 'selected' : '' }}>
+                                                {{ $brand->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col" hidden>
+                                    <label for="modalBarcode" class="form-label form-label-sm">Barcode</label>
+                                    <input type="text" class="form-control form-control-sm" id="modalBarcode" name="barcode">
+                                </div>
+                                <div class="col" hidden>
+                                    <label for="modalTotalStock" class="form-label form-label-sm">RFID</label>
+                                    <input type="number" class="form-control form-control-sm" id="modalTotalStock" name="stock">
+                                </div>
+                                {{-- <div class="col">
+                                    <label for="modalHSN" class="form-label form-label-sm">HSN Code</label>
+                                    <input type="text" class="form-control form-control-sm" id="modalHSN" name="hsnCode">
+                                </div> --}}
+                                {{-- HSN Code --}}
+                                <div class="col">
+                                    <label for="modalHSN" class="form-label form-label-sm">HSN Code</label>
+                                    <select class="form-select form-select-sm" id="modalHSN" name="hsnCode">
+                                        <option value="">-- Select HSN --</option>
+                                        @foreach($hsnCodes as $hsn)
+                                            <option 
+                                                value="{{ $hsn->code }}"
+                                                {{ old('hsnCode', $purchase->hsn_code ?? '') == $hsn->code ? 'selected' : '' }}>
+                                                {{ $hsn->code }} - {{ $hsn->description }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Inventory Management Section -->
+                            <div class="inventory-section">
+                                <hr>
+                                <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Inventory Management</h6>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="toggleVariantsCheckbox" name="useVariants" value="1">
+                                    <label class="form-check-label form-label-sm" for="toggleVariantsCheckbox">
+                                        Use Product Variants (Size,Weight, etc.)
+                                    </label>
+                                </div>
+                                
+                                <!-- Product Variants Section -->
+                                <div id="productVariantsSection" style="display: none;">
+                                    <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Variants</h6>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <p class="text-muted small mb-0">Define variations (e.g., size, weight) and their specific stock/price.</p>
+                                                <button type="button" id="addVariantBtn" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-plus me-1"></i> Add Variant Row
+                                                </button>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-bordered align-middle" id="variantsTable">
+                                                    <thead>
+                                                        <tr class="table-light">
+                                                            <th style="width: 25%;">Name (e.g., Size/Weight)</th>
+                                                            <th style="width: 15%;">Weight (gram)</th>
+                                                            <th style="width: 20%;">Price</th>
+                                                            <th style="width: 20%;">Discount Price</th>
+                                                            <th style="width: 10%;">Stock Qty</th>
+                                                            <th style="width: 10%;">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="variantsTableBody">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Base Price and Sell Price Fields -->
+                                <div class="row row-cols-md-5 g-2 mb-3">
+                                    <div class="col" id="basePrice">
+                                        <label for="modalMRP" class="form-label form-label-sm">Base Price (per item)</label>
+                                        <input type="number" class="form-control form-control-sm" id="modalMRP" name="mrpPerUnit" step="0.01">
+                                    </div>
+                                    <div class="col">
+                                        <label for="modalSellDiscount" class="form-label form-label-sm">Sell Discount %</label>
+                                        <input type="number" class="form-control form-control-sm" value="0" id="modalSellDiscount" name="sellDiscountPercentage">
+                                    </div>
+                                    <div class="col">
+                                        <label for="modalSellTaxGroup" class="form-label form-label-sm">Selling Tax Group*</label>
+                                        <select class="form-select form-select-sm calculate-field" id="modalSellTaxGroup" name="sell_tax_group_id" required>
+                                            <option value="" disabled selected>-- Select Tax Group --</option>
+                                            @foreach ($tax_groups as $group)
+                                                @if ($group->taxes->isNotEmpty())
+                                                    <option value="{{ $group->id }}"
+                                                        data-rates="{{ $group->taxes->pluck('rate')->implode(',') }}">
+                                                        {{ $group->name }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        
+                                    </div>
+                                    <div class="col" id="sellPrice">
+                                        <label for="modalSellPrice" class="form-label form-label-sm">Sell Price</label>
+                                        <input type="number" class="form-control form-control-sm" id="modalSellPrice" name="sellPrice" step="0.01" readonly>
+                                    </div>
+                                    <div class="col">
+                                        <label for="modalShippingFee" class="form-label form-label-sm">Shipping Fee *</label>
+                                        <input type="number" class="form-control form-control-sm" id="modalShippingFee" name="shippingFee">
+                                    </div>
+                                    <div class="col" id="weightFieldContainer">
+                                        <label for="modalWeight" class="form-label form-label-sm">Weight *</label>
+                                        <input type="number" class="form-control form-control-sm" id="modalWeight" name="weight">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Images Section -->
+                            <hr>
+                            <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Images</h6>
+                        
+
+                            <div class="row row-cols-md-3 g-2 mb-3">
+                                <div class="col">
+                                    <label for="modalImage1" class="form-label form-label-sm">Image 1</label>
+                                    <input type="file" class="form-control form-control-sm" id="modalImage1" name="image1" accept="image/*">
+                                    <div id="currentImage1Preview" class="mt-2"></div>
+                                </div>
+                                <div class="col">
+                                    <label for="modalImage2" class="form-label form-label-sm">Image 2</label>
+                                    <input type="file" class="form-control form-control-sm" id="modalImage2" name="image2" accept="image/*">
+                                    <div id="currentImage2Preview" class="mt-2"></div>
+                                </div>
+                                <div class="col">
+                                    <label for="modalImage3" class="form-label form-label-sm">Image 3</label>
+                                    <input type="file" class="form-control form-control-sm" id="modalImage3" name="image3" accept="image/*">
+                                    <div id="currentImage3Preview" class="mt-2"></div>
+                                </div>
+                            </div>
+
+                            
+                            <!-- Descriptions Section -->
+                            <hr>
+                            <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Descriptions</h6>
+                            <div class="row row-cols-md-2 g-2 mb-3">
+                                <div class="col">
+                                    <label for="modalDesc1" class="form-label form-label-sm">Description 1 *</label>
+                                    <textarea class="form-control form-control-sm" id="modalDesc1" name="productDescription1" rows="3"></textarea>
+                                </div>
+                                <div class="col">
+                                    <label for="modalDesc2" class="form-label form-label-sm">Description 2</label>
+                                    <textarea class="form-control form-control-sm" id="modalDesc2" name="productDescription2" rows="3"></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Product Settings Section -->
+                            <hr>
+                            <h6 class="h6 mb-3 text-uppercase text-secondary mt-4">Product Setting Section</h6>
+                    
+                            
+
+                                <div class="col">
+                                <div class="form-check pt-4">
+                                    <input class="form-check-input" type="checkbox" id="addTimer" name="addTimer" value="1">
+                                    <label class="form-check-label form-label-sm" for="addTimer">Enable Sale Timer</label>
+                                </div>
+                                <div class="form-group mt-3" id="timerDurationFields" style="display: none;">
+                                    <label for="timerDatetime" class="form-label form-label-sm">Sale End Date and Time</label>
+                                    <input type="datetime-local" class="form-control form-control-sm" id="timerDatetime" name="timerDatetime">
+                                    <input type="hidden" id="timerDays" name="timerDays">
+                                    <input type="hidden" id="timerHours" name="timerHours">
+                                    <input type="hidden" id="timerMinutes" name="timerMinutes">
+                                    <input type="hidden" id="timerSeconds" name="timerSeconds">
+                                </div>
+                            </div>  
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-sm btn-primary" id="saveModalChangesBtn">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 @endsection
-
-<style>
-    /* Custom CSS for Purchase Update Form */
-        .form-control,
-        .form-select,
-        .btn {
-            font-size: 0.8rem !important;
-            padding: 0.3rem 0.6rem !important;
-            border-radius: 0 !important;
-        }
-
-        .form-control, .form-select {
-            border: 1px solid #dee2e6;
-            box-shadow: none !important;
-        }
-
-        .form-label,
-        .table th,
-        .table td {
-            font-size: 0.8rem !important;
-            font-weight: 500;
-            margin-bottom: 0.25rem !important;
-        }
-
-        .table th, .table td {
-            padding: 0.5rem !important;
-            border: none;
-        }
-
-        .table-borderless th,
-        .table-borderless td {
-            border: none !important;
-        }
-
-        .section-header {
-            border-bottom: 1px solid #e0e6ed;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .btn {
-            font-size: 0.8rem !important;
-            padding: 0.3rem 0.75rem !important;
-            border-radius: 0 !important;
-        }
-
-        .btn-outline-primary {
-            border: 1px solid #0d6efd;
-            color: #0d6efd;
-        }
-
-        .modal-content {
-            border-radius: 0;
-            border: none;
-        }
-
-        .modal-dialog.modal-xl {
-            max-width: calc(100% - 250px) !important;
-            margin-left: 250px;
-        }
-
-        .modal-header, .modal-footer {
-            border-color: #e0e6ed;
-        }
-
-        .modal-footer {
-            padding-top: 1rem;
-        }
-
-        .size-stock-row{
-            width: 490px;
-        }
-
-        .inventory-section{
-            width: 100%;
-        }
-
-        /* Variant table styling */
-        #variantsTable th {
-            background-color: #f8f9fa;
-        }
-
-        #variantsTable td {
-            vertical-align: middle;
-        }
-
-        .variant-input {
-            font-size: 0.75rem !important;
-        }
-
-        .remove-variant-btn {
-            font-size: 0.7rem !important;
-            padding: 0.15rem 0.4rem !important;
-        }
-</style>
-
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // --- GLOBAL DATA (from Blade) ---
@@ -1238,14 +1310,314 @@
                 const quantity = document.getElementById('modalQuantity').value;
                 const unitPrice = document.getElementById('modalUnitPrice').value;
                 
-                if (!productName || !quantity || !unitPrice) {
-                    alert('Please fill in all required fields: Product Name, Quantity, and Unit Price.');
-                    return;
-                }
+                // if (!productName || !quantity || !unitPrice) {
+                //     alert('Please fill in all required fields: Product Name, Quantity, and Unit Price.');
+                //     return;
+                // }
 
                 const useVariants = document.getElementById('toggleVariantsCheckbox').checked;
                 const productSellGroupEl = document.getElementById('modalSellTaxGroup');
                 const selectedSellGroupRate = getTaxRateFromSellGroup();
+
+
+
+
+
+                // Validation Script for Item Details Modal
+                    function validateItemDetailsForm() {
+                        let errors = [];
+                        
+                        // Purchase Section Validation
+                        const productName = document.getElementById('modalProductName').value;
+                        const quantity = document.getElementById('modalQuantity').value;
+                        const unitPrice = document.getElementById('modalUnitPrice').value;
+                        const taxGroup = document.getElementById('modalTaxGroup').value;
+                        
+                        if (!productName) errors.push('Purchase Product Name is required');
+                        if (!quantity || quantity <= 0) errors.push('Valid Quantity is required');
+                        if (!unitPrice || unitPrice <= 0) errors.push('Valid Purchase Price is required');
+                        if (!taxGroup) errors.push('Purchase Tax Group is required');
+
+                        // Selling Section Validation
+                        const sellName = document.getElementById('modalSellName').value;
+                        const category = document.getElementById('modalCategory').value;
+                        const sellTaxGroup = document.getElementById('modalSellTaxGroup').value;
+                        
+                        if (!sellName) errors.push('Selling Product Name is required');
+                        if (!category) errors.push('Category is required');
+                        if (!sellTaxGroup) errors.push('Selling Tax Group is required');
+
+                        // Inventory Management Validation
+                        const shippingFee = document.getElementById('modalShippingFee').value;
+                        const weight = document.getElementById('modalWeight').value;
+                        
+                        if (!shippingFee || shippingFee === '') errors.push('Shipping Fee is required');
+
+                        // Product Images Validation - At least one image
+                        const image1 = document.getElementById('modalImage1').files.length;
+                        const image2 = document.getElementById('modalImage2').files.length;
+                        const image3 = document.getElementById('modalImage3').files.length;
+                        const hasExistingImages = checkExistingImagesForValidation();
+                        
+                        if (image1 === 0 && image2 === 0 && image3 === 0 && !hasExistingImages) {
+                            errors.push('At least one product image is required');
+                        }
+
+                        // Descriptions Validation - At least one description filled
+                        const desc1 = document.getElementById('modalDesc1').value.trim();
+                        const desc2 = document.getElementById('modalDesc2').value.trim();
+                        
+                        if (!desc1 && !desc2) {
+                            errors.push('At least one description is required (Description 1 is mandatory)');
+                        }
+
+                        // Variant-specific validation
+                        const useVariants = document.getElementById('toggleVariantsCheckbox').checked;
+                        if (useVariants) {
+                            const variantRows = document.querySelectorAll('#variantsTableBody tr');
+                            if (variantRows.length === 0) {
+                                errors.push('Please add at least one variant when using product variants');
+                            } else {
+                                let hasValidVariant = false;
+                                variantRows.forEach((row, index) => {
+                                    const variantName = row.querySelector('.variant-size')?.value.trim();
+                                    const variantPrice = row.querySelector('.variant-price')?.value;
+                                    const variantStock = row.querySelector('.variant-stock')?.value;
+                                    
+                                    if (variantName && variantPrice && variantStock) {
+                                        hasValidVariant = true;
+                                    } else if (variantName || variantPrice || variantStock) {
+                                        // Partial fill - show which row has issues
+                                        errors.push(`Variant row ${index + 1} is incomplete. Please fill Name, Price, and Stock.`);
+                                    }
+                                });
+                                
+                                if (!hasValidVariant) {
+                                    errors.push('Please fill in all required fields for at least one variant (Name, Price, and Stock)');
+                                }
+                            }
+                        } else {
+                            // Non-variant validation
+                            const mrp = document.getElementById('modalMRP').value;
+                            if (!mrp || mrp === '') {
+                                errors.push('Base Price is required for non-variant products');
+                            }
+                        }
+
+                        return errors;
+                    }
+
+                // Helper function to check existing images for validation
+                        function checkExistingImagesForValidation() {
+                            // This function should check if there are existing images for the current item
+                            // You'll need to adapt this based on how you track current editing item
+                            if (typeof currentEditingIndex === 'undefined' || currentEditingIndex < 0) {
+                                return false;
+                            }
+                            
+                            // Check if the current item has existing images
+                            // This is a placeholder - you'll need to implement based on your data structure
+                            const item = items[currentEditingIndex];
+                            if (!item || !item.product_data) return false;
+                            
+                            return !!(item.product_data.image1 || item.product_data.image2 || item.product_data.image3);
+                        }
+
+                // Function to highlight invalid fields
+                function highlightInvalidFields() {
+                    // Reset all highlights first
+                    const allInputs = document.querySelectorAll('#itemDetailsForm input, #itemDetailsForm select, #itemDetailsForm textarea');
+                    allInputs.forEach(input => {
+                        input.classList.remove('is-invalid');
+                        input.classList.remove('border-danger');
+                    });
+
+                    const errors = validateItemDetailsForm();
+                    
+                    if (errors.length > 0) {
+                        // Highlight fields based on errors
+                        errors.forEach(error => {
+                            if (error.includes('Purchase Product Name')) {
+                                document.getElementById('modalProductName').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Quantity')) {
+                                document.getElementById('modalQuantity').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Purchase Price')) {
+                                document.getElementById('modalUnitPrice').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Purchase Tax Group')) {
+                                document.getElementById('modalTaxGroup').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Selling Product Name')) {
+                                document.getElementById('modalSellName').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Category')) {
+                                document.getElementById('modalCategory').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Selling Tax Group')) {
+                                document.getElementById('modalSellTaxGroup').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Shipping Fee')) {
+                                document.getElementById('modalShippingFee').classList.add('is-invalid', 'border-danger');
+                            }
+                            // if (error.includes('Weight')) {
+                            //     document.getElementById('modalWeight').classList.add('is-invalid', 'border-danger');
+                            // }
+                            if (error.includes('image')) {
+                                document.getElementById('modalImage1').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('description')) {
+                                document.getElementById('modalDesc1').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('Base Price')) {
+                                document.getElementById('modalMRP').classList.add('is-invalid', 'border-danger');
+                            }
+                            if (error.includes('variant')) {
+                                document.getElementById('toggleVariantsCheckbox').classList.add('is-invalid', 'border-danger');
+                                document.getElementById('productVariantsSection').classList.add('border', 'border-danger', 'p-2', 'rounded');
+                            }
+                        });
+                    }
+                }
+
+               
+                // Function to hide the validation popup (used by the close button and auto-hide)
+                    function hideValidationPopup() {
+                        const popup = document.getElementById('validationPopup');
+                        if (popup) {
+                            popup.classList.add('hide');
+                            popup.classList.remove('show');
+                            // Remove 'hide' class after animation completes (300ms, matching your CSS)
+                            setTimeout(() => popup.classList.remove('hide'), 300);
+                        }
+                    }
+
+
+                    // Function to show validation errors in the custom popup
+                    function showValidationErrors(errors) {
+                        // 1. Hide any currently shown popup before displaying new errors
+                        hideValidationPopup();
+                        
+                        if (errors.length === 0) {
+                            return true; // Validation passed
+                        }
+
+                        // 2. Populate the error list
+                        const errorList = document.getElementById('validationErrorsList');
+                        if (errorList) {
+                            errorList.innerHTML = ''; // Clear previous errors
+                            errors.forEach(error => {
+                                const listItem = document.createElement('li');
+                                listItem.textContent = error;
+                                errorList.appendChild(listItem);
+                            });
+                        }
+
+                        // 3. Highlight the fields (assuming highlightInvalidFields is defined elsewhere)
+                        highlightInvalidFields();
+                        
+                        // 4. Show the popup
+                        const popup = document.getElementById('validationPopup');
+                        if (popup) {
+                            popup.classList.add('show');
+                            popup.classList.remove('hide');
+
+                            // Auto-hide after 10 seconds (10000 ms)
+                            setTimeout(hideValidationPopup, 2000); 
+                        }
+                        
+                        return false; // Validation failed
+                    }
+
+                // Real-time validation feedback (optional)
+                function setupRealTimeValidation() {
+                    const inputs = document.querySelectorAll('#itemDetailsForm input, #itemDetailsForm select, #itemDetailsForm textarea');
+                    
+                    inputs.forEach(input => {
+                        input.addEventListener('blur', function() {
+                            const errors = validateItemDetailsForm();
+                            if (errors.length > 0) {
+                                highlightInvalidFields();
+                            } else {
+                                // Remove highlights if valid
+                                const allInputs = document.querySelectorAll('#itemDetailsForm input, #itemDetailsForm select, #itemDetailsForm textarea');
+                                allInputs.forEach(input => {
+                                    input.classList.remove('is-invalid');
+                                    input.classList.remove('border-danger');
+                                });
+                                document.getElementById('productVariantsSection').classList.remove('border', 'border-danger', 'p-2', 'rounded');
+                            }
+                        });
+                    });
+                }
+
+                // Usage in your saveModalChanges function:
+
+                    // First validate the form
+                    const validationErrors = validateItemDetailsForm();
+                    
+                    if (!showValidationErrors(validationErrors)) {
+                        return; // Stop if validation fails
+                    }
+                    
+                    // If validation passes, continue with your existing save logic
+                    // ... your existing saveModalChanges code here ...
+
+
+                // Initialize real-time validation when modal opens
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('itemDetailsModal');
+                    if (modal) {
+                        modal.addEventListener('shown.bs.modal', function() {
+                            setupRealTimeValidation();
+                        });
+                    }
+                    
+                    // Also add click event to save button to trigger validation
+                    const saveBtn = document.getElementById('saveModalChangesBtn');
+                    if (saveBtn) {
+                        saveBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            saveModalChanges();
+                        });
+                    }
+                });
+
+                // Add CSS for better visual feedback
+                const style = document.createElement('style');
+                style.textContent = `
+                    .is-invalid {
+                        border-color: #dc3545 !important;
+                    }
+                    .border-danger {
+                        border-width: 2px !important;
+                    }
+                    .invalid-feedback {
+                        display: block;
+                        width: 100%;
+                        margin-top: 0.25rem;
+                        font-size: 0.875em;
+                        color: #dc3545;
+                    }
+                `;
+                document.head.appendChild(style);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 // Create form data with proper type conversion
                 const formData = {
@@ -1600,8 +1972,6 @@
 
     });
 </script>
-
-
 <script>
     function openEditModal(itemIndex) {
         let item = items[itemIndex];
@@ -1669,5 +2039,6 @@
         }
     });
 </script>
+
 
 

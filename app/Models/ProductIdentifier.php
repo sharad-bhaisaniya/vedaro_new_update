@@ -43,4 +43,5 @@ class ProductIdentifier extends Model
         
         return $productIdentifier ? $productIdentifier->product : null;
     }
+    
 }

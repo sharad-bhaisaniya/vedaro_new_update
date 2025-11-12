@@ -48,9 +48,20 @@ use App\Http\Controllers\HsnCodeController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PurchaseProductNameController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ExpenseController;
+
+
+
+Route::resource('expenses', ExpenseController::class);
+
+
+
+
 
 Route::get('/reports', [ReportController::class, 'index'])
     ->name('reports.index');
+    Route::get('/reports/purchases/export', [ReportController::class, 'exportPurchasesCsv'])->name('reports.purchases.export');
+
 
 
 Route::resource('purchase-product-names', PurchaseProductNameController::class);
@@ -300,9 +311,7 @@ Route::get('admin/', function () {
 })->name('index');
 
 
-Route::get('/dashboard', function () {
-    return 'Welcome to Admin Dashboard';
-})->name('admin.dashboard');
+
 
 // -----------------------------------------------
 // Authentication Routes (Login, Registration, etc.)

@@ -118,6 +118,7 @@
                                         <table class="table table-sm table-bordered mb-0 enhanced-table">
                                             <thead class="table-secondary">
                                                 <tr>
+                                                    <th>S.NO</th>
                                                     <th>Product Name</th>
                                                     <th>Item Code</th>
                                                     <th>Quantity</th>
@@ -129,9 +130,10 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            
                                                 @foreach($purchase->items as $item)
                                                 <tr>
-                                                    <td>{{ $item->product_name }}</td>
+                                                    <td>{{ $loop->iteration }}</td>                                                    <td>{{ $item->product_name }}</td>
                                                     <td>{{ $item->item_code }}</td>
                                                     <td>{{ $item->quantity }}</td>
                                                     <td>₹ {{ number_format($item->unit_price, 2) }}</td>
